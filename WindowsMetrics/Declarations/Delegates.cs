@@ -10,5 +10,7 @@ namespace WindowsMetrics.Declarations
     {
         public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
             IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
     }
 }

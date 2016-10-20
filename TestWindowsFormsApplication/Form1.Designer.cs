@@ -37,18 +37,18 @@ namespace TestWindowsFormsApplication
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 12);
+            this.richTextBox1.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.richTextBox1.Location = new System.Drawing.Point(12, 45);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(501, 356);
+            this.richTextBox1.Size = new System.Drawing.Size(573, 323);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
-            this.richTextBox1.BackColor = Color.DarkRed;
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(519, 57);
+            this.btnStop.Location = new System.Drawing.Point(306, 12);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(66, 39);
+            this.btnStop.Size = new System.Drawing.Size(279, 27);
             this.btnStop.TabIndex = 1;
             this.btnStop.Text = "Stop Tracking";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -56,9 +56,9 @@ namespace TestWindowsFormsApplication
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(519, 12);
+            this.btnStart.Location = new System.Drawing.Point(12, 12);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(66, 39);
+            this.btnStart.Size = new System.Drawing.Size(279, 27);
             this.btnStart.TabIndex = 2;
             this.btnStart.Text = "Start Tracking";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -75,7 +75,7 @@ namespace TestWindowsFormsApplication
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
-            this.FormClosed += btnStop_Click;
+
         }
 
         #endregion
