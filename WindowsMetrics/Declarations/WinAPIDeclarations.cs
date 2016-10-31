@@ -475,5 +475,8 @@ namespace WindowsMetrics.Declarations
         [DllImport("psapi.dll")]
         public static extern uint GetModuleFileNameEx(IntPtr hProcess,
             IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+
+        [DllImport("iphlpapi.dll", CharSet = CharSet.Ansi)]
+        public static extern int GetAdaptersInfo(IntPtr pAdapterInfo, ref Int64 pBufOutLen);
     }
 }

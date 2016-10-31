@@ -7,7 +7,7 @@ using System.IO;
 
 namespace WindowsMetrics.Helpers
 {
-    public static class FileWriter
+    public static class FileWriteHelper
     {
         public static void Write(string text, string path)
         {

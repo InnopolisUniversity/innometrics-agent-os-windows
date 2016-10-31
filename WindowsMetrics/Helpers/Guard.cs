@@ -12,10 +12,13 @@ namespace WindowsMetrics.Helpers
     {
         private readonly Timer _timer;
 
-        public Guard(ElapsedEventHandler actionToDoEveryTick, int secondsToCountdown)
+        public Guard(Action actionToDoEveryTick, int secondsToCountdown)
         {
             _timer = new Timer(secondsToCountdown * 1000);
-            _timer.Elapsed += actionToDoEveryTick;
+            _timer.Elapsed += (sender, args) =>
+            {
+                actionToDoEveryTick?.Invoke();
+            };
             _timer.AutoReset = true;
             _timer.Enabled = true;
             _timer.Stop();
@@ -32,6 +35,9 @@ namespace WindowsMetrics.Helpers
             _timer.Stop();
         }
 
+        /// <summary>
+        /// Start the timer from 0
+        /// </summary>
         public void Reset()
         {
             _timer.Stop();
