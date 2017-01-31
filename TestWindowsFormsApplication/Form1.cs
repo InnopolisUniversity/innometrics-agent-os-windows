@@ -49,8 +49,8 @@ namespace TestWindowsFormsApplication
         {
             richTextBox1.BackColor = Color.White;
 
-            collector.StartAsync();
-            writer.StartAsync();
+            collector.Start();
+            writer.Start();
         }
     }
 }

@@ -17,7 +17,6 @@ namespace WindowsMetrics
         private event Action DataSaving;
 
         private Guard _guardDataSaver;
-        private Action _guardDataSaverAction;
         private Task _taskForGuardDataSaver; // where guard works in
 
         private const int DataSavingIntervalSec = 3;
@@ -27,13 +26,16 @@ namespace WindowsMetrics
             CreateReportFile(toDirectory);
             DataSaving += OnDataSaving;
 
-            _guardDataSaverAction = () =>
-            {
-                _guardDataSaver = new Guard(
-                    actionToDoEveryTick: () => DataSaving?.Invoke(),
-                    secondsToCountdown: DataSavingIntervalSec
-                );
-            };
+            _taskForGuardDataSaver = new Task(() =>
+                {
+                    _guardDataSaver = new Guard(
+                        actionToDoEveryTick: () => DataSaving?.Invoke(),
+                        secondsToCountdown: DataSavingIntervalSec
+                    );
+                }
+            );
+
+            _taskForGuardDataSaver.Start();
         }
 
         private void OnDataSaving()
@@ -43,9 +45,8 @@ namespace WindowsMetrics
             FileWriteHelper.Write(rep, _reportFilePath);
         }
 
-        public async void StartAsync()
+        public void Start()
         {
-            await Task.Factory.StartNew(_guardDataSaverAction);
             _guardDataSaver.Start();
         }
 

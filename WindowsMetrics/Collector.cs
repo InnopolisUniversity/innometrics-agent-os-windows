@@ -23,7 +23,6 @@ namespace WindowsMetrics
         private event Action StateScan;
 
         private Guard _guardStateScanner;
-        private Action _guardStateScannerAction;
         private Task _taskForGuardStateScanner; // where guard works in
 
         private const int StateScanIntervalSec = 1;
@@ -85,13 +84,16 @@ namespace WindowsMetrics
             _writer = writer;
             StateScan += OnGuardStateScan;
 
-            _guardStateScannerAction = () =>
-            {
-                _guardStateScanner = new Guard(
-                    actionToDoEveryTick: () => StateScan?.Invoke(),
-                    secondsToCountdown: StateScanIntervalSec
-                );
-            };
+            _taskForGuardStateScanner = new Task(() =>
+                {
+                    _guardStateScanner = new Guard(
+                        actionToDoEveryTick: () => StateScan?.Invoke(),
+                        secondsToCountdown: StateScanIntervalSec
+                    );
+                }
+            );
+
+            _taskForGuardStateScanner.Start();
         }
 
         public Collector(Writer writer)
@@ -114,12 +116,11 @@ namespace WindowsMetrics
             CommonConstructorPart(writer);
         }
 
-        public async void StartAsync()
+        public void Start()
         {
             _foregroundWindowHook = WinAPI.StartTrackingForegroundWindowChange(OnForegroundWindowChange, out _foregroundWindowHandle);
             _mouseClickHook = WinAPI.StartTrackingLeftClickEvent(OnLeftMouseClick, out _mouseClickHandle);
 
-            await Task.Factory.StartNew(_guardStateScannerAction);
             _guardStateScanner.Start();
         }
 
