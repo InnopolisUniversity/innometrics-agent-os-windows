@@ -75,7 +75,7 @@ namespace TestWindowsFormsApplication
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
-
+            this.Closing += btnStop_Click;
         }
 
         #endregion

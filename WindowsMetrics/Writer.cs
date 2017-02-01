@@ -19,7 +19,7 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
 
-        private const int DataSavingIntervalSec = 3;
+        private const int DataSavingIntervalSec = 30;
 
         public Writer(string toDirectory)
         {
@@ -53,6 +53,10 @@ namespace WindowsMetrics
         public void Stop()
         {
             _guardDataSaver.Stop();
+            if (_report.Length != 0)
+            {
+                DataSaving?.Invoke();
+            }
         }
         
         public void Append(string s)

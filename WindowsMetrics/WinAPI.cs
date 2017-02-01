@@ -20,6 +20,8 @@ namespace WindowsMetrics
 {
     public static class WinAPI
     {
+        #region Private part
+
         private const int DefaultBufferSize = 1024;
 
         /// <param name="window">Pointer to a window</param>
@@ -42,6 +44,82 @@ namespace WindowsMetrics
             }
         }
 
+        private static uint GetForegroundWindowProcessID()
+        {
+            uint pid;
+            IntPtr fwin = WinAPIDeclarations.GetForegroundWindow();
+            uint idCreatorThread = WinAPIDeclarations.GetWindowThreadProcessId(fwin, out pid); // identifier of the thread that created the window
+            return pid;
+        }
+
+        private static IntPtr GetWindowUnderCursor()
+        {
+            Point point = new Point();
+            bool success = WinAPIDeclarations.GetCursorPos(ref point);
+            return WinAPIDeclarations.WindowFromPoint(point);
+        }
+
+        private static Point GetMousePosition()
+        {
+            Point point = new Point();
+            bool success = WinAPIDeclarations.GetCursorPos(ref point);
+            return point;
+        }
+
+        private static Process GetForegroundWindowProcess()
+        {
+            uint pid = GetForegroundWindowProcessID();
+            Process p = Process.GetProcessById((int)pid);
+            return p;
+        }
+
+        #endregion
+
+        // ---------------
+
+        #region TrackingForegroundWindowChange
+
+        public static IntPtr StartTrackingForegroundWindowChange(Action onWindowChangeAction, out GCHandle gcHandle)
+        {
+            WinEventDelegate action = (hook, type, hwnd, idObject, child, thread, time) =>
+            {
+                onWindowChangeAction.Invoke();
+            };
+            gcHandle = GCHandle.Alloc(action);
+            return WinAPIDeclarations.SetWinEventHook((uint)Event.EVENT_SYSTEM_FOREGROUND,
+                (uint)Event.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, action, 0, 0, (uint)Event.WINEVENT_OUTOFCONTEXT);
+        }
+
+        public static bool StopTrackingForegroundWindowChange(IntPtr hook)
+        {
+            return WinAPIDeclarations.UnhookWinEvent(hook);
+        }
+
+        #endregion
+
+        #region TrackingLeftClickEvent
+
+        public static IntPtr StartTrackingLeftClickEvent(Action onLeftClickAction, out GCHandle gcHandle)
+        {
+            HookProc action = (code, param, lParam) =>
+            {
+                if (param.ToInt32() == (int)WindowsMessageCode.WM_LBUTTONUP)
+                    onLeftClickAction.Invoke();
+                return IntPtr.Zero;
+            };
+            gcHandle = GCHandle.Alloc(action);
+            return WinAPIDeclarations.SetWindowsHookEx(HookType.WH_MOUSE_LL, action, IntPtr.Zero, 0);
+        }
+
+        public static bool StopTrackingLeftClickEvent(IntPtr hook)
+        {
+            return WinAPIDeclarations.UnhookWindowsHookEx(hook);
+        }
+
+        #endregion
+
+        // ---------------
+
         public static string GetTextOfForegroundWindow()
         {
             IntPtr hwnd = WinAPIDeclarations.GetForegroundWindow();
@@ -50,7 +128,7 @@ namespace WindowsMetrics
 
         public static string GetSystemUserName()
         {
-            int size = 1024;
+            int size = DefaultBufferSize;
             StringBuilder buffer = new StringBuilder(DefaultBufferSize);
             bool success = WinAPIDeclarations.GetUserName(buffer, ref size);
             return buffer.ToString();
@@ -70,30 +148,6 @@ namespace WindowsMetrics
             WinAPIDeclarations.GetLocalTime(out time);
             return new DateTime(time.Year, time.Month, time.Day,
                 time.Hour, time.Minute, time.Second, time.Milliseconds);
-        }
-
-        public static IntPtr StartTrackingForegroundWindowChange(Action onWindowChangeAction, out GCHandle gcHandle)
-        {
-            WinEventDelegate action = (hook, type, hwnd, idObject, child, thread, time) =>
-            {
-                onWindowChangeAction.Invoke();
-            };
-            gcHandle = GCHandle.Alloc(action);
-            return WinAPIDeclarations.SetWinEventHook((uint)Event.EVENT_SYSTEM_FOREGROUND, 
-                (uint)Event.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, action, 0, 0, (uint)Event.WINEVENT_OUTOFCONTEXT);
-        }
-
-        public static bool StopTrackingForegroundWindowChange(IntPtr hook)
-        {
-            return WinAPIDeclarations.UnhookWinEvent(hook);
-        }
-
-        public static uint GetForegroundWindowProcessID()
-        {
-            uint pid;
-            IntPtr fwin = WinAPIDeclarations.GetForegroundWindow();
-            uint idCreatorThread = WinAPIDeclarations.GetWindowThreadProcessId(fwin, out pid); // identifier of the thread that created the window
-            return pid;
         }
 
         /// <exception cref="">If the window process closing fails</exception>
@@ -116,37 +170,6 @@ namespace WindowsMetrics
                     throw new CloseProcessException();
             }
             return result;
-        }
-
-        public static IntPtr StartTrackingLeftClickEvent(Action onLeftClickAction, out GCHandle gcHandle)
-        {
-            HookProc action = (code, param, lParam) =>
-            {
-                if (param.ToInt32() == (int)WindowsMessageCode.WM_LBUTTONUP)
-                    onLeftClickAction.Invoke();
-                return IntPtr.Zero;
-            };
-            gcHandle = GCHandle.Alloc(action);
-            return WinAPIDeclarations.SetWindowsHookEx(HookType.WH_MOUSE_LL, action, IntPtr.Zero, 0);
-        }
-
-        public static bool StopTrackingLeftClickEvent(IntPtr hook)
-        {
-            return WinAPIDeclarations.UnhookWindowsHookEx(hook);
-        }
-
-        public static Point GetMousePosition()
-        {
-            Point point = new Point();
-            bool success = WinAPIDeclarations.GetCursorPos(ref point);
-            return point;
-        }
-
-        public static IntPtr GetWindowUnderCursor()
-        {
-            Point point = new Point();
-            bool success = WinAPIDeclarations.GetCursorPos(ref point);
-            return WinAPIDeclarations.WindowFromPoint(point);
         }
 
         public static string GetTextOfWindowUnderCursor()
@@ -188,8 +211,10 @@ namespace WindowsMetrics
             return vp;
         }
 
-        public static void GetAdapters()
+        public static string GetAdapters()
         {
+            StringBuilder s = new StringBuilder();
+
             long structSize = Marshal.SizeOf(typeof(IP_ADAPTER_INFO));
             IntPtr pArray = Marshal.AllocHGlobal(new IntPtr(structSize));
 
@@ -202,7 +227,7 @@ namespace WindowsMetrics
 
                 ret = WinAPIDeclarations.GetAdaptersInfo(pArray, ref structSize);
             }
-
+            
             if (ret == 0)
             {
                 // Call Succeeded
@@ -253,6 +278,18 @@ namespace WindowsMetrics
                     Console.WriteLine("Subnet Mask    : {0}", entry.IpAddressList.IpMask.Address);
                     Console.WriteLine("Default Gateway: {0}", entry.GatewayList.IpAddress.Address);
 
+                    string ip = entry.IpAddressList.IpAddress.Address;
+                    if (ip != "0.0.0.0")
+                    {
+                        s.Append(ip + " ");
+                        tmpString = string.Empty;
+                        for (int i = 0; i < entry.AddressLength - 1; i++)
+                        {
+                            tmpString += string.Format("{0:X2}-", entry.Address[i]);
+                        }
+                        s.Append(string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]));
+                    }
+
                     // MAC Address (data is in a byte[])
                     tmpString = string.Empty;
                     for (int i = 0; i < entry.AddressLength - 1; i++)
@@ -282,7 +319,7 @@ namespace WindowsMetrics
                 Marshal.FreeHGlobal(pArray);
                 throw new InvalidOperationException("GetAdaptersInfo failed: " + ret);
             }
-
+            return s.ToString();
         }
     }
 }

@@ -25,20 +25,27 @@ namespace WindowsMetrics
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
 
-        private const int StateScanIntervalSec = 1;
+        private const int StateScanIntervalSec = 5;
 
 
 
         #region Handlers for the events being tracked
 
-        private readonly Action<string> _onForegroundWindowChangeAddon = null;
-        private void OnForegroundWindowChange()
+        private static string MakeRegistry(string @event)
         {
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
             string user = WinAPI.GetSystemUserName();
+            string process = WinAPI.GetForegroundWindowProcessName();
             string currTime = DateTime.Now.ToString();
-            string registry = $"WIN CHANGE {foregroundWinTitle}\n{path}\n{user}\n{currTime}\n***\n";
+            string ipmac = WinAPI.GetAdapters();
+            return $"{@event}\n{foregroundWinTitle}\n{path}\n{process}\n{user}\n{currTime}\n{ipmac}\n***\n";
+        }
+
+        private readonly Action<string> _onForegroundWindowChangeAddon = null;
+        private void OnForegroundWindowChange()
+        {
+            string registry = MakeRegistry("WIN CHANGE");
             _writer.Append(registry);
             _onForegroundWindowChangeAddon?.Invoke(registry);
             _guardStateScanner.Reset();
@@ -47,12 +54,7 @@ namespace WindowsMetrics
         private readonly Action<string> _onLeftMouseClickAddon = null;
         private void OnLeftMouseClick()
         {
-            string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
-            string path = WinAPI.GetForegroundWindowExeModulePath();
-            string user = WinAPI.GetSystemUserName();
-            var x = WinAPI.GetForegroundWindowProcessName();
-            string currTime = DateTime.Now.ToString();
-            string registry = $"LEFT CLICK {foregroundWinTitle}\n{path}\n{user}\n{currTime}\n***\n";
+            string registry = MakeRegistry("LEFT CLICK");
             _writer.Append(registry);
             _onLeftMouseClickAddon?.Invoke(registry);
             _guardStateScanner.Reset();
@@ -62,11 +64,7 @@ namespace WindowsMetrics
         private readonly Action<string> _onGuardStateScanAddon = null;
         private void OnGuardStateScan()
         {
-            string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
-            string path = WinAPI.GetForegroundWindowExeModulePath();
-            string user = WinAPI.GetSystemUserName();
-            string currTime = DateTime.Now.ToString();
-            string registry = $"STATE SCAN {foregroundWinTitle}\n{path}\n{user}\n{currTime}\n***\n";
+            string registry = MakeRegistry("STATE SCAN");
             _writer.Append(registry);
             if (_onGuardStateScanAddon != null)
             {
@@ -79,7 +77,7 @@ namespace WindowsMetrics
 
 
 
-        private void CommonConstructorPart(Writer writer)
+        private void CommonConstructor(Writer writer)
         {
             _writer = writer;
             StateScan += OnGuardStateScan;
@@ -98,7 +96,7 @@ namespace WindowsMetrics
 
         public Collector(Writer writer)
         {
-            CommonConstructorPart(writer);
+            CommonConstructor(writer);
         }
         
         /// <param name="writer"></param>
@@ -113,7 +111,7 @@ namespace WindowsMetrics
             _onLeftMouseClickAddon = onLeftMouseClickAddon;
             _onGuardStateScanAddon = onGuardStateScanAddon;
             _sync = sync;
-            CommonConstructorPart(writer);
+            CommonConstructor(writer);
         }
 
         public void Start()
