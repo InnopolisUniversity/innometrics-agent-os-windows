@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.Net;
 using System.Threading;
-//using System.Threading;
 using System.Threading.Tasks;
-using WindowsMetrics;
-using WindowsMetrics.Helpers;
-using Timer = System.Timers.Timer;
+using Transmission;
+using Transmission.Models;
 
 namespace TestConsoleApplication
 {
@@ -17,8 +12,60 @@ namespace TestConsoleApplication
     {
         static void Main(string[] args)
         {
-            Do(); Thread.Sleep(30000);
+            Activity a = new Activity { Name = "Activity 1" };
+            a.Measurements.Add(new Measurement()
+            {
+                Name = "Time",
+                Type = typeof(DateTime),
+                Value = DateTime.Now
+            });
+            a.Measurements.Add(new Measurement()
+            {
+                Name = "Quality",
+                Type = typeof(string),
+                Value = "bad"
+            });
+
+            Activity b = new Activity { Name = "Activity 2" };
+            b.Measurements.Add(new Measurement()
+            {
+                Name = "Time",
+                Type = typeof(int),
+                Value = 147
+            });
+            b.Measurements.Add(new Measurement()
+            {
+                Name = "Quality",
+                Type = typeof(string),
+                Value = "good"
+            });
+            Report report = new Report() {Activities = new List<Activity>() {a, b}};
+
+
+
+
+
+            string json = JsonMaker.Serialize(report);
+            string statusCode;
+            var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
+
+
+
+
+
+
+            Console.WriteLine(s);
+            Console.WriteLine(statusCode);
+            Console.ReadKey();
         }
+
+
+
+
+
+
+
+
 
         private static async void Do()
         {

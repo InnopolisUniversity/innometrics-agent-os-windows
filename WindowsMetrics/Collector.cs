@@ -25,7 +25,7 @@ namespace WindowsMetrics
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
 
-        private const int StateScanIntervalSec = 5;
+        private const int StateScanIntervalSec = 5; // TODO to config
 
 
 
@@ -132,7 +132,7 @@ namespace WindowsMetrics
 
         public void Dispose()
         {
-            throw new NotImplementedException(); //TODO implement
+            throw new NotImplementedException();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
 
-        private const int DataSavingIntervalSec = 30;
+        private const int DataSavingIntervalSec = 30; // TODO to config
 
         public Writer(string toDirectory)
         {
@@ -94,7 +94,7 @@ namespace WindowsMetrics
 
         public void Dispose()
         {
-            throw new NotImplementedException(); //TODO implement
+            throw new NotImplementedException();
         }
     }
 }

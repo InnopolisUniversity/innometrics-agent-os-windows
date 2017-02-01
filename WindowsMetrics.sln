@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplication", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWindowsFormsApplication", "TestWindowsFormsApplication\TestWindowsFormsApplication.csproj", "{FD2F1D79-19AB-4035-B58C-A6F655A48220}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transmission", "Transmission\Transmission.csproj", "{7460EEAB-4961-4074-AC0B-4A68E40B5481}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FD2F1D79-19AB-4035-B58C-A6F655A48220}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD2F1D79-19AB-4035-B58C-A6F655A48220}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD2F1D79-19AB-4035-B58C-A6F655A48220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7460EEAB-4961-4074-AC0B-4A68E40B5481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7460EEAB-4961-4074-AC0B-4A68E40B5481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7460EEAB-4961-4074-AC0B-4A68E40B5481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7460EEAB-4961-4074-AC0B-4A68E40B5481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
