@@ -36,7 +36,7 @@ namespace Transmission
 
             // grab te response and print it out to the console along with the status code
             string responseString;
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = (HttpWebResponse) request.GetResponse();
             using (var streamReader = new StreamReader(response.GetResponseStream()))
             {
                 responseString = streamReader.ReadToEnd();

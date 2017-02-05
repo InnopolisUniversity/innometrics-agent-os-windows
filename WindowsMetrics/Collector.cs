@@ -39,6 +39,7 @@ namespace WindowsMetrics
             string process = WinAPI.GetForegroundWindowProcessName();
             string currTime = DateTime.Now.ToString();
             string ipmac = WinAPI.GetAdapters();
+            //string url = WinAPI.GetChormeURL("sdf");
             return $"{@event}\n{foregroundWinTitle}\n{path}\n{process}\n{user}\n{currTime}\n{ipmac}\n***\n";
         }
 

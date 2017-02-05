@@ -16,13 +16,13 @@ namespace TestConsoleApplication
             a.Measurements.Add(new Measurement()
             {
                 Name = "Time",
-                Type = typeof(DateTime),
+                Type = typeof(DateTime).Name,
                 Value = DateTime.Now
             });
             a.Measurements.Add(new Measurement()
             {
                 Name = "Quality",
-                Type = typeof(string),
+                Type = typeof(string).Name,
                 Value = "bad"
             });
 
@@ -30,13 +30,13 @@ namespace TestConsoleApplication
             b.Measurements.Add(new Measurement()
             {
                 Name = "Time",
-                Type = typeof(int),
+                Type = typeof(int).Name,
                 Value = 147
             });
             b.Measurements.Add(new Measurement()
             {
                 Name = "Quality",
-                Type = typeof(string),
+                Type = typeof(string).Name,
                 Value = "good"
             });
             Report report = new Report() {Activities = new List<Activity>() {a, b}};
@@ -47,14 +47,15 @@ namespace TestConsoleApplication
 
             string json = JsonMaker.Serialize(report);
             string statusCode;
-            var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
+            //var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
+            var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
 
-
-
+           
 
 
 
             Console.WriteLine(s);
+            Console.WriteLine();
             Console.WriteLine(statusCode);
             Console.ReadKey();
         }

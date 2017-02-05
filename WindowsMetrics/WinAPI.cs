@@ -321,5 +321,224 @@ namespace WindowsMetrics
             }
             return s.ToString();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static string Gett()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // there are always multiple chrome processes, so we have to loop through all of them to find the
+            // process with a Window Handle and an automation element of name "Address and search bar"
+            Process[] procsChrome = Process.GetProcessesByName("chrome");
+            foreach (Process chrome in procsChrome)
+            {
+                // the chrome process must have a window
+                if (chrome.MainWindowHandle == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                // find the automation element
+                AutomationElement elm = AutomationElement.FromHandle(chrome.MainWindowHandle);
+                AutomationElement elmUrlBar = elm.FindFirst(TreeScope.Descendants,
+                  new PropertyCondition(AutomationElement.NameProperty, "Address and search bar"));
+
+                // if it can be found, get the value from the URL bar
+                if (elmUrlBar != null)
+                {
+                    AutomationPattern[] patterns = elmUrlBar.GetSupportedPatterns();
+                    if (patterns.Length > 0)
+                    {
+                        ValuePattern val = (ValuePattern)elmUrlBar.GetCurrentPattern(patterns[0]);
+                        //Console.WriteLine("Chrome URL found: " + val.Current.Value);
+                        sb.Append(val.Current.Value).Append("\n");
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string Gettt()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // there are always multiple chrome processes, so we have to loop through all of them to find the
+            // process with a Window Handle and an automation element of name "Address and search bar"
+            Process[] procsChrome = Process.GetProcessesByName("chrome");
+            foreach (Process chrome in procsChrome)
+            {
+                // the chrome process must have a window
+                if (chrome.MainWindowHandle == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                // find the automation element
+                AutomationElement elm = AutomationElement.FromHandle(chrome.MainWindowHandle);
+
+                // manually walk through the tree, searching using TreeScope.Descendants is too slow (even if it's more reliable)
+                AutomationElement elmUrlBar = null;
+                try
+                {
+                    // walking path found using inspect.exe (Windows SDK) for Chrome 31.0.1650.63 m (currently the latest stable)
+                    var elm1 = elm.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
+                    if (elm1 == null) { continue; } // not the right chrome.exe
+                                                    // here, you can optionally check if Incognito is enabled:
+                                                    //bool bIncognito = TreeWalker.RawViewWalker.GetFirstChild(TreeWalker.RawViewWalker.GetFirstChild(elm1)) != null;
+                    var elm2 = TreeWalker.RawViewWalker.GetLastChild(elm1); // I don't know a Condition for this for finding :(
+                    var elm3 = elm2.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, ""));
+                    var elm4 = elm3.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolBar));
+                    elmUrlBar = elm4.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Custom));
+                }
+                catch
+                {
+                    // Chrome has probably changed something, and above walking needs to be modified. :(
+                    // put an assertion here or something to make sure you don't miss it
+                    continue;
+                }
+
+                // make sure it's valid
+                if (elmUrlBar == null)
+                {
+                    // it's not..
+                    continue;
+                }
+
+                // elmUrlBar is now the URL bar element. we have to make sure that it's out of keyboard focus if we want to get a valid URL
+                if ((bool)elmUrlBar.GetCurrentPropertyValue(AutomationElement.HasKeyboardFocusProperty))
+                {
+                    continue;
+                }
+
+                // there might not be a valid pattern to use, so we have to make sure we have one
+                AutomationPattern[] patterns = elmUrlBar.GetSupportedPatterns();
+                if (patterns.Length == 1)
+                {
+                    string ret = "";
+                    try
+                    {
+                        ret = ((ValuePattern)elmUrlBar.GetCurrentPattern(patterns[0])).Current.Value;
+                    }
+                    catch { }
+                    if (ret != "")
+                    {
+                        // must match a domain name (and possibly "https://" in front)
+                        if (Regex.IsMatch(ret, @"^(https:\/\/)?[a-zA-Z0-9\-\.]+(\.[a-zA-Z]{2,4}).*$"))
+                        {
+                            // prepend http:// to the url, because Chrome hides it if it's not SSL
+                            if (!ret.StartsWith("http"))
+                            {
+                                ret = "http://" + ret;
+                            }
+                            //Console.WriteLine("Open Chrome URL found: '" + ret + "'");
+                            sb.Append(ret).Append("\n");
+                        }
+                    }
+                    continue;
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string GetChormeURL(string ProcessName)
+        {
+            string ret = "";
+
+            //Process[] procs = Process.GetProcessesByName(ProcessName);
+            Process[] procs = { Process.GetProcessById(10912) };
+
+            foreach (Process proc in procs)
+            {
+                // the chrome process must have a window
+                if (proc.MainWindowHandle == IntPtr.Zero)
+                {
+                    continue;
+                }
+                //AutomationElement elm = AutomationElement.RootElement.FindFirst(TreeScope.Children,
+                //         new PropertyCondition(AutomationElement.ClassNameProperty, "Chrome_WidgetWin_1"));
+                // find the automation element
+                AutomationElement elm = AutomationElement.FromHandle(proc.MainWindowHandle);
+
+                // manually walk through the tree, searching using TreeScope.Descendants is too slow (even if it's more reliable)
+                AutomationElement elmUrlBar = null;
+                try
+                {
+                    // walking path found using inspect.exe (Windows SDK) for Chrome 43.0.2357.81 m (currently the latest stable)
+                    // Inspect.exe path - C://Program files (X86)/Windows Kits/10/bin/x64
+                    var elm1 = elm.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
+                    if (elm1 == null) { continue; } // not the right chrome.exe
+                    var elm2 = TreeWalker.RawViewWalker.GetLastChild(elm1); // I don't know a Condition for this for finding
+                    var elm3 = elm2.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, ""));
+                    var elm4 = TreeWalker.RawViewWalker.GetNextSibling(elm3); // I don't know a Condition for this for finding
+                    var elm5 = elm4.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolBar));
+                    var elm6 = elm5.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, ""));
+                    elmUrlBar = elm6.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
+                }
+                catch
+                {
+                    // Chrome has probably changed something, and above walking needs to be modified. :(
+                    // put an assertion here or something to make sure you don't miss it
+                    continue;
+                }
+
+                // make sure it's valid
+                if (elmUrlBar == null)
+                {
+                    // it's not..
+                    continue;
+                }
+
+                // elmUrlBar is now the URL bar element. we have to make sure that it's out of keyboard focus if we want to get a valid URL
+                if ((bool)elmUrlBar.GetCurrentPropertyValue(AutomationElement.HasKeyboardFocusProperty))
+                {
+                    continue;
+                }
+
+                // there might not be a valid pattern to use, so we have to make sure we have one
+                AutomationPattern[] patterns = elmUrlBar.GetSupportedPatterns();
+                if (patterns.Length == 1)
+                {
+                    try
+                    {
+                        ret = ((ValuePattern)elmUrlBar.GetCurrentPattern(patterns[0])).Current.Value;
+                        return ret;
+                    }
+                    catch { }
+                    if (ret != "")
+                    {
+                        // must match a domain name (and possibly "https://" in front)
+                        if (Regex.IsMatch(ret, @"^(https:\/\/)?[a-zA-Z0-9\-\.]+(\.[a-zA-Z]{2,4}).*$"))
+                        {
+                            // prepend http:// to the url, because Chrome hides it if it's not SSL
+                            if (!ret.StartsWith("http"))
+                            {
+                                ret = "http://" + ret;
+                            }
+                            return ret;
+                        }
+                    }
+                    continue;
+                }
+            }
+            return ret;
+        }
     }
 }
