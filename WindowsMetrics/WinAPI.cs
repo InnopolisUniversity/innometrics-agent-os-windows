@@ -211,7 +211,7 @@ namespace WindowsMetrics
             return vp;
         }
 
-        public static string GetAdapters()
+        public static void GetAdapters(out string IP, out string MAC)
         {
             StringBuilder s = new StringBuilder();
 
@@ -227,7 +227,8 @@ namespace WindowsMetrics
 
                 ret = WinAPIDeclarations.GetAdaptersInfo(pArray, ref structSize);
             }
-            
+
+            string ip = string.Empty, mac = string.Empty;
             if (ret == 0)
             {
                 // Call Succeeded
@@ -278,38 +279,40 @@ namespace WindowsMetrics
                     Console.WriteLine("Subnet Mask    : {0}", entry.IpAddressList.IpMask.Address);
                     Console.WriteLine("Default Gateway: {0}", entry.GatewayList.IpAddress.Address);
 
-                    string ip = entry.IpAddressList.IpAddress.Address;
+                    ip = entry.IpAddressList.IpAddress.Address;
                     if (ip != "0.0.0.0")
                     {
-                        s.Append(ip + " ");
+                        //s.Append(ip + " ");
                         tmpString = string.Empty;
                         for (int i = 0; i < entry.AddressLength - 1; i++)
                         {
                             tmpString += string.Format("{0:X2}-", entry.Address[i]);
                         }
-                        s.Append(string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]));
+                        //s.Append(string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]));
+                        mac = string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]);
+                        continue;
                     }
 
                     // MAC Address (data is in a byte[])
-                    tmpString = string.Empty;
-                    for (int i = 0; i < entry.AddressLength - 1; i++)
-                    {
-                        tmpString += string.Format("{0:X2}-", entry.Address[i]);
-                    }
-                    Console.WriteLine("MAC Address    : {0}{1:X2}\n", tmpString, entry.Address[entry.AddressLength - 1]);
+                    //tmpString = string.Empty;
+                    //for (int i = 0; i < entry.AddressLength - 1; i++)
+                    //{
+                    //    tmpString += string.Format("{0:X2}-", entry.Address[i]);
+                    //}
+                    //Console.WriteLine("MAC Address    : {0}{1:X2}\n", tmpString, entry.Address[entry.AddressLength - 1]);
 
-                    Console.WriteLine("Has WINS: {0}", entry.HaveWins ? "Yes" : "No");
-                    if (entry.HaveWins)
-                    {
-                        Console.WriteLine("Primary WINS Server  : {0}", entry.PrimaryWinsServer.IpAddress.Address);
-                        Console.WriteLine("Secondary WINS Server: {0}", entry.SecondaryWinsServer.IpAddress.Address);
-                    } // HaveWins
+                    //Console.WriteLine("Has WINS: {0}", entry.HaveWins ? "Yes" : "No");
+                    //if (entry.HaveWins)
+                    //{
+                    //    Console.WriteLine("Primary WINS Server  : {0}", entry.PrimaryWinsServer.IpAddress.Address);
+                    //    Console.WriteLine("Secondary WINS Server: {0}", entry.SecondaryWinsServer.IpAddress.Address);
+                    //} // HaveWins
 
                     // Get next adapter (if any)
                     pEntry = entry.Next;
 
                 }
-                while (pEntry != IntPtr.Zero);
+                while (pEntry != IntPtr.Zero || (ip == string.Empty && mac == string.Empty));
 
                 Marshal.FreeHGlobal(pArray);
 
@@ -319,7 +322,10 @@ namespace WindowsMetrics
                 Marshal.FreeHGlobal(pArray);
                 throw new InvalidOperationException("GetAdaptersInfo failed: " + ret);
             }
-            return s.ToString();
+            //return s.ToString();
+
+            IP = ip;
+            MAC = mac;
         }
 
 

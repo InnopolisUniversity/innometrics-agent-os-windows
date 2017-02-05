@@ -67,6 +67,12 @@
     <Compile Include="WinAPI.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonModels\CommonModels.csproj">
+      <Project>{2c91156d-5a75-475a-8bb6-744cb0780b82}</Project>
+      <Name>CommonModels</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

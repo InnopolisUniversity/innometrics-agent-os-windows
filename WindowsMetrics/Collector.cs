@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics.Helpers;
+using CommonModels;
 
 namespace WindowsMetrics
 {
@@ -31,22 +32,23 @@ namespace WindowsMetrics
 
         #region Handlers for the events being tracked
 
-        private static string MakeRegistry(string @event)
+        private static string MakeRegistry(CollectionEvent @event)
         {
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
             string user = WinAPI.GetSystemUserName();
             string process = WinAPI.GetForegroundWindowProcessName();
             string currTime = DateTime.Now.ToString();
-            string ipmac = WinAPI.GetAdapters();
-            //string url = WinAPI.GetChormeURL("sdf");
-            return $"{@event}\n{foregroundWinTitle}\n{path}\n{process}\n{user}\n{currTime}\n{ipmac}\n***\n";
+            string ip, mac;
+            WinAPI.GetAdapters(out ip, out mac);
+            //string url = WinAPI.GetChormeURL("sdf"); // TODO url
+            return $"{@event}\n{foregroundWinTitle}\n{path}\n{process}\n{user}\n{currTime}\n{ip}\n{mac}\n***\n";
         }
 
         private readonly Action<string> _onForegroundWindowChangeAddon = null;
         private void OnForegroundWindowChange()
         {
-            string registry = MakeRegistry("WIN CHANGE");
+            string registry = MakeRegistry(CollectionEvent.WIN_CHANGE);
             _writer.Append(registry);
             _onForegroundWindowChangeAddon?.Invoke(registry);
             _guardStateScanner.Reset();
@@ -55,7 +57,7 @@ namespace WindowsMetrics
         private readonly Action<string> _onLeftMouseClickAddon = null;
         private void OnLeftMouseClick()
         {
-            string registry = MakeRegistry("LEFT CLICK");
+            string registry = MakeRegistry(CollectionEvent.LEFT_CLICK);
             _writer.Append(registry);
             _onLeftMouseClickAddon?.Invoke(registry);
             _guardStateScanner.Reset();
@@ -65,7 +67,7 @@ namespace WindowsMetrics
         private readonly Action<string> _onGuardStateScanAddon = null;
         private void OnGuardStateScan()
         {
-            string registry = MakeRegistry("STATE SCAN");
+            string registry = MakeRegistry(CollectionEvent.STATE_SCAN);
             _writer.Append(registry);
             if (_onGuardStateScanAddon != null)
             {

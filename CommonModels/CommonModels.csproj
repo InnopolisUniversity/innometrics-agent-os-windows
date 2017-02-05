@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2D4FF802-0000-493D-8183-A753AC0FC180}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{2C91156D-5A75-475A-8BB6-744CB0780B82}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestConsoleApplication</RootNamespace>
-    <AssemblyName>TestConsoleApplication</AssemblyName>
+    <RootNamespace>CommonModels</RootNamespace>
+    <AssemblyName>CommonModels</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,25 +41,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="CollectionEvent.cs" />
+    <Compile Include="Metrics.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Metrics.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportModels.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonModels\CommonModels.csproj">
-      <Project>{2c91156d-5a75-475a-8bb6-744cb0780b82}</Project>
-      <Name>CommonModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Transmission\Transmission.csproj">
-      <Project>{7460eeab-4961-4074-ac0b-4a68e40b5481}</Project>
-      <Name>Transmission</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WindowsMetrics\WindowsMetrics.csproj">
-      <Project>{385a023a-208d-4835-9f11-d999dd446bcc}</Project>
-      <Name>WindowsMetrics</Name>
-    </ProjectReference>
+    <None Include="Metrics.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>Metrics.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Metrics.dbml.layout">
+      <DependentUpon>Metrics.dbml</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

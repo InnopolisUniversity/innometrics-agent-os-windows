@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,16 +15,24 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics;
 using WindowsMetrics.Helpers;
+using CommonModels;
 
 namespace TestWindowsFormsApplication
 {
     public partial class Form1 : Form
     {
+        private MetricsDataContext context;
         private Collector collector;
         private Writer writer;
 
         public Form1()
         {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
+            context = new MetricsDataContext(connectionString);
+            if(!context.DatabaseExists())
+                context.CreateDatabase();
+
             InitializeComponent();
             writer = new Writer(Directory.GetCurrentDirectory());
             collector = new Collector(

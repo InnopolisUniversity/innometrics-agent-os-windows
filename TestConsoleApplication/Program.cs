@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonModels;
 using Transmission;
-using Transmission.Models;
 
 namespace TestConsoleApplication
 {

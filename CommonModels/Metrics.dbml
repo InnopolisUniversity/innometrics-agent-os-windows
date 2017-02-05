@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Class="MetricsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="" Member="Registries">
+    <Type Name="Registry">
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Event" Type="System.UInt16" CanBeNull="false" />
+      <Column Name="WindowTitle" Type="System.String" CanBeNull="false" />
+      <Column Name="ExeModulePath" Type="System.String" CanBeNull="false" />
+      <Column Name="ProcessName" Type="System.String" CanBeNull="false" />
+      <Column Name="Time" Type="System.DateTime" CanBeNull="false" />
+      <Column Name="Ip" Type="System.Int64" CanBeNull="false" />
+      <Column Name="Mac" Type="System.Int64" CanBeNull="false" />
+      <Association Name="IpAddress_Registry" Member="IpAddress" ThisKey="Ip" OtherKey="Id" Type="IpAddress" IsForeignKey="true" />
+      <Association Name="MacAddress_Registry" Member="MacAddress" ThisKey="Mac" OtherKey="Id" Type="MacAddress" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="IpAddresses">
+    <Type Name="IpAddress">
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Ip" Type="System.String" CanBeNull="false" />
+      <Association Name="IpAddress_Registry" Member="Registries" ThisKey="Id" OtherKey="Ip" Type="Registry" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MacAddresses">
+    <Type Name="MacAddress">
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Mac" Type="System.String" CanBeNull="false" />
+      <Association Name="MacAddress_Registry" Member="Registries" ThisKey="Id" OtherKey="Mac" Type="Registry" />
+    </Type>
+  </Table>
+</Database>

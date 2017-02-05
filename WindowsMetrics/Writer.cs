@@ -23,6 +23,7 @@ namespace WindowsMetrics
 
         public Writer(string toDirectory)
         {
+            _reportFilePath = toDirectory + @"\Report.txt"; // TODO to config
             CreateReportFile(toDirectory);
             DataSaving += OnDataSaving;
 
@@ -66,30 +67,28 @@ namespace WindowsMetrics
 
         private void CreateReportFile(string directory)
         {
-            string reportDir = directory + @"\Reports";
-            if (!Directory.Exists(reportDir))
-                Directory.CreateDirectory(reportDir);
+            //string reportDir = directory + @"\Reports";
+            //if (!Directory.Exists(reportDir))
+            //    Directory.CreateDirectory(reportDir);
 
-            StringBuilder dateId = new StringBuilder();
-            dateId.Append(DateTime.Now.Year)
-                .Append(".")
-                .Append(DateTime.Now.Month)
-                .Append(".")
-                .Append(DateTime.Now.Day)
-                .Append("-")
-                .Append(DateTime.Now.Hour)
-                .Append(".")
-                .Append(DateTime.Now.Minute)
-                .Append(".")
-                .Append(DateTime.Now.Second);
+            //StringBuilder dateId = new StringBuilder();
+            //dateId.Append(DateTime.Now.Year)
+            //    .Append(".")
+            //    .Append(DateTime.Now.Month)
+            //    .Append(".")
+            //    .Append(DateTime.Now.Day)
+            //    .Append("-")
+            //    .Append(DateTime.Now.Hour)
+            //    .Append(".")
+            //    .Append(DateTime.Now.Minute)
+            //    .Append(".")
+            //    .Append(DateTime.Now.Second);
 
-            string file = reportDir + $@"\Rep-{dateId}.txt";
-            if (!File.Exists(file))
+            if (!File.Exists(_reportFilePath))
             {
-                FileStream fs = File.Create(file);
+                FileStream fs = File.Create(_reportFilePath);
                 fs.Close();
             }
-            _reportFilePath = file;
         }
 
         public void Dispose()

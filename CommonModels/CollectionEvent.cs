@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Transmission
+namespace CommonModels
 {
-    public class ReportMaker
+    public enum CollectionEvent : ushort
     {
+        WIN_CHANGE = 1,
+        LEFT_CLICK = 2,
+        STATE_SCAN = 3
     }
 }
