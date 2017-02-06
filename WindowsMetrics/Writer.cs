@@ -21,9 +21,7 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
 
-        private const int DataSavingIntervalSec = 30; // TODO to config
-
-        public Writer(string connectionString)
+        public Writer(string connectionString, int dataSavingIntervalSec)
         {
             context = new MetricsDataContext(connectionString);
             if (!context.DatabaseExists())
@@ -36,7 +34,7 @@ namespace WindowsMetrics
                 {
                     _guardDataSaver = new Guard(
                         actionToDoEveryTick: () => DataSaving?.Invoke(),
-                        secondsToCountdown: DataSavingIntervalSec
+                        secondsToCountdown: dataSavingIntervalSec
                     );
                 }
             );
@@ -83,11 +81,6 @@ namespace WindowsMetrics
         public void Add(Registry registry)
         {
             report.Add(registry);
-        }
-
-        public MetricsDataContext GetContext()
-        {
-            return context;
         }
 
         public void Dispose()

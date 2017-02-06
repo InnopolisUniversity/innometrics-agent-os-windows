@@ -26,8 +26,6 @@ namespace WindowsMetrics
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
 
-        private const int StateScanIntervalSec = 5; // TODO to config
-
 
 
         #region Handlers for the events being tracked
@@ -99,7 +97,7 @@ namespace WindowsMetrics
 
 
 
-        private void CommonConstructor(Writer writer)
+        private void CommonConstructor(Writer writer, int stateScanIntervalSec)
         {
             _writer = writer;
             StateScan += OnGuardStateScan;
@@ -108,7 +106,7 @@ namespace WindowsMetrics
                 {
                     _guardStateScanner = new Guard(
                         actionToDoEveryTick: () => StateScan?.Invoke(),
-                        secondsToCountdown: StateScanIntervalSec
+                        secondsToCountdown: stateScanIntervalSec
                     );
                 }
             );
@@ -116,24 +114,25 @@ namespace WindowsMetrics
             _taskForGuardStateScanner.Start();
         }
 
-        public Collector(Writer writer)
+        public Collector(Writer writer, int stateScanIntervalSec)
         {
-            CommonConstructor(writer);
+            CommonConstructor(writer, stateScanIntervalSec);
         }
-        
+
         /// <param name="writer"></param>
+        /// /// <param name="stateScanIntervalSec"></param>
         /// <param name="sync"></param>
         /// <param name="onForegroundWindowChangeAddon">Action with the string that is created when onForegroundWindowChange occurs</param>
         /// <param name="onLeftMouseClickAddon">Action with the string that is created when onLeftMouseClick occurs</param>
         /// <param name="onGuardStateScanAddon">Action with the string that is created when onGuardStateScan occurs</param>
-        public Collector(Writer writer, SynchronizationContext sync,
+        public Collector(Writer writer, int stateScanIntervalSec, SynchronizationContext sync,
             Action<object> onForegroundWindowChangeAddon, Action<object> onLeftMouseClickAddon, Action<object> onGuardStateScanAddon)
         {
             _onForegroundWindowChangeAddon = onForegroundWindowChangeAddon;
             _onLeftMouseClickAddon = onLeftMouseClickAddon;
             _onGuardStateScanAddon = onGuardStateScanAddon;
             _sync = sync;
-            CommonConstructor(writer);
+            CommonConstructor(writer, stateScanIntervalSec);
         }
 
         public void Start()

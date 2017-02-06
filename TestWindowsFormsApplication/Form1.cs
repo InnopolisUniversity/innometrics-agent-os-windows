@@ -27,11 +27,14 @@ namespace TestWindowsFormsApplication
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
+            int dataSavingIntervalSec = Convert.ToInt32(config.AppSettings.Settings["DataSavingIntervalSec"].Value);
+            int stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
 
             InitializeComponent();
-            writer = new Writer(connectionString);
+            writer = new Writer(connectionString, dataSavingIntervalSec);
             collector = new Collector(
                 writer,
+                stateScanIntervalSec,
                 SynchronizationContext.Current,
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
