@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsMetrics.Helpers;
+using CommonModels;
 
 namespace WindowsMetrics
 {
     public class Writer : IDisposable
     {
-        private string _reportFilePath;
-        private readonly StringBuilder _report = new StringBuilder();
+        private MetricsDataContext context;
+        private IList<Registry> report;
 
         private event Action DataSaving;
 
@@ -21,10 +23,13 @@ namespace WindowsMetrics
 
         private const int DataSavingIntervalSec = 30; // TODO to config
 
-        public Writer(string toDirectory)
+        public Writer(string connectionString)
         {
-            _reportFilePath = toDirectory + @"\Report.txt"; // TODO to config
-            CreateReportFile(toDirectory);
+            context = new MetricsDataContext(connectionString);
+            if (!context.DatabaseExists())
+                context.CreateDatabase();
+
+            report = new List<Registry>();
             DataSaving += OnDataSaving;
 
             _taskForGuardDataSaver = new Task(() =>
@@ -41,9 +46,24 @@ namespace WindowsMetrics
 
         private void OnDataSaving()
         {
-            string rep = _report.ToString();
-            _report.Clear();
-            FileWriteHelper.Write(rep, _reportFilePath);
+            for (int i = 0; i < report.Count; i++)
+            {
+                var existingUser = context.Usernames.FirstOrDefault(u => u.Value == report[i].Username1.Value); // TODO too complicated
+                if (existingUser != null)
+                    report[i].Username1 = existingUser;
+
+                var existingIp = context.IpAddresses.FirstOrDefault(ip => ip.Value == report[i].IpAddress.Value);
+                if (existingIp != null)
+                    report[i].IpAddress = existingIp;
+
+                var existingMac = context.MacAddresses.FirstOrDefault(m => m.Value == report[i].MacAddress.Value);
+                if (existingMac != null)
+                    report[i].MacAddress = existingMac;
+                
+                context.Registries.InsertOnSubmit(report[i]);
+            }
+            context.SubmitChanges(); // TODO transaction
+            report.Clear();
         }
 
         public void Start()
@@ -54,41 +74,20 @@ namespace WindowsMetrics
         public void Stop()
         {
             _guardDataSaver.Stop();
-            if (_report.Length != 0)
+            if (report.Count != 0)
             {
                 DataSaving?.Invoke();
             }
         }
         
-        public void Append(string s)
+        public void Add(Registry registry)
         {
-            _report.Append(s);
+            report.Add(registry);
         }
 
-        private void CreateReportFile(string directory)
+        public MetricsDataContext GetContext()
         {
-            //string reportDir = directory + @"\Reports";
-            //if (!Directory.Exists(reportDir))
-            //    Directory.CreateDirectory(reportDir);
-
-            //StringBuilder dateId = new StringBuilder();
-            //dateId.Append(DateTime.Now.Year)
-            //    .Append(".")
-            //    .Append(DateTime.Now.Month)
-            //    .Append(".")
-            //    .Append(DateTime.Now.Day)
-            //    .Append("-")
-            //    .Append(DateTime.Now.Hour)
-            //    .Append(".")
-            //    .Append(DateTime.Now.Minute)
-            //    .Append(".")
-            //    .Append(DateTime.Now.Second);
-
-            if (!File.Exists(_reportFilePath))
-            {
-                FileStream fs = File.Create(_reportFilePath);
-                fs.Close();
-            }
+            return context;
         }
 
         public void Dispose()

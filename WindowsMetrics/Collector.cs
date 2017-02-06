@@ -32,47 +32,66 @@ namespace WindowsMetrics
 
         #region Handlers for the events being tracked
 
-        private static string MakeRegistry(CollectionEvent @event)
+        private Registry MakeRegistry(CollectionEvent @event)
         {
+            //string url = WinAPI.GetChormeURL("sdf"); // TODO url
+
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
-            string user = WinAPI.GetSystemUserName();
             string process = WinAPI.GetForegroundWindowProcessName();
-            string currTime = DateTime.Now.ToString();
             string ip, mac;
             WinAPI.GetAdapters(out ip, out mac);
-            //string url = WinAPI.GetChormeURL("sdf"); // TODO url
-            return $"{@event}\n{foregroundWinTitle}\n{path}\n{process}\n{user}\n{currTime}\n{ip}\n{mac}\n***\n";
+            string username = WinAPI.GetSystemUserName();
+            return new Registry()
+            {
+                Event = (ushort) @event,
+                WindowTitle = foregroundWinTitle,
+                ExeModulePath = path,
+                ProcessName = process,
+                Time = DateTime.Now,
+                Username1 = new Username() { Value = username },
+                IpAddress = new IpAddress() { Value = ip },
+                MacAddress = new MacAddress() { Value = mac }
+            };
         }
 
-        private readonly Action<string> _onForegroundWindowChangeAddon = null;
+        private readonly Action<object> _onForegroundWindowChangeAddon = null;
         private void OnForegroundWindowChange()
         {
-            string registry = MakeRegistry(CollectionEvent.WIN_CHANGE);
-            _writer.Append(registry);
-            _onForegroundWindowChangeAddon?.Invoke(registry);
-            _guardStateScanner.Reset();
+            Registry registry = MakeRegistry(CollectionEvent.WIN_CHANGE);
+            if (registry != null)
+            {
+                _writer.Add(registry);
+                _onForegroundWindowChangeAddon?.Invoke(registry);
+                _guardStateScanner.Reset();
+            }
         }
 
-        private readonly Action<string> _onLeftMouseClickAddon = null;
+        private readonly Action<object> _onLeftMouseClickAddon = null;
         private void OnLeftMouseClick()
         {
-            string registry = MakeRegistry(CollectionEvent.LEFT_CLICK);
-            _writer.Append(registry);
-            _onLeftMouseClickAddon?.Invoke(registry);
-            _guardStateScanner.Reset();
+            Registry registry = MakeRegistry(CollectionEvent.LEFT_CLICK);
+            if (registry != null)
+            {
+                _writer.Add(registry);
+                _onLeftMouseClickAddon?.Invoke(registry);
+                _guardStateScanner.Reset();
+            }
         }
 
         private readonly SynchronizationContext _sync;
-        private readonly Action<string> _onGuardStateScanAddon = null;
+        private readonly Action<object> _onGuardStateScanAddon = null;
         private void OnGuardStateScan()
         {
-            string registry = MakeRegistry(CollectionEvent.STATE_SCAN);
-            _writer.Append(registry);
-            if (_onGuardStateScanAddon != null)
+            Registry registry = MakeRegistry(CollectionEvent.STATE_SCAN);
+            if (registry != null)
             {
-                SendOrPostCallback c = (state) => { _onGuardStateScanAddon.Invoke((string) state); };
-                _sync.Post(c, registry);
+                _writer.Add(registry);
+                if (_onGuardStateScanAddon != null)
+                {
+                    SendOrPostCallback c = (state) => { _onGuardStateScanAddon.Invoke(state); };
+                    _sync.Post(c, registry);
+                }
             }
         }
 
@@ -108,7 +127,7 @@ namespace WindowsMetrics
         /// <param name="onLeftMouseClickAddon">Action with the string that is created when onLeftMouseClick occurs</param>
         /// <param name="onGuardStateScanAddon">Action with the string that is created when onGuardStateScan occurs</param>
         public Collector(Writer writer, SynchronizationContext sync,
-            Action<string> onForegroundWindowChangeAddon, Action<string> onLeftMouseClickAddon, Action<string> onGuardStateScanAddon)
+            Action<object> onForegroundWindowChangeAddon, Action<object> onLeftMouseClickAddon, Action<object> onGuardStateScanAddon)
         {
             _onForegroundWindowChangeAddon = onForegroundWindowChangeAddon;
             _onLeftMouseClickAddon = onLeftMouseClickAddon;

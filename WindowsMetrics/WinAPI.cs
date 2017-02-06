@@ -290,7 +290,7 @@ namespace WindowsMetrics
                         }
                         //s.Append(string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]));
                         mac = string.Format("{0}{1:X2}", tmpString, entry.Address[entry.AddressLength - 1]);
-                        continue;
+                        break;
                     }
 
                     // MAC Address (data is in a byte[])

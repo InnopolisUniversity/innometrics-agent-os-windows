@@ -15,13 +15,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics;
 using WindowsMetrics.Helpers;
-using CommonModels;
 
 namespace TestWindowsFormsApplication
 {
     public partial class Form1 : Form
     {
-        private MetricsDataContext context;
         private Collector collector;
         private Writer writer;
 
@@ -29,18 +27,15 @@ namespace TestWindowsFormsApplication
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
-            context = new MetricsDataContext(connectionString);
-            if(!context.DatabaseExists())
-                context.CreateDatabase();
 
             InitializeComponent();
-            writer = new Writer(Directory.GetCurrentDirectory());
+            writer = new Writer(connectionString);
             collector = new Collector(
                 writer,
                 SynchronizationContext.Current,
-                s => richTextBox1.AppendText(s),
-                s => richTextBox1.AppendText(s),
-                s => richTextBox1.AppendText(s)
+                s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
+                s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
+                s => richTextBox1.AppendText(s.ToString() + "\n***\n")
                 );
         }
 

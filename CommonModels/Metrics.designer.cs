@@ -29,15 +29,18 @@ namespace CommonModels
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertRegistry(Registry instance);
-    partial void UpdateRegistry(Registry instance);
-    partial void DeleteRegistry(Registry instance);
     partial void InsertIpAddress(IpAddress instance);
     partial void UpdateIpAddress(IpAddress instance);
     partial void DeleteIpAddress(IpAddress instance);
     partial void InsertMacAddress(MacAddress instance);
     partial void UpdateMacAddress(MacAddress instance);
     partial void DeleteMacAddress(MacAddress instance);
+    partial void InsertUsername(Username instance);
+    partial void UpdateUsername(Username instance);
+    partial void DeleteUsername(Username instance);
+    partial void InsertRegistry(Registry instance);
+    partial void UpdateRegistry(Registry instance);
+    partial void DeleteRegistry(Registry instance);
     #endregion
 		
 		public MetricsDataContext(string connection) : 
@@ -64,14 +67,6 @@ namespace CommonModels
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Registry> Registries
-		{
-			get
-			{
-				return this.GetTable<Registry>();
-			}
-		}
-		
 		public System.Data.Linq.Table<IpAddress> IpAddresses
 		{
 			get
@@ -87,316 +82,20 @@ namespace CommonModels
 				return this.GetTable<MacAddress>();
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
-	public partial class Registry : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private long _Id;
-		
-		private ushort _Event;
-		
-		private string _WindowTitle;
-		
-		private string _ExeModulePath;
-		
-		private string _ProcessName;
-		
-		private System.DateTime _Time;
-		
-		private long _Ip;
-		
-		private long _Mac;
-		
-		private EntityRef<IpAddress> _IpAddress;
-		
-		private EntityRef<MacAddress> _MacAddress;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(long value);
-    partial void OnIdChanged();
-    partial void OnEventChanging(ushort value);
-    partial void OnEventChanged();
-    partial void OnWindowTitleChanging(string value);
-    partial void OnWindowTitleChanged();
-    partial void OnExeModulePathChanging(string value);
-    partial void OnExeModulePathChanged();
-    partial void OnProcessNameChanging(string value);
-    partial void OnProcessNameChanged();
-    partial void OnTimeChanging(System.DateTime value);
-    partial void OnTimeChanged();
-    partial void OnIpChanging(long value);
-    partial void OnIpChanged();
-    partial void OnMacChanging(long value);
-    partial void OnMacChanged();
-    #endregion
-		
-		public Registry()
-		{
-			this._IpAddress = default(EntityRef<IpAddress>);
-			this._MacAddress = default(EntityRef<MacAddress>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", IsPrimaryKey=true, IsDbGenerated=true)]
-		public long Id
+		public System.Data.Linq.Table<Username> Usernames
 		{
 			get
 			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
+				return this.GetTable<Username>();
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Event")]
-		public ushort Event
+		public System.Data.Linq.Table<Registry> Registries
 		{
 			get
 			{
-				return this._Event;
-			}
-			set
-			{
-				if ((this._Event != value))
-				{
-					this.OnEventChanging(value);
-					this.SendPropertyChanging();
-					this._Event = value;
-					this.SendPropertyChanged("Event");
-					this.OnEventChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindowTitle", CanBeNull=false)]
-		public string WindowTitle
-		{
-			get
-			{
-				return this._WindowTitle;
-			}
-			set
-			{
-				if ((this._WindowTitle != value))
-				{
-					this.OnWindowTitleChanging(value);
-					this.SendPropertyChanging();
-					this._WindowTitle = value;
-					this.SendPropertyChanged("WindowTitle");
-					this.OnWindowTitleChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExeModulePath", CanBeNull=false)]
-		public string ExeModulePath
-		{
-			get
-			{
-				return this._ExeModulePath;
-			}
-			set
-			{
-				if ((this._ExeModulePath != value))
-				{
-					this.OnExeModulePathChanging(value);
-					this.SendPropertyChanging();
-					this._ExeModulePath = value;
-					this.SendPropertyChanged("ExeModulePath");
-					this.OnExeModulePathChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProcessName", CanBeNull=false)]
-		public string ProcessName
-		{
-			get
-			{
-				return this._ProcessName;
-			}
-			set
-			{
-				if ((this._ProcessName != value))
-				{
-					this.OnProcessNameChanging(value);
-					this.SendPropertyChanging();
-					this._ProcessName = value;
-					this.SendPropertyChanged("ProcessName");
-					this.OnProcessNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Time")]
-		public System.DateTime Time
-		{
-			get
-			{
-				return this._Time;
-			}
-			set
-			{
-				if ((this._Time != value))
-				{
-					this.OnTimeChanging(value);
-					this.SendPropertyChanging();
-					this._Time = value;
-					this.SendPropertyChanged("Time");
-					this.OnTimeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ip")]
-		public long Ip
-		{
-			get
-			{
-				return this._Ip;
-			}
-			set
-			{
-				if ((this._Ip != value))
-				{
-					if (this._IpAddress.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnIpChanging(value);
-					this.SendPropertyChanging();
-					this._Ip = value;
-					this.SendPropertyChanged("Ip");
-					this.OnIpChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mac")]
-		public long Mac
-		{
-			get
-			{
-				return this._Mac;
-			}
-			set
-			{
-				if ((this._Mac != value))
-				{
-					if (this._MacAddress.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnMacChanging(value);
-					this.SendPropertyChanging();
-					this._Mac = value;
-					this.SendPropertyChanged("Mac");
-					this.OnMacChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IpAddress_Registry", Storage="_IpAddress", ThisKey="Ip", OtherKey="Id", IsForeignKey=true)]
-		public IpAddress IpAddress
-		{
-			get
-			{
-				return this._IpAddress.Entity;
-			}
-			set
-			{
-				IpAddress previousValue = this._IpAddress.Entity;
-				if (((previousValue != value) 
-							|| (this._IpAddress.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._IpAddress.Entity = null;
-						previousValue.Registries.Remove(this);
-					}
-					this._IpAddress.Entity = value;
-					if ((value != null))
-					{
-						value.Registries.Add(this);
-						this._Ip = value.Id;
-					}
-					else
-					{
-						this._Ip = default(long);
-					}
-					this.SendPropertyChanged("IpAddress");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MacAddress_Registry", Storage="_MacAddress", ThisKey="Mac", OtherKey="Id", IsForeignKey=true)]
-		public MacAddress MacAddress
-		{
-			get
-			{
-				return this._MacAddress.Entity;
-			}
-			set
-			{
-				MacAddress previousValue = this._MacAddress.Entity;
-				if (((previousValue != value) 
-							|| (this._MacAddress.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MacAddress.Entity = null;
-						previousValue.Registries.Remove(this);
-					}
-					this._MacAddress.Entity = value;
-					if ((value != null))
-					{
-						value.Registries.Add(this);
-						this._Mac = value.Id;
-					}
-					else
-					{
-						this._Mac = default(long);
-					}
-					this.SendPropertyChanged("MacAddress");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				return this.GetTable<Registry>();
 			}
 		}
 	}
@@ -409,7 +108,7 @@ namespace CommonModels
 		
 		private long _Id;
 		
-		private string _Ip;
+		private string _Value;
 		
 		private EntitySet<Registry> _Registries;
 		
@@ -419,8 +118,8 @@ namespace CommonModels
     partial void OnCreated();
     partial void OnIdChanging(long value);
     partial void OnIdChanged();
-    partial void OnIpChanging(string value);
-    partial void OnIpChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
     #endregion
 		
 		public IpAddress()
@@ -449,22 +148,22 @@ namespace CommonModels
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ip", CanBeNull=false)]
-		public string Ip
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", CanBeNull=false)]
+		public string Value
 		{
 			get
 			{
-				return this._Ip;
+				return this._Value;
 			}
 			set
 			{
-				if ((this._Ip != value))
+				if ((this._Value != value))
 				{
-					this.OnIpChanging(value);
+					this.OnValueChanging(value);
 					this.SendPropertyChanging();
-					this._Ip = value;
-					this.SendPropertyChanged("Ip");
-					this.OnIpChanged();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
 				}
 			}
 		}
@@ -523,7 +222,7 @@ namespace CommonModels
 		
 		private long _Id;
 		
-		private string _Mac;
+		private string _Value;
 		
 		private EntitySet<Registry> _Registries;
 		
@@ -533,8 +232,8 @@ namespace CommonModels
     partial void OnCreated();
     partial void OnIdChanging(long value);
     partial void OnIdChanged();
-    partial void OnMacChanging(string value);
-    partial void OnMacChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
     #endregion
 		
 		public MacAddress()
@@ -563,22 +262,22 @@ namespace CommonModels
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mac", CanBeNull=false)]
-		public string Mac
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", CanBeNull=false)]
+		public string Value
 		{
 			get
 			{
-				return this._Mac;
+				return this._Value;
 			}
 			set
 			{
-				if ((this._Mac != value))
+				if ((this._Value != value))
 				{
-					this.OnMacChanging(value);
+					this.OnValueChanging(value);
 					this.SendPropertyChanging();
-					this._Mac = value;
-					this.SendPropertyChanged("Mac");
-					this.OnMacChanged();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
 				}
 			}
 		}
@@ -627,6 +326,502 @@ namespace CommonModels
 			this.SendPropertyChanging();
 			entity.MacAddress = null;
 		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class Username : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private long _Id;
+		
+		private string _Value;
+		
+		private EntitySet<Registry> _Registries;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(long value);
+    partial void OnIdChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
+    #endregion
+		
+		public Username()
+		{
+			this._Registries = new EntitySet<Registry>(new Action<Registry>(this.attach_Registries), new Action<Registry>(this.detach_Registries));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", IsPrimaryKey=true, IsDbGenerated=true)]
+		public long Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", CanBeNull=false)]
+		public string Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this.OnValueChanging(value);
+					this.SendPropertyChanging();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Username_Registry", Storage="_Registries", ThisKey="Id", OtherKey="Username")]
+		public EntitySet<Registry> Registries
+		{
+			get
+			{
+				return this._Registries;
+			}
+			set
+			{
+				this._Registries.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Registries(Registry entity)
+		{
+			this.SendPropertyChanging();
+			entity.Username1 = this;
+		}
+		
+		private void detach_Registries(Registry entity)
+		{
+			this.SendPropertyChanging();
+			entity.Username1 = null;
+		}
+    }
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class Registry : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private long _Id;
+		
+		private ushort _Event;
+		
+		private string _WindowTitle;
+		
+		private string _ExeModulePath;
+		
+		private string _ProcessName;
+		
+		private System.DateTime _Time;
+		
+		private System.Nullable<long> _Ip;
+		
+		private System.Nullable<long> _Mac;
+		
+		private System.Nullable<long> _Username;
+		
+		private EntityRef<IpAddress> _IpAddress;
+		
+		private EntityRef<MacAddress> _MacAddress;
+		
+		private EntityRef<Username> _Username1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(long value);
+    partial void OnIdChanged();
+    partial void OnEventChanging(ushort value);
+    partial void OnEventChanged();
+    partial void OnWindowTitleChanging(string value);
+    partial void OnWindowTitleChanged();
+    partial void OnExeModulePathChanging(string value);
+    partial void OnExeModulePathChanged();
+    partial void OnProcessNameChanging(string value);
+    partial void OnProcessNameChanged();
+    partial void OnTimeChanging(System.DateTime value);
+    partial void OnTimeChanged();
+    partial void OnIpChanging(System.Nullable<long> value);
+    partial void OnIpChanged();
+    partial void OnMacChanging(System.Nullable<long> value);
+    partial void OnMacChanged();
+    partial void OnUsernameChanging(System.Nullable<long> value);
+    partial void OnUsernameChanged();
+    #endregion
+		
+		public Registry()
+		{
+			this._IpAddress = default(EntityRef<IpAddress>);
+			this._MacAddress = default(EntityRef<MacAddress>);
+			this._Username1 = default(EntityRef<Username>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", IsPrimaryKey=true, IsDbGenerated=true)]
+		public long Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Event")]
+		public ushort Event
+		{
+			get
+			{
+				return this._Event;
+			}
+			set
+			{
+				if ((this._Event != value))
+				{
+					this.OnEventChanging(value);
+					this.SendPropertyChanging();
+					this._Event = value;
+					this.SendPropertyChanged("Event");
+					this.OnEventChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindowTitle")]
+		public string WindowTitle
+		{
+			get
+			{
+				return this._WindowTitle;
+			}
+			set
+			{
+				if ((this._WindowTitle != value))
+				{
+					this.OnWindowTitleChanging(value);
+					this.SendPropertyChanging();
+					this._WindowTitle = value;
+					this.SendPropertyChanged("WindowTitle");
+					this.OnWindowTitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExeModulePath")]
+		public string ExeModulePath
+		{
+			get
+			{
+				return this._ExeModulePath;
+			}
+			set
+			{
+				if ((this._ExeModulePath != value))
+				{
+					this.OnExeModulePathChanging(value);
+					this.SendPropertyChanging();
+					this._ExeModulePath = value;
+					this.SendPropertyChanged("ExeModulePath");
+					this.OnExeModulePathChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProcessName")]
+		public string ProcessName
+		{
+			get
+			{
+				return this._ProcessName;
+			}
+			set
+			{
+				if ((this._ProcessName != value))
+				{
+					this.OnProcessNameChanging(value);
+					this.SendPropertyChanging();
+					this._ProcessName = value;
+					this.SendPropertyChanged("ProcessName");
+					this.OnProcessNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Time")]
+		public System.DateTime Time
+		{
+			get
+			{
+				return this._Time;
+			}
+			set
+			{
+				if ((this._Time != value))
+				{
+					this.OnTimeChanging(value);
+					this.SendPropertyChanging();
+					this._Time = value;
+					this.SendPropertyChanged("Time");
+					this.OnTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ip")]
+		public System.Nullable<long> Ip
+		{
+			get
+			{
+				return this._Ip;
+			}
+			set
+			{
+				if ((this._Ip != value))
+				{
+					if (this._IpAddress.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnIpChanging(value);
+					this.SendPropertyChanging();
+					this._Ip = value;
+					this.SendPropertyChanged("Ip");
+					this.OnIpChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mac")]
+		public System.Nullable<long> Mac
+		{
+			get
+			{
+				return this._Mac;
+			}
+			set
+			{
+				if ((this._Mac != value))
+				{
+					if (this._MacAddress.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMacChanging(value);
+					this.SendPropertyChanging();
+					this._Mac = value;
+					this.SendPropertyChanged("Mac");
+					this.OnMacChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Username")]
+		public System.Nullable<long> Username
+		{
+			get
+			{
+				return this._Username;
+			}
+			set
+			{
+				if ((this._Username != value))
+				{
+					if (this._Username1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUsernameChanging(value);
+					this.SendPropertyChanging();
+					this._Username = value;
+					this.SendPropertyChanged("Username");
+					this.OnUsernameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IpAddress_Registry", Storage="_IpAddress", ThisKey="Ip", OtherKey="Id", IsForeignKey=true)]
+		public IpAddress IpAddress
+		{
+			get
+			{
+				return this._IpAddress.Entity;
+			}
+			set
+			{
+				IpAddress previousValue = this._IpAddress.Entity;
+				if (((previousValue != value) 
+							|| (this._IpAddress.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._IpAddress.Entity = null;
+						previousValue.Registries.Remove(this);
+					}
+					this._IpAddress.Entity = value;
+					if ((value != null))
+					{
+						value.Registries.Add(this);
+						this._Ip = value.Id;
+					}
+					else
+					{
+						this._Ip = default(Nullable<long>);
+					}
+					this.SendPropertyChanged("IpAddress");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MacAddress_Registry", Storage="_MacAddress", ThisKey="Mac", OtherKey="Id", IsForeignKey=true)]
+		public MacAddress MacAddress
+		{
+			get
+			{
+				return this._MacAddress.Entity;
+			}
+			set
+			{
+				MacAddress previousValue = this._MacAddress.Entity;
+				if (((previousValue != value) 
+							|| (this._MacAddress.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MacAddress.Entity = null;
+						previousValue.Registries.Remove(this);
+					}
+					this._MacAddress.Entity = value;
+					if ((value != null))
+					{
+						value.Registries.Add(this);
+						this._Mac = value.Id;
+					}
+					else
+					{
+						this._Mac = default(Nullable<long>);
+					}
+					this.SendPropertyChanged("MacAddress");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Username_Registry", Storage="_Username1", ThisKey="Username", OtherKey="Id", IsForeignKey=true)]
+		public Username Username1
+		{
+			get
+			{
+				return this._Username1.Entity;
+			}
+			set
+			{
+				Username previousValue = this._Username1.Entity;
+				if (((previousValue != value) 
+							|| (this._Username1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Username1.Entity = null;
+						previousValue.Registries.Remove(this);
+					}
+					this._Username1.Entity = value;
+					if ((value != null))
+					{
+						value.Registries.Add(this);
+						this._Username = value.Id;
+					}
+					else
+					{
+						this._Username = default(Nullable<long>);
+					}
+					this.SendPropertyChanged("Username1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+	    public override string ToString()
+	    {
+	        return $"Event:{Event}\nWindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\nProcessName:{ProcessName}\nTime:{Time}";
+	    }
 	}
 }
 #pragma warning restore 1591
