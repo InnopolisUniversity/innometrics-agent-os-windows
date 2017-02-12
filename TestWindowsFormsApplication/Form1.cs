@@ -56,7 +56,11 @@ namespace TestWindowsFormsApplication
         {
             richTextBox1.BackColor = Color.White;
 
-            collector.Start();
+            collector.Start(
+                enableForegroundWindowChangeTracking: true,
+                enableLeftClickTracking: false,
+                enableStateScanning: false
+                );
             writer.Start();
         }
     }

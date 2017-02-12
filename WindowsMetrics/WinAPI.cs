@@ -120,6 +120,11 @@ namespace WindowsMetrics
 
         // ---------------
 
+        public static IntPtr GetForegroundWindowId()
+        {
+            return WinAPIDeclarations.GetForegroundWindow();
+        }
+
         public static string GetTextOfForegroundWindow()
         {
             IntPtr hwnd = WinAPIDeclarations.GetForegroundWindow();

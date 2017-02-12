@@ -22,6 +22,7 @@ namespace WindowsMetrics
         private GCHandle _mouseClickHandle;
 
         private event Action StateScan;
+        private int _stateScanIntervalSec;
 
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
@@ -34,6 +35,7 @@ namespace WindowsMetrics
         {
             //string url = WinAPI.GetChormeURL("sdf"); // TODO url
 
+            IntPtr winId = WinAPI.GetForegroundWindowId();
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
             string process = WinAPI.GetForegroundWindowProcessName();
@@ -49,7 +51,8 @@ namespace WindowsMetrics
                 Time = DateTime.Now,
                 Username1 = new Username() { Value = username },
                 IpAddress = new IpAddress() { Value = ip },
-                MacAddress = new MacAddress() { Value = mac }
+                MacAddress = new MacAddress() { Value = mac },
+                WindowId = winId.ToString()
             };
         }
 
@@ -61,7 +64,7 @@ namespace WindowsMetrics
             {
                 _writer.Add(registry);
                 _onForegroundWindowChangeAddon?.Invoke(registry);
-                _guardStateScanner.Reset();
+                _guardStateScanner?.Reset();
             }
         }
 
@@ -73,7 +76,7 @@ namespace WindowsMetrics
             {
                 _writer.Add(registry);
                 _onLeftMouseClickAddon?.Invoke(registry);
-                _guardStateScanner.Reset();
+                _guardStateScanner?.Reset();
             }
         }
 
@@ -101,17 +104,7 @@ namespace WindowsMetrics
         {
             _writer = writer;
             StateScan += OnGuardStateScan;
-
-            _taskForGuardStateScanner = new Task(() =>
-                {
-                    _guardStateScanner = new Guard(
-                        actionToDoEveryTick: () => StateScan?.Invoke(),
-                        secondsToCountdown: stateScanIntervalSec
-                    );
-                }
-            );
-
-            _taskForGuardStateScanner.Start();
+            _stateScanIntervalSec = stateScanIntervalSec;
         }
 
         public Collector(Writer writer, int stateScanIntervalSec)
@@ -135,20 +128,46 @@ namespace WindowsMetrics
             CommonConstructor(writer, stateScanIntervalSec);
         }
 
-        public void Start()
+        public void Start(bool enableForegroundWindowChangeTracking, bool enableLeftClickTracking, bool enableStateScanning)
         {
-            _foregroundWindowHook = WinAPI.StartTrackingForegroundWindowChange(OnForegroundWindowChange, out _foregroundWindowHandle);
-            _mouseClickHook = WinAPI.StartTrackingLeftClickEvent(OnLeftMouseClick, out _mouseClickHandle);
+            if(enableForegroundWindowChangeTracking)
+                _foregroundWindowHook = WinAPI.StartTrackingForegroundWindowChange(OnForegroundWindowChange, out _foregroundWindowHandle);
 
-            _guardStateScanner.Start();
+            if(enableLeftClickTracking)
+                _mouseClickHook = WinAPI.StartTrackingLeftClickEvent(OnLeftMouseClick, out _mouseClickHandle);
+
+            if (enableStateScanning)
+            {
+                _taskForGuardStateScanner = new Task(() =>
+                    {
+                        _guardStateScanner = new Guard(
+                            actionToDoEveryTick: () => StateScan?.Invoke(),
+                            secondsToCountdown: _stateScanIntervalSec
+                        );
+                    }
+                );
+                _taskForGuardStateScanner.Start();
+                while (_taskForGuardStateScanner.Status == TaskStatus.WaitingToRun)
+                {
+                    Thread.Sleep(1);
+                }
+                _guardStateScanner?.Start();
+            }
         }
 
         public bool Stop()
         {
-            bool success = WinAPI.StopTrackingForegroundWindowChange(_foregroundWindowHook);
-            bool success2 = WinAPI.StopTrackingLeftClickEvent(_mouseClickHook);
-            _guardStateScanner.Stop();
-            return success && success2;
+            bool foregroundWindowChangeTrackingDeactivated = _foregroundWindowHook == IntPtr.Zero;
+            bool mouseClickTrackingDeactivated = _mouseClickHook == IntPtr.Zero;
+
+            if (!foregroundWindowChangeTrackingDeactivated)
+                foregroundWindowChangeTrackingDeactivated = WinAPI.StopTrackingForegroundWindowChange(_foregroundWindowHook);
+            if (!mouseClickTrackingDeactivated)
+                mouseClickTrackingDeactivated = WinAPI.StopTrackingLeftClickEvent(_mouseClickHook);
+
+            _guardStateScanner?.Stop();
+
+            return foregroundWindowChangeTrackingDeactivated && mouseClickTrackingDeactivated;
         }
 
         public void Dispose()

@@ -20,10 +20,10 @@
         <elementListCompartment Id="f1c328ec-e868-4bc1-8974-8c2687fc79a0" absoluteBounds="7.015, 1.335, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="ad7c93ba-8471-43b6-a605-efd1a1c2ef6b" absoluteBounds="4.75, 2.375, 2, 2.5401025390624996">
+    <classShape Id="ad7c93ba-8471-43b6-a605-efd1a1c2ef6b" absoluteBounds="4.75, 2.375, 2, 2.7324039713541666">
       <DataClassMoniker Name="/MetricsDataContext/Registry" />
       <nestedChildShapes>
-        <elementListCompartment Id="5f02417e-30c8-4e89-8622-aca9adaa2605" absoluteBounds="4.7650000000000006, 2.835, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="5f02417e-30c8-4e89-8622-aca9adaa2605" absoluteBounds="4.7650000000000006, 2.835, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(4.5 : 2.06899251302083); (4.75 : 2.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
@@ -33,7 +33,7 @@
         <classShapeMoniker Id="ad7c93ba-8471-43b6-a605-efd1a1c2ef6b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.7812525 : 2.06899251302083); (5.7812525 : 2.375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.75 : 2.06899251302083); (5.75 : 2.375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/MetricsDataContext/MacAddress/MacAddress_Registry" />
       <nodes>
         <classShapeMoniker Id="1a1b2b0e-d1a3-431f-8766-308c32fcb5ae" />

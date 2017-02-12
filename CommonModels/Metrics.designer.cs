@@ -440,7 +440,7 @@ namespace CommonModels
 			this.SendPropertyChanging();
 			entity.Username1 = null;
 		}
-    }
+	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
 	public partial class Registry : INotifyPropertyChanging, INotifyPropertyChanged
@@ -465,6 +465,8 @@ namespace CommonModels
 		private System.Nullable<long> _Mac;
 		
 		private System.Nullable<long> _Username;
+		
+		private string _WindowId;
 		
 		private EntityRef<IpAddress> _IpAddress;
 		
@@ -494,6 +496,8 @@ namespace CommonModels
     partial void OnMacChanged();
     partial void OnUsernameChanging(System.Nullable<long> value);
     partial void OnUsernameChanged();
+    partial void OnWindowIdChanging(string value);
+    partial void OnWindowIdChanged();
     #endregion
 		
 		public Registry()
@@ -696,6 +700,26 @@ namespace CommonModels
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindowId")]
+		public string WindowId
+		{
+			get
+			{
+				return this._WindowId;
+			}
+			set
+			{
+				if ((this._WindowId != value))
+				{
+					this.OnWindowIdChanging(value);
+					this.SendPropertyChanging();
+					this._WindowId = value;
+					this.SendPropertyChanged("WindowId");
+					this.OnWindowIdChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IpAddress_Registry", Storage="_IpAddress", ThisKey="Ip", OtherKey="Id", IsForeignKey=true)]
 		public IpAddress IpAddress
 		{
@@ -820,7 +844,9 @@ namespace CommonModels
 
 	    public override string ToString()
 	    {
-	        return $"Event:{Event}\nWindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\nProcessName:{ProcessName}\nTime:{Time}";
+	        return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\n" +
+	               $"WindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\n" +
+	               $"ProcessName:{ProcessName}\nUsername:{Username1.Value}\nIp:{IpAddress.Value}\nMac:{MacAddress.Value}";
 	    }
 	}
 }

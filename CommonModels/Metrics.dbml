@@ -1,36 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Class="MetricsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="" Member="IpAddresses">
     <Type Name="IpAddress">
-      <Column Member="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="Value" Type="System.String" CanBeNull="false" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" CanBeNull="false" />
       <Association Name="IpAddress_Registry" Member="Registries" ThisKey="Id" OtherKey="Ip" Type="Registry" />
     </Type>
   </Table>
   <Table Name="" Member="MacAddresses">
     <Type Name="MacAddress">
-      <Column Member="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="Value" Type="System.String" CanBeNull="false" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" CanBeNull="false" />
       <Association Name="MacAddress_Registry" Member="Registries" ThisKey="Id" OtherKey="Mac" Type="Registry" />
     </Type>
   </Table>
   <Table Name="" Member="Usernames">
     <Type Name="Username">
-      <Column Member="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="Value" Type="System.String" CanBeNull="false" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" CanBeNull="false" />
       <Association Name="Username_Registry" Member="Registries" ThisKey="Id" OtherKey="Username" Type="Registry" />
     </Type>
   </Table>
   <Table Name="" Member="Registries">
     <Type Name="Registry">
-      <Column Member="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="Event" Type="System.UInt16" CanBeNull="false" />
-      <Column Member="WindowTitle" Type="System.String" CanBeNull="true" />
-      <Column Member="ExeModulePath" Type="System.String" CanBeNull="true" />
-      <Column Member="ProcessName" Type="System.String" CanBeNull="true" />
-      <Column Member="Time" Type="System.DateTime" CanBeNull="false" />
-      <Column Member="Ip" Type="System.Int64" CanBeNull="true" />
-      <Column Member="Mac" Type="System.Int64" CanBeNull="true" />
-      <Column Member="Username" Type="System.Int64" CanBeNull="true" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Event" Type="System.UInt16" CanBeNull="false" />
+      <Column Name="WindowTitle" Type="System.String" CanBeNull="true" />
+      <Column Name="ExeModulePath" Type="System.String" CanBeNull="true" />
+      <Column Name="ProcessName" Type="System.String" CanBeNull="true" />
+      <Column Name="Time" Type="System.DateTime" CanBeNull="false" />
+      <Column Name="Ip" Type="System.Int64" CanBeNull="true" />
+      <Column Name="Mac" Type="System.Int64" CanBeNull="true" />
+      <Column Name="Username" Type="System.Int64" CanBeNull="true" />
+      <Column Member="WindowId" Type="System.String" CanBeNull="true" />
       <Association Name="IpAddress_Registry" Member="IpAddress" ThisKey="Ip" OtherKey="Id" Type="IpAddress" IsForeignKey="true" />
       <Association Name="MacAddress_Registry" Member="MacAddress" ThisKey="Mac" OtherKey="Id" Type="MacAddress" IsForeignKey="true" />
       <Association Name="Username_Registry" Member="Username1" ThisKey="Username" OtherKey="Id" Type="Username" IsForeignKey="true" />

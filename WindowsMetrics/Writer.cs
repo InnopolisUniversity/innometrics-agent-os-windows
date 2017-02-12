@@ -13,8 +13,8 @@ namespace WindowsMetrics
 {
     public class Writer : IDisposable
     {
-        private MetricsDataContext context;
-        private IList<Registry> report;
+        private readonly MetricsDataContext _context;
+        private readonly IList<Registry> _report;
 
         private event Action DataSaving;
 
@@ -23,11 +23,11 @@ namespace WindowsMetrics
 
         public Writer(string connectionString, int dataSavingIntervalSec)
         {
-            context = new MetricsDataContext(connectionString);
-            if (!context.DatabaseExists())
-                context.CreateDatabase();
+            _context = new MetricsDataContext(connectionString);
+            if (!_context.DatabaseExists())
+                _context.CreateDatabase();
 
-            report = new List<Registry>();
+            _report = new List<Registry>();
             DataSaving += OnDataSaving;
 
             _taskForGuardDataSaver = new Task(() =>
@@ -44,24 +44,24 @@ namespace WindowsMetrics
 
         private void OnDataSaving()
         {
-            for (int i = 0; i < report.Count; i++)
+            for (int i = 0; i < _report.Count; i++)
             {
-                var existingUser = context.Usernames.FirstOrDefault(u => u.Value == report[i].Username1.Value); // TODO too complicated
+                var existingUser = _context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value); // TODO too complicated
                 if (existingUser != null)
-                    report[i].Username1 = existingUser;
+                    _report[i].Username1 = existingUser;
 
-                var existingIp = context.IpAddresses.FirstOrDefault(ip => ip.Value == report[i].IpAddress.Value);
+                var existingIp = _context.IpAddresses.FirstOrDefault(ip => ip.Value == _report[i].IpAddress.Value);
                 if (existingIp != null)
-                    report[i].IpAddress = existingIp;
+                    _report[i].IpAddress = existingIp;
 
-                var existingMac = context.MacAddresses.FirstOrDefault(m => m.Value == report[i].MacAddress.Value);
+                var existingMac = _context.MacAddresses.FirstOrDefault(m => m.Value == _report[i].MacAddress.Value);
                 if (existingMac != null)
-                    report[i].MacAddress = existingMac;
+                    _report[i].MacAddress = existingMac;
                 
-                context.Registries.InsertOnSubmit(report[i]);
+                _context.Registries.InsertOnSubmit(_report[i]);
             }
-            context.SubmitChanges(); // TODO transaction
-            report.Clear();
+            _context.SubmitChanges(); // TODO transaction
+            _report.Clear();
         }
 
         public void Start()
@@ -72,7 +72,7 @@ namespace WindowsMetrics
         public void Stop()
         {
             _guardDataSaver.Stop();
-            if (report.Count != 0)
+            if (_report.Count != 0)
             {
                 DataSaving?.Invoke();
             }
@@ -80,7 +80,7 @@ namespace WindowsMetrics
         
         public void Add(Registry registry)
         {
-            report.Add(registry);
+            _report.Add(registry);
         }
 
         public void Dispose()
