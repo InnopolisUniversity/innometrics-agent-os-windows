@@ -468,6 +468,8 @@ namespace CommonModels
 		
 		private string _WindowId;
 		
+		private bool _Processed;
+		
 		private EntityRef<IpAddress> _IpAddress;
 		
 		private EntityRef<MacAddress> _MacAddress;
@@ -498,10 +500,13 @@ namespace CommonModels
     partial void OnUsernameChanged();
     partial void OnWindowIdChanging(string value);
     partial void OnWindowIdChanged();
+    partial void OnProcessedChanging(bool value);
+    partial void OnProcessedChanged();
     #endregion
 		
 		public Registry()
 		{
+		    this.Processed = false;
 			this._IpAddress = default(EntityRef<IpAddress>);
 			this._MacAddress = default(EntityRef<MacAddress>);
 			this._Username1 = default(EntityRef<Username>);
@@ -720,6 +725,26 @@ namespace CommonModels
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Processed")]
+		public bool Processed
+		{
+			get
+			{
+				return this._Processed;
+			}
+			set
+			{
+				if ((this._Processed != value))
+				{
+					this.OnProcessedChanging(value);
+					this.SendPropertyChanging();
+					this._Processed = value;
+					this.SendPropertyChanged("Processed");
+					this.OnProcessedChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IpAddress_Registry", Storage="_IpAddress", ThisKey="Ip", OtherKey="Id", IsForeignKey=true)]
 		public IpAddress IpAddress
 		{
@@ -841,13 +866,6 @@ namespace CommonModels
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-
-	    public override string ToString()
-	    {
-	        return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\n" +
-	               $"WindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\n" +
-	               $"ProcessName:{ProcessName}\nUsername:{Username1.Value}\nIp:{IpAddress.Value}\nMac:{MacAddress.Value}";
-	    }
 	}
 }
 #pragma warning restore 1591

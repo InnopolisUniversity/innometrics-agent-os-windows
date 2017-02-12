@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,18 +46,26 @@ namespace TestConsoleApplication
 
 
 
-            string json = JsonMaker.Serialize(report);
-            string statusCode;
-            //var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
-            var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
+            //string json = JsonMaker.Serialize(report);
+            //string statusCode;
+            ////var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
+            //var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
+            
+            //Console.WriteLine(s);
+            //Console.WriteLine();
+            //Console.WriteLine(statusCode);
 
-           
+
+
+            List<int> ri = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
+
+            var ui = ri.Take(100).ToList();
+
+            ri.RemoveRange(5, 2);
 
 
 
-            Console.WriteLine(s);
-            Console.WriteLine();
-            Console.WriteLine(statusCode);
+
             Console.ReadKey();
         }
 

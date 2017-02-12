@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetricsProcessing
+namespace MetricsProcessing.Exceptions
 {
-    public class Class1
+    public class OnlyOneNonProcessedRegistryTakenException : Exception
     {
     }
 }
