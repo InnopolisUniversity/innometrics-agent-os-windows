@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbReader.cs" />
+    <Compile Include="DbHelper.cs" />
     <Compile Include="Exceptions\AllTakenRegistiesBeginActivityException.cs" />
+    <Compile Include="Exceptions\NoNonProcessedRegistriesException.cs" />
     <Compile Include="Exceptions\OnlyOneNonProcessedRegistryTakenException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistriesList.cs" />
     <Compile Include="RegistriesProcessor.cs" />
   </ItemGroup>
   <ItemGroup>

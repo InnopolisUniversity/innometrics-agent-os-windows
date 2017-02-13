@@ -54,6 +54,10 @@
       <Project>{2c91156d-5a75-475a-8bb6-744cb0780b82}</Project>
       <Name>CommonModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MetricsProcessing\MetricsProcessing.csproj">
+      <Project>{41fc4119-fbfb-4a21-b38f-2310feff0662}</Project>
+      <Name>MetricsProcessing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Transmission\Transmission.csproj">
       <Project>{7460eeab-4961-4074-ac0b-4a68e40b5481}</Project>
       <Name>Transmission</Name>

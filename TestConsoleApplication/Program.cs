@@ -5,7 +5,9 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonModels;
+using MetricsProcessing;
 using Transmission;
+using System.Configuration;
 
 namespace TestConsoleApplication
 {
@@ -50,29 +52,41 @@ namespace TestConsoleApplication
             //string statusCode;
             ////var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
             //var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
-            
+
             //Console.WriteLine(s);
             //Console.WriteLine();
             //Console.WriteLine(statusCode);
 
 
-
             List<int> ri = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
 
-            var ui = ri.Take(100).ToList();
+            var ui = Foo(ri);
 
-            ri.RemoveRange(5, 2);
+            int p = 100;
+            Foo2(p);
 
 
 
+            RegistriesProcessor rp = new RegistriesProcessor(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
+            var act = rp.Process(50);
+            var act2 = rp.Process(50);
+            var xx = JsonMaker.Serialize(act);
 
             Console.ReadKey();
         }
 
 
+        private static List<int> Foo(List<int> l)
+        {
+            List<int> res = l.Take(3).ToList();
+            l.RemoveRange(0, 3);
+            return res;
+        }
 
-
-
+        private static int Foo2(int x)
+        {
+            return x-- * 2;
+        }
 
 
 
