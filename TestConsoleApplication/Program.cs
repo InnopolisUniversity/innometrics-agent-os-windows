@@ -71,6 +71,7 @@ namespace TestConsoleApplication
             var act = rp.Process(50);
             var act2 = rp.Process(50);
             var xx = JsonMaker.Serialize(act);
+            WindowsMetrics.Helpers.FileWriteHelper.Write(xx, @"D:\aaa.txt");
 
             Console.ReadKey();
         }

@@ -445,8 +445,14 @@ namespace CommonModels
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
 	public partial class Registry : INotifyPropertyChanging, INotifyPropertyChanged
 	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	    public override string ToString()
+	    {
+            return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\n" +
+                   $"WindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\n" +
+                   $"ProcessName:{ProcessName}\nUsername:{Username1.Value}\nIp:{IpAddress.Value}\nMac:{MacAddress.Value}";
+        }
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private long _Id;
 		
@@ -468,7 +474,7 @@ namespace CommonModels
 		
 		private string _WindowId;
 		
-		private bool _Processed;
+		private System.Nullable<bool> _Processed;
 		
 		private EntityRef<IpAddress> _IpAddress;
 		
@@ -500,13 +506,12 @@ namespace CommonModels
     partial void OnUsernameChanged();
     partial void OnWindowIdChanging(string value);
     partial void OnWindowIdChanged();
-    partial void OnProcessedChanging(bool value);
+    partial void OnProcessedChanging(System.Nullable<bool> value);
     partial void OnProcessedChanged();
     #endregion
 		
 		public Registry()
 		{
-		    this.Processed = false;
 			this._IpAddress = default(EntityRef<IpAddress>);
 			this._MacAddress = default(EntityRef<MacAddress>);
 			this._Username1 = default(EntityRef<Username>);
@@ -726,7 +731,7 @@ namespace CommonModels
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Processed")]
-		public bool Processed
+		public System.Nullable<bool> Processed
 		{
 			get
 			{

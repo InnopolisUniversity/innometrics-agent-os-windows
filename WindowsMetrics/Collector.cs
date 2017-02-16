@@ -52,7 +52,8 @@ namespace WindowsMetrics
                 Username1 = new Username() { Value = username },
                 IpAddress = new IpAddress() { Value = ip },
                 MacAddress = new MacAddress() { Value = mac },
-                WindowId = winId.ToString()
+                WindowId = winId.ToString(),
+                Processed = false
             };
         }
 

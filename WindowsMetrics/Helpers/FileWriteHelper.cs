@@ -11,7 +11,7 @@ namespace WindowsMetrics.Helpers
     {
         public static void Write(string text, string path)
         {
-            using (FileStream fs = File.Open(path, FileMode.Append))
+            using (FileStream fs = File.Exists(path) ? File.Open(path, FileMode.Append) : File.Create(path))
             {
                 using (StreamWriter writer = new StreamWriter(fs))
                 {

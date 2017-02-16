@@ -22,15 +22,13 @@ namespace MetricsProcessing
         /// end time of the activity represented by the only registry)
         /// </exception>
         /// <exception cref="NoNonProcessedRegistriesException">
-        /// Such a situation should not happen in a usual case - the last registry in DB cannot be processed
-        /// because end time for the activity it can be involved in is unknown
         /// </exception>
         public RegistriesList GetRegistries(int quantityToTake)
         {
             var registries = _context.Registries.
-                Where(r => !r.Processed).Take(quantityToTake).OrderBy(r => r.Time).ToList();
+                Where(r => r.Processed.HasValue && !r.Processed.Value).Take(quantityToTake).OrderBy(r => r.Time).ToList();
             if (registries.Count == 1)
-                throw new OnlyOneNonProcessedRegistryTakenException();
+                throw new OnlyOneNonProcessedRegistryTakenException(registries[0]);
             if (registries.Count == 0)
                 throw new NoNonProcessedRegistriesException();
 
@@ -51,7 +49,7 @@ namespace MetricsProcessing
 
             // if all the registries are of the same WindowId
             if (registries.Count == registries.Count(r => r.WindowId == lastRegistryWinId))
-                throw new AllTakenRegistiesBeginActivityException();
+                throw new AllTakenRegistiesBeginActivityException(new RegistriesList(registries, registries.Last().Time));
 
 
             // *****************************************************************************
@@ -84,6 +82,21 @@ namespace MetricsProcessing
                 registry.Processed = true;
             }
             _context.SubmitChanges();
+        }
+
+        public void SetProcessedToNull(Registry registry)
+        {
+            var reg = _context.Registries.First(r => r.Id == registry.Id);
+            reg.Processed = null;
+            _context.SubmitChanges();
+        }
+
+        /// <summary>
+        /// Checks if there any more registries in db that stored after given time
+        /// </summary>
+        public bool AnyMoreRegistriesExist(DateTime after)
+        {
+            return _context.Registries.Any(r => r.Time > after);
         }
     }
 }

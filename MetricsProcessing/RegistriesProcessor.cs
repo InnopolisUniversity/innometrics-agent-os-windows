@@ -17,14 +17,27 @@ namespace MetricsProcessing
             _dbHelper = new DbHelper(connectionString);
         }
 
-        /// <exception cref="OnlyOneNonProcessedRegistryTakenException">
-        /// Too few registries obtained, processing is impossible (there's no possibility of determining
-        /// end time of the activity represented by the only registry)
-        /// </exception>
+        /// <returns>
+        /// NULL if there's no processible registries obtained or there's no more registries, so there's no more
+        /// activities can be obtained.
+        /// </returns>
         public List<Activity> Process(int quantity)
         {
             List<Activity> activities = new List<Activity>();
-            RegistriesList registries = GetRegistries(quantity);
+            RegistriesList registries;
+            try
+            {
+                registries = GetRegistries(quantity);
+            }
+            catch (OnlyOneNonProcessedRegistryTakenException e)
+            {
+                MarkAsCannotBeProcessed(e.TheOnlyRemainingRegistry);
+                return null;
+            }
+            catch (NoNonProcessedRegistriesException)
+            {
+                return null;
+            }
             while (!registries.IsEmpty)
             {
                 int numOfRegistriesInActivity = DetectActivity(registries);
@@ -40,6 +53,10 @@ namespace MetricsProcessing
         /// Too few registries obtained, processing is impossible (there's no possibility of determining
         /// end time of the activity represented by the only registry)
         /// </exception>
+        /// <exception cref="NoNonProcessedRegistriesException">
+        /// Such a situation should not happen in a usual case - the last registry in DB cannot be processed
+        /// because end time for the activity it can be involved in is unknown
+        /// </exception>
         private RegistriesList GetRegistries(int registriesToProcessAtOnce)
         {
             try
@@ -47,9 +64,12 @@ namespace MetricsProcessing
                 var registries = _dbHelper.GetRegistries(registriesToProcessAtOnce);
                 return registries;
             }
-            catch (AllTakenRegistiesBeginActivityException)
+            catch (AllTakenRegistiesBeginActivityException e)
             {
-                return GetRegistries(registriesToProcessAtOnce*2);
+                if (_dbHelper.AnyMoreRegistriesExist(e.TakenRegistries.Last().Time))
+                    return GetRegistries(registriesToProcessAtOnce*2);
+
+                return e.TakenRegistries;
             }
         }
 
@@ -119,6 +139,11 @@ namespace MetricsProcessing
         private void MarkAsProcessed(RegistriesList registries)
         {
             _dbHelper.MarkAsProcessed(registries);
+        }
+
+        private void MarkAsCannotBeProcessed(Registry registry)
+        {
+            _dbHelper.SetProcessedToNull(registry);
         }
     }
 }

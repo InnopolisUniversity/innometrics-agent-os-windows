@@ -33,7 +33,7 @@
         <classShapeMoniker Id="ad7c93ba-8471-43b6-a605-efd1a1c2ef6b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.75 : 2.06899251302083); (5.75 : 2.375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.75 : 2.06899251302083); (5.75 : 2.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/MetricsDataContext/MacAddress/MacAddress_Registry" />
       <nodes>
         <classShapeMoniker Id="1a1b2b0e-d1a3-431f-8766-308c32fcb5ae" />

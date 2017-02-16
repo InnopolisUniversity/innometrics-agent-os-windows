@@ -13,5 +13,11 @@ namespace MetricsProcessing.Exceptions
     /// </summary>
     class AllTakenRegistiesBeginActivityException : Exception
     {
+        public RegistriesList TakenRegistries { get; }
+
+        public AllTakenRegistiesBeginActivityException(RegistriesList takenRegistries)
+        {
+            TakenRegistries = takenRegistries;
+        }
     }
 }

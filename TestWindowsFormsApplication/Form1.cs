@@ -58,7 +58,7 @@ namespace TestWindowsFormsApplication
 
             collector.Start(
                 enableForegroundWindowChangeTracking: true,
-                enableLeftClickTracking: false,
+                enableLeftClickTracking: true,
                 enableStateScanning: false
                 );
             writer.Start();
