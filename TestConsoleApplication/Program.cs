@@ -68,12 +68,13 @@ namespace TestConsoleApplication
 
 
             RegistriesProcessor rp = new RegistriesProcessor(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
-            var act = rp.Process(50);
+            var act = rp.Process(100);
             var act2 = rp.Process(50);
             var xx = JsonMaker.Serialize(act);
             WindowsMetrics.Helpers.FileWriteHelper.Write(xx, @"D:\aaa.txt");
 
-            Console.ReadKey();
+
+            //Console.ReadKey();
         }
 
 

@@ -45,18 +45,18 @@ namespace MetricsProcessing
         /// <exception cref="AllTakenRegistiesBeginActivityException">See description of the exception class</exception>
         private static RegistriesList MakeRegistriesList(List<Registry> registries)
         {
-            var lastRegistryWinId = registries.Last().WindowId;
+            var lastRegistryWinTitle = registries.Last().WindowTitle;
 
             // if all the registries are of the same WindowId
-            if (registries.Count == registries.Count(r => r.WindowId == lastRegistryWinId))
+            if (registries.Count == registries.Count(r => r.WindowTitle == lastRegistryWinTitle))
                 throw new AllTakenRegistiesBeginActivityException(new RegistriesList(registries, registries.Last().Time));
 
 
             // *****************************************************************************
-            // find how many last registies should be removed - which have the same WindowId
+            // find how many last registies should be removed - which have the same WindowTitle
             int lastRegistiesToRemove = 1;
             var cursor = registries[registries.Count - 2]; // penultimate element
-            while (cursor.WindowId == lastRegistryWinId)
+            while (cursor.WindowTitle == lastRegistryWinTitle)
             {
                 lastRegistiesToRemove++;
                 cursor = registries[(registries.Count - 1) - lastRegistiesToRemove];

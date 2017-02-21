@@ -79,8 +79,8 @@ namespace MetricsProcessing
         private static int DetectActivity(RegistriesList registries)
         {
             int count = 1;
-            var activityWinId = registries[0].WindowId;
-            while (count < registries.Count && registries[count].WindowId == activityWinId)
+            var activityWinTitle = registries[0].WindowTitle;
+            while (count < registries.Count && registries[count].WindowTitle == activityWinTitle)
                 count++;
             return count;
         }
