@@ -21,12 +21,13 @@ namespace MetricsProcessing
         /// Too few registries obtained, processing is impossible (there's no possibility of determining
         /// end time of the activity represented by the only registry)
         /// </exception>
-        /// <exception cref="NoNonProcessedRegistriesException">
-        /// </exception>
+        /// <exception cref="NoNonProcessedRegistriesException"></exception>
+        /// <exception cref="AllTakenRegistiesBeginActivityException">See description of the exception class</exception>
         public RegistriesList GetRegistries(int quantityToTake)
         {
             var registries = _context.Registries.
                 Where(r => r.Processed.HasValue && !r.Processed.Value).Take(quantityToTake).OrderBy(r => r.Time).ToList();
+
             if (registries.Count == 1)
                 throw new OnlyOneNonProcessedRegistryTakenException(registries[0]);
             if (registries.Count == 0)
@@ -76,14 +77,22 @@ namespace MetricsProcessing
 
         public void MarkAsProcessed(RegistriesList registries)
         {
-            for (int i = 0; i < registries.Count; i++)
-            {
-                var registry = _context.Registries.First(r => r.Id == registries[i].Id);
-                registry.Processed = true;
-            }
+            registries.ForEach(r => r.Processed = true);
             _context.SubmitChanges();
         }
 
+        public void MarkFilteredAsProcessed(RegistriesList registries)
+        {
+            registries.FilteredRegistries.ForEach(r => r.Processed = true);
+            _context.SubmitChanges();
+        }
+
+        /// <summary>
+        /// Marks 'processed' field with NULL, so that the given registry won't be obtainable
+        /// but also isn't marked as a processed.
+        /// Usings: 1. If only one registry is obtained, there's no more registries in db - cannot be processed
+        /// 2. Filter ban
+        /// </summary>
         public void SetProcessedToNull(Registry registry)
         {
             var reg = _context.Registries.First(r => r.Id == registry.Id);

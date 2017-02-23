@@ -23,6 +23,16 @@ namespace MetricsProcessing
         /// </returns>
         public List<Activity> Process(int quantity)
         {
+            return Process(quantity, null, /*doesn't matter when second param is 'null'*/ true);
+        }
+
+        /// <param name="includeNullTitles">Matters only if nameFilter != null</param>
+        /// <returns>
+        /// NULL if there's no processible registries obtained or there's no more registries, so there's no more
+        /// activities can be obtained.
+        /// </returns>
+        public List<Activity> Process(int quantity, IEnumerable<string> nameFilter, bool includeNullTitles)
+        {
             List<Activity> activities = new List<Activity>();
             RegistriesList registries;
             try
@@ -31,13 +41,20 @@ namespace MetricsProcessing
             }
             catch (OnlyOneNonProcessedRegistryTakenException e)
             {
-                MarkAsCannotBeProcessed(e.TheOnlyRemainingRegistry);
+                MarkAsShouldNotBeProcessed(e.TheOnlyRemainingRegistry);
                 return null;
             }
             catch (NoNonProcessedRegistriesException)
             {
                 return null;
             }
+
+            if (nameFilter != null)
+                registries.Filter(nameFilter, includeNullTitles);
+
+            if (registries.IsEmpty) // if all have been filtered out
+                return null;
+
             while (!registries.IsEmpty)
             {
                 int numOfRegistriesInActivity = DetectActivity(registries);
@@ -46,6 +63,7 @@ namespace MetricsProcessing
                 activities.Add(activity);
                 MarkAsProcessed(activityRegistries);
             }
+            MarkFilteredAsProcessed(registries);
             return activities;
         }
 
@@ -141,7 +159,18 @@ namespace MetricsProcessing
             _dbHelper.MarkAsProcessed(registries);
         }
 
-        private void MarkAsCannotBeProcessed(Registry registry)
+        public void MarkFilteredAsProcessed(RegistriesList registries)
+        {
+            _dbHelper.MarkFilteredAsProcessed(registries);
+        }
+
+        /// <summary>
+        /// Marks 'processed' field with NULL, so that the given registry won't be obtainable
+        /// but also isn't marked as a processed.
+        /// Usings: 1. If only one registry is obtained, there's no more registries in db - cannot be processed
+        /// 2. Filter ban
+        /// </summary>
+        private void MarkAsShouldNotBeProcessed(Registry registry)
         {
             _dbHelper.SetProcessedToNull(registry);
         }
