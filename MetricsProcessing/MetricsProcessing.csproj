@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivitiesProcessor.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="Exceptions\AllTakenRegistiesBeginActivityException.cs" />
     <Compile Include="Exceptions\NoNonProcessedRegistriesException.cs" />

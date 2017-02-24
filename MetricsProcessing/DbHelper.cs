@@ -107,5 +107,15 @@ namespace MetricsProcessing
         {
             return _context.Registries.Any(r => r.Time > after);
         }
+
+        public void StoreJsonInActivitiesRegistry(string json)
+        {
+            _context.ActivitiesRegistries.InsertOnSubmit(new ActivitiesRegistry()
+            {
+                Json = json,
+                Transmitted = false
+            });
+            _context.SubmitChanges();
+        }
     }
 }

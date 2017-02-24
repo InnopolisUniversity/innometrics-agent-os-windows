@@ -41,6 +41,9 @@ namespace CommonModels
     partial void InsertRegistry(Registry instance);
     partial void UpdateRegistry(Registry instance);
     partial void DeleteRegistry(Registry instance);
+    partial void InsertActivitiesRegistry(ActivitiesRegistry instance);
+    partial void UpdateActivitiesRegistry(ActivitiesRegistry instance);
+    partial void DeleteActivitiesRegistry(ActivitiesRegistry instance);
     #endregion
 		
 		public MetricsDataContext(string connection) : 
@@ -96,6 +99,14 @@ namespace CommonModels
 			get
 			{
 				return this.GetTable<Registry>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ActivitiesRegistry> ActivitiesRegistries
+		{
+			get
+			{
+				return this.GetTable<ActivitiesRegistry>();
 			}
 		}
 	}
@@ -872,6 +883,116 @@ namespace CommonModels
 						this._Username = default(Nullable<long>);
 					}
 					this.SendPropertyChanged("Username1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class ActivitiesRegistry : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private long _Id;
+		
+		private string _Json;
+		
+		private System.Nullable<bool> _Transmitted;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(long value);
+    partial void OnIdChanged();
+    partial void OnJsonChanging(string value);
+    partial void OnJsonChanged();
+    partial void OnTransmittedChanging(System.Nullable<bool> value);
+    partial void OnTransmittedChanged();
+    #endregion
+		
+		public ActivitiesRegistry()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", IsPrimaryKey=true, IsDbGenerated=true)]
+		public long Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Json")]
+		public string Json
+		{
+			get
+			{
+				return this._Json;
+			}
+			set
+			{
+				if ((this._Json != value))
+				{
+					this.OnJsonChanging(value);
+					this.SendPropertyChanging();
+					this._Json = value;
+					this.SendPropertyChanged("Json");
+					this.OnJsonChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Transmitted")]
+		public System.Nullable<bool> Transmitted
+		{
+			get
+			{
+				return this._Transmitted;
+			}
+			set
+			{
+				if ((this._Transmitted != value))
+				{
+					this.OnTransmittedChanging(value);
+					this.SendPropertyChanging();
+					this._Transmitted = value;
+					this.SendPropertyChanged("Transmitted");
+					this.OnTransmittedChanged();
 				}
 			}
 		}

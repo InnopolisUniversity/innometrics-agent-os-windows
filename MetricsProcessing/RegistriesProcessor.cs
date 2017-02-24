@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommonModels;
+using CommonModels.Helpers;
 using MetricsProcessing.Exceptions;
 
 namespace MetricsProcessing
@@ -12,9 +13,9 @@ namespace MetricsProcessing
     {
         private readonly DbHelper _dbHelper;
 
-        public RegistriesProcessor(MetricsDataContext context)
+        public RegistriesProcessor(DbHelper helper)
         {
-            _dbHelper = new DbHelper(context);
+            _dbHelper = helper;
         }
 
         /// <returns>
@@ -64,6 +65,7 @@ namespace MetricsProcessing
                 MarkAsProcessed(activityRegistries);
             }
             MarkFilteredAsProcessed(registries);
+
             return activities;
         }
 

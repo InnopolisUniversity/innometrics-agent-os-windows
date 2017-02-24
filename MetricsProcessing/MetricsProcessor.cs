@@ -12,29 +12,28 @@ namespace MetricsProcessing
     {
         private Guard _guardRegistriesProcessor;
         private Task _taskForGuardRegistriesProcessor; // where guard works in
-        private RegistriesProcessor _processor;
-        private event Action Processing;
+        private RegistriesProcessor _registriesProcessor;
+        private ActivitiesProcessor _activitiesProcessor;
+        private event Action ProcessingAndStoring;
 
         // Parameters for RegistriesProcessor
         private int _processRegistriesAtOneTime;
         private readonly List<string> _nameFilter;
         private readonly bool _includeNullTitles;
 
-        // Where all the obtained activities stored
-        public List<Activity> Activities { get; private set; }
-
         private void CommonConstructor(MetricsDataContext context,
             int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
-            Activities = new List<Activity>();
-            _processor = new RegistriesProcessor(context);
+            DbHelper helper = new DbHelper(context);
+            _registriesProcessor = new RegistriesProcessor(helper);
+            _activitiesProcessor = new ActivitiesProcessor(helper);
             _processRegistriesAtOneTime = processRegistriesAtOneTime;
-            Processing += OnRegistriesProcessing;
+            ProcessingAndStoring += OnRegistriesProcessingAndStoring;
 
             _taskForGuardRegistriesProcessor = new Task(() =>
                 {
                     _guardRegistriesProcessor = new Guard(
-                        actionToDoEveryTick: () => Processing?.Invoke(),
+                        actionToDoEveryTick: () => ProcessingAndStoring?.Invoke(),
                         secondsToCountdown: processRegistriesIntervalSec
                     );
                 }
@@ -66,17 +65,21 @@ namespace MetricsProcessing
             _guardRegistriesProcessor.Stop();
         }
 
-        private void OnRegistriesProcessing()
+        private void OnRegistriesProcessingAndStoring()
         {
+            List<Activity> activities;
             if (_nameFilter == null)
-                Activities.AddRange(_processor.Process(quantity: _processRegistriesAtOneTime));
+                activities = _registriesProcessor.Process(quantity: _processRegistriesAtOneTime);
             else
-                Activities.AddRange(
-                    _processor.Process(
-                        quantity: _processRegistriesAtOneTime,
-                        nameFilter: _nameFilter,
-                        includeNullTitles: _includeNullTitles
-                    ));
+                activities = _registriesProcessor.Process(
+                    quantity: _processRegistriesAtOneTime,
+                    nameFilter: _nameFilter,
+                    includeNullTitles: _includeNullTitles
+                );
+            if (activities != null)
+            {
+                _activitiesProcessor.StoreActivitiesListInDbAsJson(activities);
+            }
         }
 
         public void Dispose()

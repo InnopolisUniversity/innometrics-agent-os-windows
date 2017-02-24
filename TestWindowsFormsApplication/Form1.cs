@@ -27,8 +27,6 @@ namespace TestWindowsFormsApplication
         private Writer writer;
         private MetricsProcessor processor;
 
-        private string jsonStoragePath;
-
         public Form1()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -37,7 +35,6 @@ namespace TestWindowsFormsApplication
             int stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
             int processRegistriesIntervalSec = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesIntervalSec"].Value);
             int processRegistriesAtOneTime = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesAtOneTime"].Value);
-            jsonStoragePath = config.AppSettings.Settings["JsonStoragePath"].Value;
 
             InitializeComponent();
 
@@ -66,10 +63,6 @@ namespace TestWindowsFormsApplication
             writer.Stop();
             bool success = collector.Stop();
 
-            var activities = processor.Activities; // TODO multiple root elements
-            var json = JsonMaker.Serialize(activities);
-            FileWriteHelper.Write(json, jsonStoragePath);
-
             if (success)
             {
                 richTextBox1.BackColor = Color.LightSteelBlue;
@@ -83,7 +76,7 @@ namespace TestWindowsFormsApplication
             collector.Start(
                 enableForegroundWindowChangeTracking: true,
                 enableLeftClickTracking: true,
-                enableStateScanning: false
+                enableStateScanning: true
                 );
             writer.Start();
             processor.Start();
