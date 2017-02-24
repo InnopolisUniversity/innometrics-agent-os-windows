@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsMetrics.Helpers;
 using CommonModels;
 
 namespace WindowsMetrics
@@ -33,8 +32,6 @@ namespace WindowsMetrics
 
         private Registry MakeRegistry(CollectionEvent @event)
         {
-            //string url = WinAPI.GetChormeURL("sdf"); // TODO url
-
             IntPtr winId = WinAPI.GetForegroundWindowId();
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
@@ -42,6 +39,15 @@ namespace WindowsMetrics
             string ip, mac;
             WinAPI.GetAdapters(out ip, out mac);
             string username = WinAPI.GetSystemUserName();
+            
+            string url = null;
+            if (process.Contains("chrome"))
+            {
+                url = WinAPI.GetChormeUrl();
+                //WinAPI.Tabs(out a);
+                //url = Convert.ToString(a);
+            }
+
             return new Registry()
             {
                 Event = (ushort) @event,
@@ -53,6 +59,7 @@ namespace WindowsMetrics
                 IpAddress = new IpAddress() { Value = ip },
                 MacAddress = new MacAddress() { Value = mac },
                 WindowId = winId.ToString(),
+                Url = url,
                 Processed = false
             };
         }

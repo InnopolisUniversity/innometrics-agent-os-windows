@@ -12,9 +12,9 @@ namespace MetricsProcessing
     {
         private readonly DbHelper _dbHelper;
 
-        public RegistriesProcessor(string connectionString)
+        public RegistriesProcessor(MetricsDataContext context)
         {
-            _dbHelper = new DbHelper(connectionString);
+            _dbHelper = new DbHelper(context);
         }
 
         /// <returns>
@@ -151,6 +151,15 @@ namespace MetricsProcessing
                 Type = "String",
                 Value = activityRegistries.First.Username1.Value
             });
+            if (activityRegistries.Any(r => r.Url != null))
+            {
+                activity.Measurements.Add(new Measurement()
+                {
+                    Name = "URL",
+                    Type = "String",
+                    Value = activityRegistries.First(r => r.Url != null).Url
+                });
+            }
             return activity;
         }
 
@@ -159,7 +168,7 @@ namespace MetricsProcessing
             _dbHelper.MarkAsProcessed(registries);
         }
 
-        public void MarkFilteredAsProcessed(RegistriesList registries)
+        private void MarkFilteredAsProcessed(RegistriesList registries)
         {
             _dbHelper.MarkFilteredAsProcessed(registries);
         }

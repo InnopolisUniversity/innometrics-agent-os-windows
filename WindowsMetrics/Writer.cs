@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsMetrics.Helpers;
 using CommonModels;
 
 namespace WindowsMetrics
@@ -21,9 +20,9 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
 
-        public Writer(string connectionString, int dataSavingIntervalSec)
+        public Writer(MetricsDataContext context, int dataSavingIntervalSec)
         {
-            _context = new MetricsDataContext(connectionString);
+            _context = context;
             if (!_context.DatabaseExists())
                 _context.CreateDatabase();
 

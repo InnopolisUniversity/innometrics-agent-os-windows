@@ -12,9 +12,9 @@ namespace MetricsProcessing
     {
         private readonly MetricsDataContext _context;
 
-        public DbHelper(string connectionString)
+        public DbHelper(MetricsDataContext context)
         {
-            _context = new MetricsDataContext(connectionString);
+            _context = context;
         }
 
         /// <exception cref="OnlyOneNonProcessedRegistryTakenException">

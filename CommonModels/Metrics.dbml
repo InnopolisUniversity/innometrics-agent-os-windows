@@ -33,6 +33,7 @@
       <Column Name="Username" Type="System.Int64" CanBeNull="true" />
       <Column Name="WindowId" Type="System.String" CanBeNull="true" />
       <Column Name="Processed" Type="System.Boolean" CanBeNull="true" />
+      <Column Member="Url" Type="System.String" CanBeNull="true" />
       <Association Name="IpAddress_Registry" Member="IpAddress" ThisKey="Ip" OtherKey="Id" Type="IpAddress" IsForeignKey="true" />
       <Association Name="MacAddress_Registry" Member="MacAddress" ThisKey="Mac" OtherKey="Id" Type="MacAddress" IsForeignKey="true" />
       <Association Name="Username_Registry" Member="Username1" ThisKey="Username" OtherKey="Id" Type="Username" IsForeignKey="true" />

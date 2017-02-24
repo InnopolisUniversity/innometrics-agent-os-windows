@@ -445,11 +445,11 @@ namespace CommonModels
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
 	public partial class Registry : INotifyPropertyChanging, INotifyPropertyChanged
 	{
-	    public override string ToString()
-	    {
-            return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\n" +
-                   $"WindowTitle:{WindowTitle}\nExeModulePath:{ExeModulePath}\n" +
-                   $"ProcessName:{ProcessName}\nUsername:{Username1.Value}\nIp:{IpAddress.Value}\nMac:{MacAddress.Value}";
+        public override string ToString()
+        {
+            return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\nWindowTitle:{WindowTitle}\n" +
+                   $"ExeModulePath:{ExeModulePath}\nProcessName:{ProcessName}\nUsername:{Username1.Value}\n" +
+                   $"Ip:{IpAddress.Value}\nMac:{MacAddress.Value}\nURL:{Url}";
         }
 
         private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -475,6 +475,8 @@ namespace CommonModels
 		private string _WindowId;
 		
 		private System.Nullable<bool> _Processed;
+		
+		private string _Url;
 		
 		private EntityRef<IpAddress> _IpAddress;
 		
@@ -508,6 +510,8 @@ namespace CommonModels
     partial void OnWindowIdChanged();
     partial void OnProcessedChanging(System.Nullable<bool> value);
     partial void OnProcessedChanged();
+    partial void OnUrlChanging(string value);
+    partial void OnUrlChanged();
     #endregion
 		
 		public Registry()
@@ -746,6 +750,26 @@ namespace CommonModels
 					this._Processed = value;
 					this.SendPropertyChanged("Processed");
 					this.OnProcessedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url")]
+		public string Url
+		{
+			get
+			{
+				return this._Url;
+			}
+			set
+			{
+				if ((this._Url != value))
+				{
+					this.OnUrlChanging(value);
+					this.SendPropertyChanging();
+					this._Url = value;
+					this.SendPropertyChanged("Url");
+					this.OnUrlChanged();
 				}
 			}
 		}

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Transmission
+namespace CommonModels.Helpers
 {
     public static class JsonMaker
     {

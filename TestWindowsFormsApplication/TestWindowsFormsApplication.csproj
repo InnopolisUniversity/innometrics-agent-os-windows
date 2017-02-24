@@ -84,6 +84,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonModels\CommonModels.csproj">
+      <Project>{2c91156d-5a75-475a-8bb6-744cb0780b82}</Project>
+      <Name>CommonModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetricsProcessing\MetricsProcessing.csproj">
+      <Project>{41fc4119-fbfb-4a21-b38f-2310feff0662}</Project>
+      <Name>MetricsProcessing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsMetrics\WindowsMetrics.csproj">
       <Project>{385a023a-208d-4835-9f11-d999dd446bcc}</Project>
       <Name>WindowsMetrics</Name>

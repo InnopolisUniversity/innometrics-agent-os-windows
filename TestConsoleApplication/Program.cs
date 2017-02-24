@@ -8,6 +8,7 @@ using CommonModels;
 using MetricsProcessing;
 using Transmission;
 using System.Configuration;
+using CommonModels.Helpers;
 
 namespace TestConsoleApplication
 {
@@ -70,11 +71,12 @@ namespace TestConsoleApplication
                 "Tele"
             };
 
-            RegistriesProcessor rp = new RegistriesProcessor(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
+            MetricsDataContext context = new MetricsDataContext(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
+            RegistriesProcessor rp = new RegistriesProcessor(context);
             var act = rp.Process(100, filter, includeNullTitles: true);
             var act2 = rp.Process(50, filter, includeNullTitles: true);
             var xx = JsonMaker.Serialize(act);
-            WindowsMetrics.Helpers.FileWriteHelper.Write(xx, @"D:\aaa.txt");
+            FileWriteHelper.Write(xx, @"D:\aaa.txt");
 
 
             //Console.ReadKey();

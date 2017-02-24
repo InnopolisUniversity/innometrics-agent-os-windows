@@ -14,14 +14,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics;
-using WindowsMetrics.Helpers;
+using CommonModels;
+using CommonModels.Helpers;
+using MetricsProcessing;
 
 namespace TestWindowsFormsApplication
 {
     public partial class Form1 : Form
     {
+        private MetricsDataContext context;
         private Collector collector;
         private Writer writer;
+        private MetricsProcessor processor;
+
+        private string jsonStoragePath;
 
         public Form1()
         {
@@ -29,9 +35,14 @@ namespace TestWindowsFormsApplication
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
             int dataSavingIntervalSec = Convert.ToInt32(config.AppSettings.Settings["DataSavingIntervalSec"].Value);
             int stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
+            int processRegistriesIntervalSec = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesIntervalSec"].Value);
+            int processRegistriesAtOneTime = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesAtOneTime"].Value);
+            jsonStoragePath = config.AppSettings.Settings["JsonStoragePath"].Value;
 
             InitializeComponent();
-            writer = new Writer(connectionString, dataSavingIntervalSec);
+
+            context = new MetricsDataContext(connectionString);
+            writer = new Writer(context, dataSavingIntervalSec);
             collector = new Collector(
                 writer,
                 stateScanIntervalSec,
@@ -39,13 +50,26 @@ namespace TestWindowsFormsApplication
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n"),
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n")
-                );
+            );
+            processor = new MetricsProcessor(
+                context: context,
+                processRegistriesIntervalSec: processRegistriesIntervalSec,
+                processRegistriesAtOneTime: processRegistriesAtOneTime,
+                nameFilter: new List<string>() { "XXX" },
+                includeNullTitles: false
+            );
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
+            processor.Stop();
             writer.Stop();
             bool success = collector.Stop();
+
+            var activities = processor.Activities; // TODO multiple root elements
+            var json = JsonMaker.Serialize(activities);
+            FileWriteHelper.Write(json, jsonStoragePath);
+
             if (success)
             {
                 richTextBox1.BackColor = Color.LightSteelBlue;
@@ -62,6 +86,7 @@ namespace TestWindowsFormsApplication
                 enableStateScanning: false
                 );
             writer.Start();
+            processor.Start();
         }
     }
 }

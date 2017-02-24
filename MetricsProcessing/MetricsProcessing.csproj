@@ -45,6 +45,7 @@
     <Compile Include="Exceptions\AllTakenRegistiesBeginActivityException.cs" />
     <Compile Include="Exceptions\NoNonProcessedRegistriesException.cs" />
     <Compile Include="Exceptions\OnlyOneNonProcessedRegistryTakenException.cs" />
+    <Compile Include="MetricsProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistriesList.cs" />
     <Compile Include="RegistriesProcessor.cs" />
