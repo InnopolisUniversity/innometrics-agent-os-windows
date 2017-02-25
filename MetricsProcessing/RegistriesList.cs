@@ -37,6 +37,12 @@ namespace MetricsProcessing
                     FilteredRegistries.AddRange(filterExtract);
                 }
                 this.RemoveAll(r => FilteredRegistries.Contains(r));
+                return;
+            }
+
+            if (!includeNullTitles)
+            {
+                this.RemoveAll(r => r.WindowTitle == null);
             }
         }
     }

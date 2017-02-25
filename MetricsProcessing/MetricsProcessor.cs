@@ -46,17 +46,17 @@ namespace MetricsProcessing
         }
 
         public MetricsProcessor(string connectionString,
-            int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter,
-            bool includeNullTitles)
+            int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter, bool includeNullTitles)
         {
             _nameFilter = nameFilter;
             _includeNullTitles = includeNullTitles;
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
-        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec,
-            int processRegistriesAtOneTime)
+        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
+            _nameFilter = null;
+            _includeNullTitles = true;
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
@@ -72,17 +72,11 @@ namespace MetricsProcessing
 
         private void OnRegistriesProcessingAndStoring()
         {
-            List<Activity> activities = null;
-            if (_nameFilter == null)
-                activities = _registriesProcessor.Process(quantity: _processRegistriesAtOneTime);
-            else
-            {
-                activities = _registriesProcessor.Process(
-                    quantity: _processRegistriesAtOneTime,
-                    nameFilter: _nameFilter,
-                    includeNullTitles: _includeNullTitles
-                );
-            }
+            List<Activity> activities = _registriesProcessor.Process(
+                quantity: _processRegistriesAtOneTime,
+                nameFilter: _nameFilter,
+                includeNullTitles: _includeNullTitles
+            );
             if (activities != null)
             {
                 _activitiesProcessor.StoreActivitiesListInDbAsJson(activities);

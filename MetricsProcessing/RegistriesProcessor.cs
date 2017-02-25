@@ -18,21 +18,14 @@ namespace MetricsProcessing
             _connectionString = connectionString;
         }
 
-        /// <returns>
-        /// NULL if there's no processible registries obtained or there's no more registries, so there's no more
-        /// activities can be obtained.
-        /// </returns>
-        public List<Activity> Process(int quantity)
-        {
-            return Process(quantity, null, /*doesn't matter when second param is 'null'*/ true);
-        }
-
+        /// <param name="quantity">Number of registries which processor obtains at a time from db and processes</param>
         /// <param name="includeNullTitles">Matters only if nameFilter != null</param>
+        /// <param name="nameFilter">Filters out each registry which contains a given substring in its WindowTitle</param>
         /// <returns>
         /// NULL if there's no processible registries obtained or there's no more registries, so there's no more
         /// activities can be obtained.
         /// </returns>
-        public List<Activity> Process(int quantity, IEnumerable<string> nameFilter, bool includeNullTitles)
+        public List<Activity> Process(int quantity, bool includeNullTitles, IEnumerable<string> nameFilter = null)
         {
             List<Activity> activities = new List<Activity>();
             RegistriesList registries;
@@ -182,7 +175,6 @@ namespace MetricsProcessing
         /// Marks 'processed' field with NULL, so that the given registry won't be obtainable
         /// but also isn't marked as a processed.
         /// Usings: 1. If only one registry is obtained, there's no more registries in db - cannot be processed
-        /// 2. Filter ban
         /// </summary>
         private void MarkAsShouldNotBeProcessed(Registry registry)
         {
