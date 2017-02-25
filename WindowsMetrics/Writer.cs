@@ -12,7 +12,8 @@ namespace WindowsMetrics
 {
     public class Writer : IDisposable
     {
-        private readonly MetricsDataContext _context;
+        private readonly string _connectionString;
+
         private readonly IList<Registry> _report;
 
         private event Action DataSaving;
@@ -20,12 +21,9 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
 
-        public Writer(MetricsDataContext context, int dataSavingIntervalSec)
+        public Writer(string connectionString, int dataSavingIntervalSec)
         {
-            _context = context;
-            if (!_context.DatabaseExists())
-                _context.CreateDatabase();
-
+            _connectionString = connectionString;
             _report = new List<Registry>();
             DataSaving += OnDataSaving;
 
@@ -43,24 +41,50 @@ namespace WindowsMetrics
 
         private void OnDataSaving()
         {
-            for (int i = 0; i < _report.Count; i++)
+            //for (int i = 0; i < _report.Count; i++)
+            //{
+            //    var existingUser = _context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value); // TODO too complicated
+            //    if (existingUser != null)
+            //        _report[i].Username1 = existingUser;
+
+            //    var existingIp = _context.IpAddresses.FirstOrDefault(ip => ip.Value == _report[i].IpAddress.Value);
+            //    if (existingIp != null)
+            //        _report[i].IpAddress = existingIp;
+
+            //    var existingMac = _context.MacAddresses.FirstOrDefault(m => m.Value == _report[i].MacAddress.Value);
+            //    if (existingMac != null)
+            //        _report[i].MacAddress = existingMac;
+
+            //    _context.Registries.InsertOnSubmit(_report[i]);
+            //}
+            //_context.SubmitChanges(); // TODO transaction
+            //_report.Clear();
+
+            using (var context = new MetricsDataContext(_connectionString))
             {
-                var existingUser = _context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value); // TODO too complicated
-                if (existingUser != null)
-                    _report[i].Username1 = existingUser;
+                if (!context.DatabaseExists())
+                    context.CreateDatabase();
 
-                var existingIp = _context.IpAddresses.FirstOrDefault(ip => ip.Value == _report[i].IpAddress.Value);
-                if (existingIp != null)
-                    _report[i].IpAddress = existingIp;
+                for (int i = 0; i < _report.Count; i++)
+                {
+                    var existingUser = context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value);
+                    // TODO too complicated
+                    if (existingUser != null)
+                        _report[i].Username1 = existingUser;
 
-                var existingMac = _context.MacAddresses.FirstOrDefault(m => m.Value == _report[i].MacAddress.Value);
-                if (existingMac != null)
-                    _report[i].MacAddress = existingMac;
-                
-                _context.Registries.InsertOnSubmit(_report[i]);
+                    var existingIp = context.IpAddresses.FirstOrDefault(ip => ip.Value == _report[i].IpAddress.Value);
+                    if (existingIp != null)
+                        _report[i].IpAddress = existingIp;
+
+                    var existingMac = context.MacAddresses.FirstOrDefault(m => m.Value == _report[i].MacAddress.Value);
+                    if (existingMac != null)
+                        _report[i].MacAddress = existingMac;
+
+                    context.Registries.InsertOnSubmit(_report[i]);
+                }
+                context.SubmitChanges(); // TODO transaction
+                _report.Clear();
             }
-            _context.SubmitChanges(); // TODO transaction
-            _report.Clear();
         }
 
         public void Start()

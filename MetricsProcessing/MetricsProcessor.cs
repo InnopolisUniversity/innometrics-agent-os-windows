@@ -21,10 +21,10 @@ namespace MetricsProcessing
         private readonly List<string> _nameFilter;
         private readonly bool _includeNullTitles;
 
-        private void CommonConstructor(MetricsDataContext context,
+        private void CommonConstructor(string connectionString,
             int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
-            DbHelper helper = new DbHelper(context);
+            DbHelper helper = new DbHelper(connectionString);
             _registriesProcessor = new RegistriesProcessor(helper);
             _activitiesProcessor = new ActivitiesProcessor(helper);
             _processRegistriesAtOneTime = processRegistriesAtOneTime;
@@ -42,17 +42,17 @@ namespace MetricsProcessing
             _taskForGuardRegistriesProcessor.Start();
         }
 
-        public MetricsProcessor(MetricsDataContext context, 
+        public MetricsProcessor(string connectionString, 
             int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter, bool includeNullTitles)
         {
             _nameFilter = nameFilter;
             _includeNullTitles = includeNullTitles;
-            CommonConstructor(context, processRegistriesIntervalSec, processRegistriesAtOneTime);
+            CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
-        public MetricsProcessor(MetricsDataContext context, int processRegistriesIntervalSec, int processRegistriesAtOneTime)
+        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
-            CommonConstructor(context, processRegistriesIntervalSec, processRegistriesAtOneTime);
+            CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
         public void Start()
@@ -76,6 +76,7 @@ namespace MetricsProcessing
                     nameFilter: _nameFilter,
                     includeNullTitles: _includeNullTitles
                 );
+            int u = activities?.Count ?? -1;
             if (activities != null)
             {
                 _activitiesProcessor.StoreActivitiesListInDbAsJson(activities);

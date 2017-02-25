@@ -10,11 +10,11 @@ namespace MetricsProcessing
 {
     public class DbHelper
     {
-        private readonly MetricsDataContext _context;
+        private readonly string _connectionString;
 
-        public DbHelper(MetricsDataContext context)
+        public DbHelper(string connectionString)
         {
-            _context = context;
+            _connectionString = connectionString;
         }
 
         /// <exception cref="OnlyOneNonProcessedRegistryTakenException">
@@ -25,15 +25,21 @@ namespace MetricsProcessing
         /// <exception cref="AllTakenRegistiesBeginActivityException">See description of the exception class</exception>
         public RegistriesList GetRegistries(int quantityToTake)
         {
-            var registries = _context.Registries.
-                Where(r => r.Processed.HasValue && !r.Processed.Value).Take(quantityToTake).OrderBy(r => r.Time).ToList();
+            using (var context = new MetricsDataContext(_connectionString))
+            {
+                var registries = context.Registries.
+                    Where(r => r.Processed.HasValue && !r.Processed.Value)
+                    .Take(quantityToTake)
+                    .OrderBy(r => r.Time)
+                    .ToList();
 
-            if (registries.Count == 1)
-                throw new OnlyOneNonProcessedRegistryTakenException(registries[0]);
-            if (registries.Count == 0)
-                throw new NoNonProcessedRegistriesException();
+                if (registries.Count == 1)
+                    throw new OnlyOneNonProcessedRegistryTakenException(registries[0]);
+                if (registries.Count == 0)
+                    throw new NoNonProcessedRegistriesException();
 
-            return MakeRegistriesList(registries);
+                return MakeRegistriesList(registries);
+            }
         }
 
         /// <summary>
@@ -77,14 +83,20 @@ namespace MetricsProcessing
 
         public void MarkAsProcessed(RegistriesList registries)
         {
-            registries.ForEach(r => r.Processed = true);
-            _context.SubmitChanges();
+            using (var context = new MetricsDataContext(_connectionString))
+            {
+                registries.ForEach(r => r.Processed = true);
+                context.SubmitChanges();
+            }
         }
 
         public void MarkFilteredAsProcessed(RegistriesList registries)
         {
-            registries.FilteredRegistries.ForEach(r => r.Processed = true);
-            _context.SubmitChanges();
+            using (var context = new MetricsDataContext(_connectionString))
+            {
+                registries.FilteredRegistries.ForEach(r => r.Processed = true);
+                context.SubmitChanges();
+            }
         }
 
         /// <summary>
@@ -95,9 +107,12 @@ namespace MetricsProcessing
         /// </summary>
         public void SetProcessedToNull(Registry registry)
         {
-            var reg = _context.Registries.First(r => r.Id == registry.Id);
-            reg.Processed = null;
-            _context.SubmitChanges();
+            using (var context = new MetricsDataContext(_connectionString))
+            {
+                var reg = context.Registries.First(r => r.Id == registry.Id);
+                reg.Processed = null;
+                context.SubmitChanges();
+            }
         }
 
         /// <summary>
@@ -105,17 +120,21 @@ namespace MetricsProcessing
         /// </summary>
         public bool AnyMoreRegistriesExist(DateTime after)
         {
-            return _context.Registries.Any(r => r.Time > after);
+            using (var context = new MetricsDataContext(_connectionString))
+                return context.Registries.Any(r => r.Time > after);
         }
 
         public void StoreJsonInActivitiesRegistry(string json)
         {
-            _context.ActivitiesRegistries.InsertOnSubmit(new ActivitiesRegistry()
+            using (var context = new MetricsDataContext(_connectionString))
             {
-                Json = json,
-                Transmitted = false
-            });
-            _context.SubmitChanges();
+                context.ActivitiesRegistries.InsertOnSubmit(new ActivitiesRegistry()
+                {
+                    Json = json,
+                    Transmitted = false
+                });
+                context.SubmitChanges();
+            }
         }
     }
 }

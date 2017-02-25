@@ -22,7 +22,6 @@ namespace TestWindowsFormsApplication
 {
     public partial class Form1 : Form
     {
-        private MetricsDataContext context;
         private Collector collector;
         private Writer writer;
         private MetricsProcessor processor;
@@ -38,8 +37,7 @@ namespace TestWindowsFormsApplication
 
             InitializeComponent();
 
-            context = new MetricsDataContext(connectionString);
-            writer = new Writer(context, dataSavingIntervalSec);
+            writer = new Writer(connectionString, dataSavingIntervalSec);
             collector = new Collector(
                 writer,
                 stateScanIntervalSec,
@@ -49,7 +47,7 @@ namespace TestWindowsFormsApplication
                 s => richTextBox1.AppendText(s.ToString() + "\n***\n")
             );
             processor = new MetricsProcessor(
-                context: context,
+                connectionString: connectionString,
                 processRegistriesIntervalSec: processRegistriesIntervalSec,
                 processRegistriesAtOneTime: processRegistriesAtOneTime,
                 nameFilter: new List<string>() { "XXX" },
