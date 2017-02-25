@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommonModels;
 using CommonModels.Helpers;
@@ -24,16 +25,18 @@ namespace MetricsProcessing
         private void CommonConstructor(string connectionString,
             int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
-            DbHelper helper = new DbHelper(connectionString);
-            _registriesProcessor = new RegistriesProcessor(helper);
-            _activitiesProcessor = new ActivitiesProcessor(helper);
+            _registriesProcessor = new RegistriesProcessor(connectionString);
+            _activitiesProcessor = new ActivitiesProcessor(connectionString);
             _processRegistriesAtOneTime = processRegistriesAtOneTime;
             ProcessingAndStoring += OnRegistriesProcessingAndStoring;
 
             _taskForGuardRegistriesProcessor = new Task(() =>
                 {
                     _guardRegistriesProcessor = new Guard(
-                        actionToDoEveryTick: () => ProcessingAndStoring?.Invoke(),
+                        actionToDoEveryTick: () =>
+                        {
+                            ProcessingAndStoring?.Invoke();
+                        },
                         secondsToCountdown: processRegistriesIntervalSec
                     );
                 }
@@ -42,15 +45,17 @@ namespace MetricsProcessing
             _taskForGuardRegistriesProcessor.Start();
         }
 
-        public MetricsProcessor(string connectionString, 
-            int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter, bool includeNullTitles)
+        public MetricsProcessor(string connectionString,
+            int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter,
+            bool includeNullTitles)
         {
             _nameFilter = nameFilter;
             _includeNullTitles = includeNullTitles;
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
-        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec, int processRegistriesAtOneTime)
+        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec,
+            int processRegistriesAtOneTime)
         {
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
@@ -67,16 +72,17 @@ namespace MetricsProcessing
 
         private void OnRegistriesProcessingAndStoring()
         {
-            List<Activity> activities;
+            List<Activity> activities = null;
             if (_nameFilter == null)
                 activities = _registriesProcessor.Process(quantity: _processRegistriesAtOneTime);
             else
+            {
                 activities = _registriesProcessor.Process(
                     quantity: _processRegistriesAtOneTime,
                     nameFilter: _nameFilter,
                     includeNullTitles: _includeNullTitles
                 );
-            int u = activities?.Count ?? -1;
+            }
             if (activities != null)
             {
                 _activitiesProcessor.StoreActivitiesListInDbAsJson(activities);

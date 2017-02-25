@@ -41,25 +41,6 @@ namespace WindowsMetrics
 
         private void OnDataSaving()
         {
-            //for (int i = 0; i < _report.Count; i++)
-            //{
-            //    var existingUser = _context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value); // TODO too complicated
-            //    if (existingUser != null)
-            //        _report[i].Username1 = existingUser;
-
-            //    var existingIp = _context.IpAddresses.FirstOrDefault(ip => ip.Value == _report[i].IpAddress.Value);
-            //    if (existingIp != null)
-            //        _report[i].IpAddress = existingIp;
-
-            //    var existingMac = _context.MacAddresses.FirstOrDefault(m => m.Value == _report[i].MacAddress.Value);
-            //    if (existingMac != null)
-            //        _report[i].MacAddress = existingMac;
-
-            //    _context.Registries.InsertOnSubmit(_report[i]);
-            //}
-            //_context.SubmitChanges(); // TODO transaction
-            //_report.Clear();
-
             using (var context = new MetricsDataContext(_connectionString))
             {
                 if (!context.DatabaseExists())
@@ -68,7 +49,6 @@ namespace WindowsMetrics
                 for (int i = 0; i < _report.Count; i++)
                 {
                     var existingUser = context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value);
-                    // TODO too complicated
                     if (existingUser != null)
                         _report[i].Username1 = existingUser;
 

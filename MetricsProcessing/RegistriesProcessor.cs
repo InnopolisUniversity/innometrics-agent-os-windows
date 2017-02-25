@@ -11,11 +11,11 @@ namespace MetricsProcessing
 {
     public class RegistriesProcessor
     {
-        private readonly DbHelper _dbHelper;
+        private readonly string _connectionString;
 
-        public RegistriesProcessor(DbHelper helper)
+        public RegistriesProcessor(string connectionString)
         {
-            _dbHelper = helper;
+            _connectionString = connectionString;
         }
 
         /// <returns>
@@ -58,9 +58,10 @@ namespace MetricsProcessing
 
             while (!registries.IsEmpty)
             {
+                Activity activity = null;
                 int numOfRegistriesInActivity = DetectActivity(registries);
                 RegistriesList activityRegistries = ExtractActivity(registries, numOfRegistriesInActivity);
-                Activity activity = CreateActivity(activityRegistries);
+                activity = CreateActivity(activityRegistries);
                 activities.Add(activity);
                 MarkAsProcessed(activityRegistries);
             }
@@ -81,12 +82,12 @@ namespace MetricsProcessing
         {
             try
             {
-                var registries = _dbHelper.GetRegistries(registriesToProcessAtOnce);
+                var registries = DbHelper.GetRegistries(_connectionString, registriesToProcessAtOnce);
                 return registries;
             }
             catch (AllTakenRegistiesBeginActivityException e)
             {
-                if (_dbHelper.AnyMoreRegistriesExist(e.TakenRegistries.Last().Time))
+                if (DbHelper.AnyMoreRegistriesExist(_connectionString, e.TakenRegistries.Last().Time))
                     return GetRegistries(registriesToProcessAtOnce*2);
 
                 return e.TakenRegistries;
@@ -123,6 +124,7 @@ namespace MetricsProcessing
             {
                 Name = activityRegistries.First.WindowTitle,
             };
+
             activity.Measurements.Add(new Measurement()
             {
                 Name = "Duration",
@@ -162,17 +164,18 @@ namespace MetricsProcessing
                     Value = activityRegistries.First(r => r.Url != null).Url
                 });
             }
+            
             return activity;
         }
 
         private void MarkAsProcessed(RegistriesList registries)
         {
-            _dbHelper.MarkAsProcessed(registries);
+            DbHelper.MarkAsProcessed(_connectionString, registries);
         }
 
         private void MarkFilteredAsProcessed(RegistriesList registries)
         {
-            _dbHelper.MarkFilteredAsProcessed(registries);
+            DbHelper.MarkFilteredAsProcessed(_connectionString, registries);
         }
 
         /// <summary>
@@ -183,7 +186,7 @@ namespace MetricsProcessing
         /// </summary>
         private void MarkAsShouldNotBeProcessed(Registry registry)
         {
-            _dbHelper.SetProcessedToNull(registry);
+            DbHelper.SetProcessedToNull(_connectionString, registry);
         }
     }
 }

@@ -10,17 +10,17 @@ namespace MetricsProcessing
 {
     public class ActivitiesProcessor
     {
-        private readonly DbHelper _dbHelper;
+        private readonly string _connectionString;
 
-        public ActivitiesProcessor(DbHelper helper)
+        public ActivitiesProcessor(string connectionString)
         {
-            _dbHelper = helper;
+            _connectionString = connectionString;
         }
 
         public void StoreActivitiesListInDbAsJson(List<Activity> activities)
         {
             string json = JsonMaker.Serialize(activities);
-            _dbHelper.StoreJsonInActivitiesRegistry(json);
+            DbHelper.StoreJsonInActivitiesRegistry(_connectionString, json);
         }
     }
 }

@@ -226,8 +226,8 @@ namespace WindowsMetrics
                     IP_ADAPTER_INFO entry = (IP_ADAPTER_INFO)Marshal.PtrToStructure(pEntry, typeof(IP_ADAPTER_INFO));
 
                     // ***Do something with the data HERE!***
-                    Console.WriteLine("\n");
-                    Console.WriteLine("Index: {0}", entry.Index.ToString());
+                    //Console.WriteLine("\n");
+                    //Console.WriteLine("Index: {0}", entry.Index.ToString());
 
                     // Adapter Type
                     string tmpString = string.Empty;
@@ -241,29 +241,29 @@ namespace WindowsMetrics
                         case (uint)AdaptersConsts.MIB_IF_TYPE_SLIP: tmpString = "Slip"; break;
                         default: tmpString = "Other/Unknown"; break;
                     } // switch
-                    Console.WriteLine("Adapter Type: {0}", tmpString);
+                    //Console.WriteLine("Adapter Type: {0}", tmpString);
 
-                    Console.WriteLine("Name: {0}", entry.AdapterName);
-                    Console.WriteLine("Desc: {0}\n", entry.AdapterDescription);
+                    //Console.WriteLine("Name: {0}", entry.AdapterName);
+                    //Console.WriteLine("Desc: {0}\n", entry.AdapterDescription);
 
-                    Console.WriteLine("DHCP Enabled: {0}", (entry.DhcpEnabled == 1) ? "Yes" : "No");
+                    //Console.WriteLine("DHCP Enabled: {0}", (entry.DhcpEnabled == 1) ? "Yes" : "No");
 
                     if (entry.DhcpEnabled == 1)
                     {
-                        Console.WriteLine("DHCP Server : {0}", entry.DhcpServer.IpAddress.Address);
+                        //Console.WriteLine("DHCP Server : {0}", entry.DhcpServer.IpAddress.Address);
 
                         // Lease Obtained (convert from "time_t" to C# DateTime)
                         DateTime pdatDate = new DateTime(1970, 1, 1).AddSeconds(entry.LeaseObtained).ToLocalTime();
-                        Console.WriteLine("Lease Obtained: {0}", pdatDate.ToString());
+                        //Console.WriteLine("Lease Obtained: {0}", pdatDate.ToString());
 
                         // Lease Expires (convert from "time_t" to C# DateTime)
                         pdatDate = new DateTime(1970, 1, 1).AddSeconds(entry.LeaseExpires).ToLocalTime();
-                        Console.WriteLine("Lease Expires : {0}\n", pdatDate.ToString());
+                        //Console.WriteLine("Lease Expires : {0}\n", pdatDate.ToString());
                     } // if DhcpEnabled
 
-                    Console.WriteLine("IP Address     : {0}", entry.IpAddressList.IpAddress.Address);
-                    Console.WriteLine("Subnet Mask    : {0}", entry.IpAddressList.IpMask.Address);
-                    Console.WriteLine("Default Gateway: {0}", entry.GatewayList.IpAddress.Address);
+                    //Console.WriteLine("IP Address     : {0}", entry.IpAddressList.IpAddress.Address);
+                    //Console.WriteLine("Subnet Mask    : {0}", entry.IpAddressList.IpMask.Address);
+                    //Console.WriteLine("Default Gateway: {0}", entry.GatewayList.IpAddress.Address);
 
                     ip = entry.IpAddressList.IpAddress.Address;
                     if (ip != "0.0.0.0")

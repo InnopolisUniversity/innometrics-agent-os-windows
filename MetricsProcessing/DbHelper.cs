@@ -8,30 +8,30 @@ using MetricsProcessing.Exceptions;
 
 namespace MetricsProcessing
 {
-    public class DbHelper
+    public static class DbHelper
     {
-        private readonly string _connectionString;
-
-        public DbHelper(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         /// <exception cref="OnlyOneNonProcessedRegistryTakenException">
         /// Too few registries obtained, processing is impossible (there's no possibility of determining
         /// end time of the activity represented by the only registry)
         /// </exception>
         /// <exception cref="NoNonProcessedRegistriesException"></exception>
         /// <exception cref="AllTakenRegistiesBeginActivityException">See description of the exception class</exception>
-        public RegistriesList GetRegistries(int quantityToTake)
+        public static RegistriesList GetRegistries(string connectionString, int quantityToTake)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
             {
                 var registries = context.Registries.
                     Where(r => r.Processed.HasValue && !r.Processed.Value)
                     .Take(quantityToTake)
                     .OrderBy(r => r.Time)
                     .ToList();
+
+                foreach (var registry in registries)
+                {
+                    registry.IpAddress = context.IpAddresses.Single(ip => ip.Id == registry.Ip);
+                    registry.MacAddress = context.MacAddresses.Single(mac => mac.Id == registry.Mac);
+                    registry.Username1 = context.Usernames.Single(u => u.Id == registry.Username);
+                }
 
                 if (registries.Count == 1)
                     throw new OnlyOneNonProcessedRegistryTakenException(registries[0]);
@@ -81,18 +81,18 @@ namespace MetricsProcessing
             return new RegistriesList(registries, firstRegistryOfNextActivity.Time);
         }
 
-        public void MarkAsProcessed(RegistriesList registries)
+        public static void MarkAsProcessed(string connectionString, RegistriesList registries)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
             {
                 registries.ForEach(r => r.Processed = true);
                 context.SubmitChanges();
             }
         }
 
-        public void MarkFilteredAsProcessed(RegistriesList registries)
+        public static void MarkFilteredAsProcessed(string connectionString, RegistriesList registries)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
             {
                 registries.FilteredRegistries.ForEach(r => r.Processed = true);
                 context.SubmitChanges();
@@ -105,9 +105,9 @@ namespace MetricsProcessing
         /// Usings: 1. If only one registry is obtained, there's no more registries in db - cannot be processed
         /// 2. Filter ban
         /// </summary>
-        public void SetProcessedToNull(Registry registry)
+        public static void SetProcessedToNull(string connectionString, Registry registry)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
             {
                 var reg = context.Registries.First(r => r.Id == registry.Id);
                 reg.Processed = null;
@@ -118,15 +118,15 @@ namespace MetricsProcessing
         /// <summary>
         /// Checks if there any more registries in db that stored after given time
         /// </summary>
-        public bool AnyMoreRegistriesExist(DateTime after)
+        public static bool AnyMoreRegistriesExist(string connectionString, DateTime after)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
                 return context.Registries.Any(r => r.Time > after);
         }
 
-        public void StoreJsonInActivitiesRegistry(string json)
+        public static void StoreJsonInActivitiesRegistry(string connectionString, string json)
         {
-            using (var context = new MetricsDataContext(_connectionString))
+            using (var context = new MetricsDataContext(connectionString))
             {
                 context.ActivitiesRegistries.InsertOnSubmit(new ActivitiesRegistry()
                 {
