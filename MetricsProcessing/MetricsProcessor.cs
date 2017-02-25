@@ -46,14 +46,16 @@ namespace MetricsProcessing
         }
 
         public MetricsProcessor(string connectionString,
-            int processRegistriesIntervalSec, int processRegistriesAtOneTime, List<string> nameFilter, bool includeNullTitles)
+            int processRegistriesIntervalSec, int processRegistriesAtOneTime,
+            bool includeNullTitles, List<string> nameFilter = null)
         {
             _nameFilter = nameFilter;
             _includeNullTitles = includeNullTitles;
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
-        public MetricsProcessor(string connectionString, int processRegistriesIntervalSec, int processRegistriesAtOneTime)
+        public MetricsProcessor(string connectionString,
+            int processRegistriesIntervalSec, int processRegistriesAtOneTime)
         {
             _nameFilter = null;
             _includeNullTitles = true;

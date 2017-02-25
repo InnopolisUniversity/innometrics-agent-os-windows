@@ -50,15 +50,15 @@ namespace TestWindowsFormsApplication
                 connectionString: connectionString,
                 processRegistriesIntervalSec: processRegistriesIntervalSec,
                 processRegistriesAtOneTime: processRegistriesAtOneTime,
-                includeNullTitles: false,
-                nameFilter: new List<string>() { "XXX" }
+                includeNullTitles: false
             );
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            processor.Stop();
             writer.Stop();
+            // TODO manual process before stop
+            processor.Stop();
             bool success = collector.Stop();
 
             if (success)

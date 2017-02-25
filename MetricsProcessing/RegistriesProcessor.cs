@@ -25,7 +25,7 @@ namespace MetricsProcessing
         /// NULL if there's no processible registries obtained or there's no more registries, so there's no more
         /// activities can be obtained.
         /// </returns>
-        public List<Activity> Process(int quantity, bool includeNullTitles, IEnumerable<string> nameFilter = null)
+        public List<Activity> Process(int quantity, bool includeNullTitles, IEnumerable<string> nameFilter)
         {
             List<Activity> activities = new List<Activity>();
             RegistriesList registries;
