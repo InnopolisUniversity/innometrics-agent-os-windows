@@ -43,11 +43,13 @@ namespace MetricsProcessing
                 return null;
             }
 
-            if (nameFilter != null)
-                registries.Filter(nameFilter, includeNullTitles);
+            registries.Filter(nameFilter, includeNullTitles);
 
             if (registries.IsEmpty) // if all have been filtered out
+            {
+                MarkAsProcessed(registries.FilteredRegistries);
                 return null;
+            }
 
             while (!registries.IsEmpty)
             {
@@ -58,7 +60,7 @@ namespace MetricsProcessing
                 activities.Add(activity);
                 MarkAsProcessed(activityRegistries);
             }
-            MarkFilteredAsProcessed(registries);
+            MarkAsProcessed(registries.FilteredRegistries);
 
             return activities;
         }
@@ -161,14 +163,9 @@ namespace MetricsProcessing
             return activity;
         }
 
-        private void MarkAsProcessed(RegistriesList registries)
+        private void MarkAsProcessed(List<Registry> registries)
         {
             DbHelper.MarkAsProcessed(_connectionString, registries);
-        }
-
-        private void MarkFilteredAsProcessed(RegistriesList registries)
-        {
-            DbHelper.MarkFilteredAsProcessed(_connectionString, registries);
         }
 
         /// <summary>

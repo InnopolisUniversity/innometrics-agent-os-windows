@@ -50,8 +50,8 @@ namespace TestWindowsFormsApplication
                 connectionString: connectionString,
                 processRegistriesIntervalSec: processRegistriesIntervalSec,
                 processRegistriesAtOneTime: processRegistriesAtOneTime,
-                nameFilter: new List<string>() { "XXX" },
-                includeNullTitles: false
+                includeNullTitles: false,
+                nameFilter: new List<string>() { "XXX" }
             );
         }
 

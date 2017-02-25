@@ -81,20 +81,13 @@ namespace MetricsProcessing
             return new RegistriesList(registries, firstRegistryOfNextActivity.Time);
         }
 
-        public static void MarkAsProcessed(string connectionString, RegistriesList registries)
+        public static void MarkAsProcessed(string connectionString, List<Registry> registries)
         {
             using (var context = new MetricsDataContext(connectionString))
             {
-                registries.ForEach(r => r.Processed = true);
-                context.SubmitChanges();
-            }
-        }
-
-        public static void MarkFilteredAsProcessed(string connectionString, RegistriesList registries)
-        {
-            using (var context = new MetricsDataContext(connectionString))
-            {
-                registries.FilteredRegistries.ForEach(r => r.Processed = true);
+                List<Registry> contextRegistries = new List<Registry>();
+                registries.ForEach(r => contextRegistries.Add(context.Registries.Single(rg => rg.Id == r.Id)));
+                contextRegistries.ForEach(r => r.Processed = true);
                 context.SubmitChanges();
             }
         }

@@ -27,23 +27,24 @@ namespace MetricsProcessing
 
         public void Filter(IEnumerable<string> nameFilter, bool includeNullTitles)
         {
-            if (nameFilter != null)
+            var filterSubstrings = nameFilter as string[];
+            if (filterSubstrings != null && filterSubstrings.Any())
             {
-                foreach (var filterSubstring in nameFilter)
+                foreach (var filterSubstring in filterSubstrings)
                 {
                     var filterExtract = includeNullTitles ?
                         this.Where(r => r.WindowTitle != null && r.WindowTitle.Contains(filterSubstring)):
                         this.Where(r => r.WindowTitle == null || r.WindowTitle.Contains(filterSubstring));
                     FilteredRegistries.AddRange(filterExtract);
                 }
-                this.RemoveAll(r => FilteredRegistries.Contains(r));
-                return;
             }
 
             if (!includeNullTitles)
             {
-                this.RemoveAll(r => r.WindowTitle == null);
+                FilteredRegistries.AddRange(this.Where(r => r.WindowTitle == null));
             }
+
+            this.RemoveAll(r => FilteredRegistries.Contains(r));
         }
     }
 }
