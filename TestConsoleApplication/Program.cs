@@ -45,8 +45,16 @@ namespace TestConsoleApplication
             });
             Report report = new Report() {Activities = new List<Activity>() {a, b}};
 
+            string statusCode;
+            Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/");
+            bool succReg = sender.Authorize("test", "test123123", out statusCode);
 
-
+            string res;
+            if (succReg)
+            {
+                res = sender.SendActivities(report, out statusCode);
+            }
+            
 
 
             //string json = JsonMaker.Serialize(report);
