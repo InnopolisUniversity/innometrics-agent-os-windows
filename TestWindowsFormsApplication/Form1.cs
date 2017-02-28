@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Data.Sql;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics;
-using CommonModels;
 using CommonModels.Helpers;
 using MetricsProcessing;
+using Microsoft.Win32;
+using Registry = CommonModels.Registry;
+using System.ServiceProcess;
 
 namespace TestWindowsFormsApplication
 {

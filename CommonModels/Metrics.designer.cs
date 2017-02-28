@@ -458,7 +458,7 @@ namespace CommonModels
 	{
         public override string ToString()
         {
-            return $"Event:{Event}\nTime:{Time}\nWindowId:{WindowId}\nWindowTitle:{WindowTitle}\n" +
+            return $"Event:{((CollectionEvent)Event).ToString()}\nTime:{Time}\nWindowId:{WindowId}\nWindowTitle:{WindowTitle}\n" +
                    $"ExeModulePath:{ExeModulePath}\nProcessName:{ProcessName}\nUsername:{Username1.Value}\n" +
                    $"Ip:{IpAddress.Value}\nMac:{MacAddress.Value}\nURL:{Url}";
         }
