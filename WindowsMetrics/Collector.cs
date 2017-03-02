@@ -26,6 +26,10 @@ namespace WindowsMetrics
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
 
+        private bool _enableForegroundWindowChangeTracking;
+        private bool _enableLeftClickTracking;
+        private bool _enableStateScanning;
+
 
 
         #region Handlers for the events being tracked
@@ -108,16 +112,21 @@ namespace WindowsMetrics
 
 
 
-        private void CommonConstructor(Writer writer, int stateScanIntervalSec)
+        private void CommonConstructor(Writer writer, int stateScanIntervalSec, 
+            bool enableForegroundWindowChangeTracking, bool enableLeftClickTracking, bool enableStateScanning)
         {
             _writer = writer;
             StateScan += OnGuardStateScan;
             _stateScanIntervalSec = stateScanIntervalSec;
+            _enableForegroundWindowChangeTracking = enableForegroundWindowChangeTracking;
+            _enableLeftClickTracking = enableLeftClickTracking;
+            _enableStateScanning = enableStateScanning;
         }
 
-        public Collector(Writer writer, int stateScanIntervalSec)
+        public Collector(Writer writer, int stateScanIntervalSec, 
+            bool enableForegroundWindowChangeTracking, bool enableLeftClickTracking, bool enableStateScanning)
         {
-            CommonConstructor(writer, stateScanIntervalSec);
+            CommonConstructor(writer, stateScanIntervalSec, enableForegroundWindowChangeTracking, enableLeftClickTracking, enableStateScanning);
         }
 
         /// <param name="writer"></param>
@@ -126,25 +135,27 @@ namespace WindowsMetrics
         /// <param name="onForegroundWindowChangeAddon">Action with the string that is created when onForegroundWindowChange occurs</param>
         /// <param name="onLeftMouseClickAddon">Action with the string that is created when onLeftMouseClick occurs</param>
         /// <param name="onGuardStateScanAddon">Action with the string that is created when onGuardStateScan occurs</param>
-        public Collector(Writer writer, int stateScanIntervalSec, SynchronizationContext sync,
+        public Collector(Writer writer, int stateScanIntervalSec, 
+            bool enableForegroundWindowChangeTracking, bool enableLeftClickTracking, bool enableStateScanning, 
+            SynchronizationContext sync, 
             Action<object> onForegroundWindowChangeAddon, Action<object> onLeftMouseClickAddon, Action<object> onGuardStateScanAddon)
         {
             _onForegroundWindowChangeAddon = onForegroundWindowChangeAddon;
             _onLeftMouseClickAddon = onLeftMouseClickAddon;
             _onGuardStateScanAddon = onGuardStateScanAddon;
             _sync = sync;
-            CommonConstructor(writer, stateScanIntervalSec);
+            CommonConstructor(writer, stateScanIntervalSec, enableForegroundWindowChangeTracking, enableLeftClickTracking, enableStateScanning);
         }
 
-        public void Start(bool enableForegroundWindowChangeTracking, bool enableLeftClickTracking, bool enableStateScanning)
+        public void Start()
         {
-            if(enableForegroundWindowChangeTracking)
+            if(_enableForegroundWindowChangeTracking)
                 _foregroundWindowHook = WinAPI.StartTrackingForegroundWindowChange(OnForegroundWindowChange, out _foregroundWindowHandle);
 
-            if(enableLeftClickTracking)
+            if(_enableLeftClickTracking)
                 _mouseClickHook = WinAPI.StartTrackingLeftClickEvent(OnLeftMouseClick, out _mouseClickHandle);
 
-            if (enableStateScanning)
+            if (_enableStateScanning)
             {
                 _taskForGuardStateScanner = new Task(() =>
                     {
