@@ -100,7 +100,19 @@
         "Entry"
         {
         "MsmKey" = "8:_94DE4A7F63C864CB960D44523B1C25AE"
+        "OwnerKey" = "8:_96513981B3F65F520BB5D7F237BA487E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_94DE4A7F63C864CB960D44523B1C25AE"
         "OwnerKey" = "8:_F8A738BA61BCE590D00775E7CAE3753F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_96513981B3F65F520BB5D7F237BA487E"
+        "OwnerKey" = "8:_9ED21F614FB24758A7BA212195984F29"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -250,6 +262,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_96513981B3F65F520BB5D7F237BA487E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F8A738BA61BCE590D00775E7CAE3753F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -356,6 +374,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -380,6 +406,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -655,6 +689,37 @@
                     }
                 }
             "SourcePath" = "8:CommonModels.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D940A3343C6B43E287A16524C1FCC612"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_96513981B3F65F520BB5D7F237BA487E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Transmission, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_96513981B3F65F520BB5D7F237BA487E"
+                    {
+                    "Name" = "8:Transmission.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Transmission.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D940A3343C6B43E287A16524C1FCC612"
@@ -1026,9 +1091,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:TestInstaller"
+        "ProductName" = "8:Windows Metrics Collection System"
         "ProductCode" = "8:{352B6233-1156-4B55-9FD4-E7E462CFFF26}"
-        "PackageCode" = "8:{3200195D-84F8-412F-ACF2-BB72C360EB74}"
+        "PackageCode" = "8:{998EFDA9-BD95-43BE-A2AC-C969D8DCF63D}"
         "UpgradeCode" = "8:{FEB56E72-01B7-49A7-91F9-D82F0B98964E}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1039,7 +1104,7 @@
         "Manufacturer" = "8:Innopolis University"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:TestInstaller"
+        "Title" = "8:Windows Metrics Collection System"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Alexander Shunevich"
         "Keywords" = "8:"

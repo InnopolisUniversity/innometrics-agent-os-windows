@@ -48,7 +48,8 @@ namespace WindowsMetrics
         {
             uint pid;
             IntPtr fwin = WinAPIDeclarations.GetForegroundWindow();
-            uint idCreatorThread = WinAPIDeclarations.GetWindowThreadProcessId(fwin, out pid); // identifier of the thread that created the window
+            uint idCreatorThread = WinAPIDeclarations.GetWindowThreadProcessId(fwin, out pid);
+                // identifier of the thread that created the window
             return pid;
         }
 
@@ -69,7 +70,7 @@ namespace WindowsMetrics
         private static Process GetForegroundWindowProcess()
         {
             uint pid = GetForegroundWindowProcessID();
-            Process p = Process.GetProcessById((int)pid);
+            Process p = Process.GetProcessById((int) pid);
             return p;
         }
 
@@ -86,8 +87,8 @@ namespace WindowsMetrics
                 onWindowChangeAction.Invoke();
             };
             gcHandle = GCHandle.Alloc(action);
-            return WinAPIDeclarations.SetWinEventHook((uint)Event.EVENT_SYSTEM_FOREGROUND,
-                (uint)Event.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, action, 0, 0, (uint)Event.WINEVENT_OUTOFCONTEXT);
+            return WinAPIDeclarations.SetWinEventHook((uint) Event.EVENT_SYSTEM_FOREGROUND,
+                (uint) Event.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, action, 0, 0, (uint) Event.WINEVENT_OUTOFCONTEXT);
         }
 
         public static bool StopTrackingForegroundWindowChange(IntPtr hook)
@@ -103,7 +104,7 @@ namespace WindowsMetrics
         {
             HookProc action = (code, param, lParam) =>
             {
-                if (param.ToInt32() == (int)WindowsMessageCode.WM_LBUTTONUP)
+                if (param.ToInt32() == (int) WindowsMessageCode.WM_LBUTTONUP)
                     onLeftClickAction.Invoke();
                 return IntPtr.Zero;
             };
@@ -143,7 +144,7 @@ namespace WindowsMetrics
         {
             SYSTEMTIME time;
             WinAPIDeclarations.GetSystemTime(out time);
-            return new DateTime(time.Year, time.Month, time.Day, 
+            return new DateTime(time.Year, time.Month, time.Day,
                 time.Hour, time.Minute, time.Second, time.Milliseconds);
         }
 
@@ -161,12 +162,13 @@ namespace WindowsMetrics
             string result = null;
             uint processId = GetForegroundWindowProcessID();
             IntPtr processHandle = WinAPIDeclarations.OpenProcess(
-                    ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead, true, (int)processId);
+                ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead, true, (int) processId);
             if (processHandle != IntPtr.Zero)
             {
                 int size = 1024;
                 StringBuilder buffer = new StringBuilder(DefaultBufferSize);
-                uint length = WinAPIDeclarations.GetModuleFileNameEx(processHandle, IntPtr.Zero, buffer, size); // returns length of the string copied to the buffer (0 if failed)
+                uint length = WinAPIDeclarations.GetModuleFileNameEx(processHandle, IntPtr.Zero, buffer, size);
+                    // returns length of the string copied to the buffer (0 if failed)
                 if (length > 0)
                     result = buffer.ToString();
 
@@ -206,7 +208,7 @@ namespace WindowsMetrics
 
             int ret = WinAPIDeclarations.GetAdaptersInfo(pArray, ref structSize);
 
-            if (ret == (int)AdaptersConsts.ERROR_BUFFER_OVERFLOW) // ERROR_BUFFER_OVERFLOW == 111
+            if (ret == (int) AdaptersConsts.ERROR_BUFFER_OVERFLOW) // ERROR_BUFFER_OVERFLOW == 111
             {
                 // Buffer was too small, reallocate the correct size for the buffer.
                 pArray = Marshal.ReAllocHGlobal(pArray, new IntPtr(structSize));
@@ -223,7 +225,7 @@ namespace WindowsMetrics
                 do
                 {
                     // Retrieve the adapter info from the memory address
-                    IP_ADAPTER_INFO entry = (IP_ADAPTER_INFO)Marshal.PtrToStructure(pEntry, typeof(IP_ADAPTER_INFO));
+                    IP_ADAPTER_INFO entry = (IP_ADAPTER_INFO) Marshal.PtrToStructure(pEntry, typeof(IP_ADAPTER_INFO));
 
                     // ***Do something with the data HERE!***
                     //Console.WriteLine("\n");
@@ -233,13 +235,27 @@ namespace WindowsMetrics
                     string tmpString = string.Empty;
                     switch (entry.Type)
                     {
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_ETHERNET: tmpString = "Ethernet"; break;
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_TOKENRING: tmpString = "Token Ring"; break;
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_FDDI: tmpString = "FDDI"; break;
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_PPP: tmpString = "PPP"; break;
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_LOOPBACK: tmpString = "Loopback"; break;
-                        case (uint)AdaptersConsts.MIB_IF_TYPE_SLIP: tmpString = "Slip"; break;
-                        default: tmpString = "Other/Unknown"; break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_ETHERNET:
+                            tmpString = "Ethernet";
+                            break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_TOKENRING:
+                            tmpString = "Token Ring";
+                            break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_FDDI:
+                            tmpString = "FDDI";
+                            break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_PPP:
+                            tmpString = "PPP";
+                            break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_LOOPBACK:
+                            tmpString = "Loopback";
+                            break;
+                        case (uint) AdaptersConsts.MIB_IF_TYPE_SLIP:
+                            tmpString = "Slip";
+                            break;
+                        default:
+                            tmpString = "Other/Unknown";
+                            break;
                     } // switch
                     //Console.WriteLine("Adapter Type: {0}", tmpString);
 
@@ -297,8 +313,7 @@ namespace WindowsMetrics
                     // Get next adapter (if any)
                     pEntry = entry.Next;
 
-                }
-                while (pEntry != IntPtr.Zero || (ip == string.Empty && mac == string.Empty));
+                } while (pEntry != IntPtr.Zero || (ip == string.Empty && mac == string.Empty));
 
                 Marshal.FreeHGlobal(pArray);
 
@@ -319,81 +334,97 @@ namespace WindowsMetrics
 
         public static string GetChormeUrl()
         {
-            Process[] procs = Process.GetProcessesByName("chrome");
-
-            foreach (Process proc in procs)
+            try
             {
-                // the chrome process must have a window
-                if (proc.MainWindowHandle == IntPtr.Zero)
-                {
-                    continue;
-                }
-                //AutomationElement elm = AutomationElement.RootElement.FindFirst(TreeScope.Children,
-                //         new PropertyCondition(AutomationElement.ClassNameProperty, "Chrome_WidgetWin_1"));
-                // find the automation element
-                AutomationElement elm = AutomationElement.FromHandle(proc.MainWindowHandle);
+                Process[] procs = Process.GetProcessesByName("chrome");
 
-                // manually walk through the tree, searching using TreeScope.Descendants is too slow (even if it's more reliable)
-                AutomationElement elmUrlBar = null;
-                try
+                foreach (Process proc in procs)
                 {
-                    // walking path found using inspect.exe (Windows SDK) for Chrome 43.0.2357.81 m (currently the latest stable)
-                    // Inspect.exe path - C://Program files (X86)/Windows Kits/10/bin/x64
-                    var elm1 = elm.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
-                    if (elm1 == null) { continue; } // not the right chrome.exe
-                    var elm2 = TreeWalker.RawViewWalker.GetLastChild(elm1); // I don't know a Condition for this for finding
-                    var elm3 = elm2.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, ""));
-                    var elm4 = TreeWalker.RawViewWalker.GetNextSibling(elm3); // I don't know a Condition for this for finding
-                    var elm5 = elm4.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolBar));
-                    var elm6 = elm5.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, ""));
-                    elmUrlBar = elm6.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
-                }
-                catch
-                {
-                    // Chrome has probably changed something, and above walking needs to be modified. :(
-                    // put an assertion here or something to make sure you don't miss it
-                    continue;
-                }
+                    // the chrome process must have a window
+                    if (proc.MainWindowHandle == IntPtr.Zero)
+                    {
+                        continue;
+                    }
+                    //AutomationElement elm = AutomationElement.RootElement.FindFirst(TreeScope.Children,
+                    //         new PropertyCondition(AutomationElement.ClassNameProperty, "Chrome_WidgetWin_1"));
+                    // find the automation element
+                    AutomationElement elm = AutomationElement.FromHandle(proc.MainWindowHandle);
 
-                // make sure it's valid
-                if (elmUrlBar == null)
-                {
-                    // it's not..
-                    continue;
-                }
-
-                // elmUrlBar is now the URL bar element. we have to make sure that it's out of keyboard focus if we want to get a valid URL
-                if ((bool)elmUrlBar.GetCurrentPropertyValue(AutomationElement.HasKeyboardFocusProperty))
-                {
-                    continue;
-                }
-
-                // there might not be a valid pattern to use, so we have to make sure we have one
-                AutomationPattern[] patterns = elmUrlBar.GetSupportedPatterns();
-                if (patterns.Length == 1)
-                {
-                    string ret = "";
+                    // manually walk through the tree, searching using TreeScope.Descendants is too slow (even if it's more reliable)
+                    AutomationElement elmUrlBar = null;
                     try
                     {
-                        ret = ((ValuePattern)elmUrlBar.GetCurrentPattern(patterns[0])).Current.Value;
-                    }
-                    catch { }
-                    if (ret != "")
-                    {
-                        // must match a domain name (and possibly "https://" in front)
-                        if (Regex.IsMatch(ret, @"^(https:\/\/)?[a-zA-Z0-9\-\.]+(\.[a-zA-Z]{2,4}).*$"))
+                        // walking path found using inspect.exe (Windows SDK) for Chrome 43.0.2357.81 m (currently the latest stable)
+                        // Inspect.exe path - C://Program files (X86)/Windows Kits/10/bin/x64
+                        var elm1 = elm.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
+                        if (elm1 == null)
                         {
-                            // prepend http:// to the url, because Chrome hides it if it's not SSL
-                            if (!ret.StartsWith("http"))
-                            {
-                                ret = "http://" + ret;
-                            }
-                            return ret;
-                        }
+                            continue;
+                        } // not the right chrome.exe
+                        var elm2 = TreeWalker.RawViewWalker.GetLastChild(elm1);
+                        // I don't know a Condition for this for finding
+                        var elm3 = elm2.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.NameProperty, ""));
+                        var elm4 = TreeWalker.RawViewWalker.GetNextSibling(elm3);
+                        // I don't know a Condition for this for finding
+                        var elm5 = elm4.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolBar));
+                        var elm6 = elm5.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.NameProperty, ""));
+                        elmUrlBar = elm6.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
                     }
-                    continue;
+                    catch
+                    {
+                        // Chrome has probably changed something, and above walking needs to be modified. :(
+                        // put an assertion here or something to make sure you don't miss it
+                        continue;
+                    }
+
+                    // make sure it's valid
+                    if (elmUrlBar == null)
+                    {
+                        // it's not..
+                        continue;
+                    }
+
+                    // elmUrlBar is now the URL bar element. we have to make sure that it's out of keyboard focus if we want to get a valid URL
+                    if ((bool) elmUrlBar.GetCurrentPropertyValue(AutomationElement.HasKeyboardFocusProperty))
+                    {
+                        continue;
+                    }
+
+                    // there might not be a valid pattern to use, so we have to make sure we have one
+                    AutomationPattern[] patterns = elmUrlBar.GetSupportedPatterns();
+                    if (patterns.Length == 1)
+                    {
+                        string ret = "";
+                        try
+                        {
+                            ret = ((ValuePattern) elmUrlBar.GetCurrentPattern(patterns[0])).Current.Value;
+                        }
+                        catch
+                        {
+                        }
+                        if (ret != "")
+                        {
+                            // must match a domain name (and possibly "https://" in front)
+                            if (Regex.IsMatch(ret, @"^(https:\/\/)?[a-zA-Z0-9\-\.]+(\.[a-zA-Z]{2,4}).*$"))
+                            {
+                                // prepend http:// to the url, because Chrome hides it if it's not SSL
+                                if (!ret.StartsWith("http"))
+                                {
+                                    ret = "http://" + ret;
+                                }
+                                return ret;
+                            }
+                        }
+                        continue;
+                    }
                 }
             }
+            catch (Exception) { }
             return null;
         }
 

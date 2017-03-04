@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsProcessing", "Metric
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TestInstaller", "TestInstaller\TestInstaller.vdproj", "{897149A9-167B-4E00-A202-3C86D4E0B254}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsCollector", "MetricsCollector\MetricsCollector.csproj", "{A558F40E-19AB-44F3-B080-79C0C0177B6B}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MetricsCollectionService", "MetricsCollectionService\MetricsCollectionService.vdproj", "{2CB2EC2B-C18B-4DC4-AA69-640F27C5BCD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,12 @@ Global
 		{41FC4119-FBFB-4A21-B38F-2310FEFF0662}.Release|Any CPU.Build.0 = Release|Any CPU
 		{897149A9-167B-4E00-A202-3C86D4E0B254}.Debug|Any CPU.ActiveCfg = Debug
 		{897149A9-167B-4E00-A202-3C86D4E0B254}.Release|Any CPU.ActiveCfg = Release
+		{A558F40E-19AB-44F3-B080-79C0C0177B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A558F40E-19AB-44F3-B080-79C0C0177B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A558F40E-19AB-44F3-B080-79C0C0177B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A558F40E-19AB-44F3-B080-79C0C0177B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CB2EC2B-C18B-4DC4-AA69-640F27C5BCD7}.Debug|Any CPU.ActiveCfg = Debug
+		{2CB2EC2B-C18B-4DC4-AA69-640F27C5BCD7}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

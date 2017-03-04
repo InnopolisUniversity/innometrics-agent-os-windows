@@ -22,5 +22,15 @@ namespace MetricsProcessing
             string json = JsonMaker.Serialize(activities);
             DbHelper.StoreJsonInActivitiesRegistry(_connectionString, json);
         }
+
+        public ActivitiesRegistry GetFirstNonTransmittedJson()
+        {
+            return DbHelper.GetFirstNonTransmittedActivitiesRegistry(_connectionString);
+        }
+
+        public bool AnyNonTransmittedJson()
+        {
+            return DbHelper.AnyNonTransmittedActivitiesRegistries(_connectionString);
+        }
     }
 }

@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Configuration;
 using System.Configuration.Install;
+using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
-using CommonModels;
 
-namespace TestWindowsFormsApplication
+namespace MetricsCollector
 {
     [RunInstaller(true)]
     public partial class Installer : System.Configuration.Install.Installer
     {
-        // from here
-        // http://www.c-sharpcorner.com/UploadFile/27c648/create-a-custom-setup-for-change-app-onfig/
+        ServiceInstaller serviceInstaller;
+        ServiceProcessInstaller processInstaller;
 
         public Installer()
         {
             InitializeComponent();
+
+            serviceInstaller = new ServiceInstaller();
+            processInstaller = new ServiceProcessInstaller();
+
+            processInstaller.Account = ServiceAccount.LocalSystem;
+            serviceInstaller.StartType = ServiceStartMode.Manual;
+            serviceInstaller.ServiceName = "Metrics Collector";
+            Installers.Add(processInstaller);
+            Installers.Add(serviceInstaller);
         }
 
         public override void Install(System.Collections.IDictionary stateSaver)
@@ -40,24 +44,16 @@ namespace TestWindowsFormsApplication
             {
                 AddConnectionStringToConfig();
             }
-            catch (AddingOfConnectionStringException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch (NoMSSQLServerInstancesFoundException e)
-            {
-                var res = MessageBox.Show(e.Message +
-                                          " Press OK to continue installation, you'll have to install MSSQL Server" +
-                                          " and add a connection string to .config file manually. " +
-                                          "Otherwise intallation will be aborted.");
-                if (res != DialogResult.OK)
-                {
-                    base.Rollback(savedState);
-                }
-            }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                string path = "C:\\log.txt";
+                using (FileStream fs = File.Exists(path) ? File.Open(path, FileMode.Append) : File.Create(path))
+                {
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+                        writer.Write(e.Message);
+                    }
+                }
                 base.Rollback(savedState);
             }
         }
@@ -107,7 +103,6 @@ namespace TestWindowsFormsApplication
 
         private void AddConnectionStringToConfig()
         {
-            string connectionString = null;
             string sqlServer = GetMsSqlServiceName();
             if (sqlServer != null)
             {
@@ -146,7 +141,7 @@ namespace TestWindowsFormsApplication
 
                             XmlAttribute connStrAttr = doc.CreateAttribute("connectionString");
                             connStrAttr.Value =
-                                $@"Data Source={machineName}\{sqlServer};Initial Catalog=WindowsMetrics;Integrated Security=True";
+                                $@"Data Source={machineName}\{sqlServer};Initial Catalog=WindowsMetrics;Integrated Security=True;";
 
                             XmlAttribute providerNameAttr = doc.CreateAttribute("providerName");
                             providerNameAttr.Value = $@"System.Data.SqlClient";
@@ -156,41 +151,21 @@ namespace TestWindowsFormsApplication
                             elem.Attributes.Append(providerNameAttr);
 
                             connectionStringsNode.AppendChild(elem);
-
-                            connectionString = elem.Value;
                         }
                     }
                     doc.Save(appConfigPath);
-
-
                 }
                 catch
                 {
                     throw new AddingOfConnectionStringException
-                    ("Sorry, automatic adding of a connection string to .config file failed. " +
-                     "Please, add connection string manually.");
-                }
-
-                try
-                {
-                    if (connectionString != null)
-                    {
-                        using (var context = new MetricsDataContext(connectionString))
-                        {
-                            if (!context.DatabaseExists())
-                                context.CreateDatabase();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new DbCreateFailException("Database creation failed.");
+                        ("Sorry, automatic adding of a connection string to .config file failed. " +
+                         "Please, add connection string manually.");
                 }
             }
             else
             {
                 throw new NoMSSQLServerInstancesFoundException
-                    ("No MSSQL Server instances found on the machine.");
+                    ("No MS SQL Server instances found on the machine. Please, install MS SQL Server.");
             }
         }
 
@@ -202,11 +177,6 @@ namespace TestWindowsFormsApplication
         private class NoMSSQLServerInstancesFoundException : Exception
         {
             public NoMSSQLServerInstancesFoundException(string message) : base(message) { }
-        }
-
-        private class DbCreateFailException : Exception
-        {
-            public DbCreateFailException(string message) : base(message) { }
         }
     }
 }

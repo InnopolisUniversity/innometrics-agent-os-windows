@@ -129,5 +129,31 @@ namespace MetricsProcessing
                 context.SubmitChanges();
             }
         }
+
+        public static ActivitiesRegistry GetFirstNonTransmittedActivitiesRegistry(string connectionString)
+        {
+            using (var context = new MetricsDataContext(connectionString))
+            {
+                return context.ActivitiesRegistries.FirstOrDefault(r => !r.Transmitted.Value);
+            }
+        }
+
+        public static void MarkAsTransmitted(string connectionString, ActivitiesRegistry transmittedRegistry)
+        {
+            using (var context = new MetricsDataContext(connectionString))
+            {
+                var dbRegistry = context.ActivitiesRegistries.Single(r => r.Id == transmittedRegistry.Id);
+                dbRegistry.Transmitted = true;
+                context.SubmitChanges();
+            }
+        }
+
+        public static bool AnyNonTransmittedActivitiesRegistries(string connectionString)
+        {
+            using (var context = new MetricsDataContext(connectionString))
+            {
+                return context.ActivitiesRegistries.Any(r => !r.Transmitted.Value);
+            }
+        }
     }
 }

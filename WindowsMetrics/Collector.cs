@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonModels;
+using CommonModels.Helpers;
 
 namespace WindowsMetrics
 {
@@ -25,6 +27,7 @@ namespace WindowsMetrics
 
         private Guard _guardStateScanner;
         private Task _taskForGuardStateScanner; // where guard works in
+        private CancellationTokenSource _tokenSource;
 
         private bool _enableForegroundWindowChangeTracking;
         private bool _enableLeftClickTracking;
@@ -52,7 +55,7 @@ namespace WindowsMetrics
                 //url = Convert.ToString(a);
             }
 
-            return new Registry()
+            var r = new Registry()
             {
                 Event = (ushort) @event,
                 WindowTitle = foregroundWinTitle,
@@ -66,6 +69,10 @@ namespace WindowsMetrics
                 Url = url,
                 Processed = false
             };
+
+            FileWriteHelper.Write(r.ToString(), "D:\\rrrr.txt"); // TODO just for testing
+
+            return r;
         }
 
         private readonly Action<object> _onForegroundWindowChangeAddon = null;
@@ -157,20 +164,18 @@ namespace WindowsMetrics
 
             if (_enableStateScanning)
             {
-                _taskForGuardStateScanner = new Task(() =>
-                    {
-                        _guardStateScanner = new Guard(
-                            actionToDoEveryTick: () => StateScan?.Invoke(),
-                            secondsToCountdown: _stateScanIntervalSec
-                        );
-                    }
-                );
-                _taskForGuardStateScanner.Start();
-                while (_taskForGuardStateScanner.Status == TaskStatus.WaitingToRun)
+                _tokenSource = new CancellationTokenSource();
+                var cancellation = _tokenSource.Token;
+                _taskForGuardStateScanner = new Task((token) =>
                 {
-                    Thread.Sleep(1);
-                }
-                _guardStateScanner?.Start();
+                    CancellationToken t = (CancellationToken) token;
+                    _guardStateScanner = new Guard(
+                        actionToDoEveryTick: () => StateScan?.Invoke(),
+                        secondsToCountdown: _stateScanIntervalSec
+                    );
+                    _guardStateScanner.Start();
+                }, cancellation);
+                _taskForGuardStateScanner.Start();
             }
         }
 
@@ -184,7 +189,9 @@ namespace WindowsMetrics
             if (!mouseClickTrackingDeactivated)
                 mouseClickTrackingDeactivated = WinAPI.StopTrackingLeftClickEvent(_mouseClickHook);
 
-            _guardStateScanner?.Stop();
+            _guardStateScanner.Stop();
+            _tokenSource.Cancel();
+            _taskForGuardStateScanner.Wait();
 
             return foregroundWindowChangeTrackingDeactivated && mouseClickTrackingDeactivated;
         }

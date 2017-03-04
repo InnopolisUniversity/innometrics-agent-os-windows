@@ -15,7 +15,7 @@ namespace Transmission
     {
         public string AuthorizationUri { get; }
         public string SendDataUri { get; }
-        public string Token { get; private set; }
+        private string Token { get; set; }
 
         public Sender(string authorizationUri, string sendDataUri)
         {
@@ -23,9 +23,11 @@ namespace Transmission
             SendDataUri = sendDataUri;
         }
 
+        public bool Authorized => Token != null;
+
         /// <summary>Get and store token</summary>
         /// <returns>Success of authorization</returns>
-        public bool Authorize(string username, string password, out string statusCode)
+        public bool Authorize(string username, string password, out HttpStatusCode statusCode)
         {
             var loginData = new {username = username, password = password};
             string json = JsonMaker.Serialize(loginData);
@@ -34,12 +36,17 @@ namespace Transmission
             return Token != null;
         }
 
-        public string SendActivities(Report activities, out string statusCode)
+        public string SendActivities(Report activities, out HttpStatusCode statusCode)
         {
             return Send(SendDataUri, JsonMaker.Serialize(activities), "application/json", out statusCode);
         }
 
-        private string Send(string uri, string json, string contentType, out string statusCode)
+        public string SendActivities(string json, out HttpStatusCode statusCode)
+        {
+            return Send(SendDataUri, json, "application/json", out statusCode);
+        }
+
+        private string Send(string uri, string json, string contentType, out HttpStatusCode statusCode)
         {
             // source of the solution
             // http://www.terminally-incoherent.com/blog/2008/05/05/send-a-https-post-request-with-c/
@@ -53,7 +60,7 @@ namespace Transmission
                 request.Headers["Authorization"] = $"Token {Token}";
 
             // turn our request string into a byte stream
-            byte[] postBytes = Encoding.ASCII.GetBytes(json);
+            byte[] postBytes = Encoding.UTF8.GetBytes(json);
 
             // this is important - make sure you specify type this way
             request.ContentType = contentType;
@@ -73,13 +80,13 @@ namespace Transmission
             }
             catch (WebException e)
             {
-                response = e.Response as HttpWebResponse;
-                statusCode = response?.StatusCode.ToString();
+                response = (HttpWebResponse) e.Response;
+                statusCode = response.StatusCode;
                 return response?.StatusDescription;
             }
             catch (Exception e)
             {
-                statusCode = null;
+                statusCode = 0;
                 return e.Message;
             }
             
@@ -87,7 +94,7 @@ namespace Transmission
             {
                 responseString = streamReader.ReadToEnd();
             }
-            statusCode = response.StatusCode.ToString();
+            statusCode = response.StatusCode;
             return responseString;
         }
     }

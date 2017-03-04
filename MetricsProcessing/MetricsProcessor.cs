@@ -13,13 +13,16 @@ namespace MetricsProcessing
     {
         private Guard _guardRegistriesProcessor;
         private Task _taskForGuardRegistriesProcessor; // where guard works in
+        private CancellationTokenSource _tokenSource;
+
         private RegistriesProcessor _registriesProcessor;
         private ActivitiesProcessor _activitiesProcessor;
         private event Action ProcessingAndStoring;
 
         // Parameters for RegistriesProcessor
         private int _processRegistriesAtOneTime;
-        private readonly List<string> _nameFilter;
+        private int _processRegistriesIntervalSec;
+        private List<string> _nameFilter;
         private readonly bool _includeNullTitles;
 
         private void CommonConstructor(string connectionString,
@@ -28,21 +31,8 @@ namespace MetricsProcessing
             _registriesProcessor = new RegistriesProcessor(connectionString);
             _activitiesProcessor = new ActivitiesProcessor(connectionString);
             _processRegistriesAtOneTime = processRegistriesAtOneTime;
+            _processRegistriesIntervalSec = processRegistriesIntervalSec;
             ProcessingAndStoring += OnRegistriesProcessingAndStoring;
-
-            _taskForGuardRegistriesProcessor = new Task(() =>
-                {
-                    _guardRegistriesProcessor = new Guard(
-                        actionToDoEveryTick: () =>
-                        {
-                            ProcessingAndStoring?.Invoke();
-                        },
-                        secondsToCountdown: processRegistriesIntervalSec
-                    );
-                }
-            );
-
-            _taskForGuardRegistriesProcessor.Start();
         }
 
         public MetricsProcessor(string connectionString,
@@ -62,14 +52,35 @@ namespace MetricsProcessing
             CommonConstructor(connectionString, processRegistriesIntervalSec, processRegistriesAtOneTime);
         }
 
+        public void SetNameFilter(List<string> strings)
+        {
+            _nameFilter = strings;
+        }
+
         public void Start()
         {
-            _guardRegistriesProcessor.Start();
+            _tokenSource = new CancellationTokenSource();
+            var cancellation = _tokenSource.Token;
+
+            _taskForGuardRegistriesProcessor = new Task(() =>
+            {
+                _guardRegistriesProcessor = new Guard(
+                    actionToDoEveryTick: () =>
+                    {
+                        ProcessingAndStoring?.Invoke();
+                    },
+                    secondsToCountdown: _processRegistriesIntervalSec
+                );
+                _guardRegistriesProcessor.Start();
+            }, cancellation);
+            _taskForGuardRegistriesProcessor.Start();
         }
 
         public void Stop()
         {
             _guardRegistriesProcessor.Stop();
+            _tokenSource.Cancel();
+            _taskForGuardRegistriesProcessor.Wait();
         }
 
         private void OnRegistriesProcessingAndStoring()
@@ -83,6 +94,16 @@ namespace MetricsProcessing
             {
                 _activitiesProcessor.StoreActivitiesListInDbAsJson(activities);
             }
+        }
+
+        public ActivitiesRegistry GetJsonItem()
+        {
+            return _activitiesProcessor.GetFirstNonTransmittedJson();
+        }
+
+        public bool AnyNonTransmittedJson()
+        {
+            return _activitiesProcessor.AnyNonTransmittedJson();
         }
 
         public void Dispose()
