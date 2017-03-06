@@ -157,34 +157,16 @@ namespace TestWindowsFormsApplication
 
                             connectionStringsNode.AppendChild(elem);
 
-                            connectionString = elem.Value;
+                            connectionString = connStrAttr.Value;
                         }
                     }
                     doc.Save(appConfigPath);
-
-
                 }
                 catch
                 {
                     throw new AddingOfConnectionStringException
                     ("Sorry, automatic adding of a connection string to .config file failed. " +
                      "Please, add connection string manually.");
-                }
-
-                try
-                {
-                    if (connectionString != null)
-                    {
-                        using (var context = new MetricsDataContext(connectionString))
-                        {
-                            if (!context.DatabaseExists())
-                                context.CreateDatabase();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new DbCreateFailException("Database creation failed.");
                 }
             }
             else
@@ -202,11 +184,6 @@ namespace TestWindowsFormsApplication
         private class NoMSSQLServerInstancesFoundException : Exception
         {
             public NoMSSQLServerInstancesFoundException(string message) : base(message) { }
-        }
-
-        private class DbCreateFailException : Exception
-        {
-            public DbCreateFailException(string message) : base(message) { }
         }
     }
 }

@@ -70,8 +70,6 @@ namespace WindowsMetrics
                 Processed = false
             };
 
-            FileWriteHelper.Write(r.ToString(), "D:\\rrrr.txt"); // TODO just for testing
-
             return r;
         }
 
@@ -189,9 +187,12 @@ namespace WindowsMetrics
             if (!mouseClickTrackingDeactivated)
                 mouseClickTrackingDeactivated = WinAPI.StopTrackingLeftClickEvent(_mouseClickHook);
 
-            _guardStateScanner.Stop();
-            _tokenSource.Cancel();
-            _taskForGuardStateScanner.Wait();
+            if (_guardStateScanner != null)
+            {
+                _guardStateScanner.Stop();
+                _tokenSource.Cancel();
+                _taskForGuardStateScanner.Wait();
+            }
 
             return foregroundWindowChangeTrackingDeactivated && mouseClickTrackingDeactivated;
         }

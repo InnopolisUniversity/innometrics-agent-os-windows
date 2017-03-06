@@ -8,7 +8,9 @@ using CommonModels;
 using MetricsProcessing;
 using Transmission;
 using System.Configuration;
+using System.IO;
 using CommonModels.Helpers;
+using Microsoft.Win32.SafeHandles;
 
 namespace TestConsoleApplication
 {
@@ -19,7 +21,7 @@ namespace TestConsoleApplication
             Activity a = new Activity { Name = "Activity 1" };
             a.Measurements.Add(new Measurement()
             {
-                Name = "Time",
+                Name = "Время",
                 Type = typeof(DateTime).Name,
                 Value = DateTime.Now
             });
@@ -49,10 +51,19 @@ namespace TestConsoleApplication
             Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/activities/");
             bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
 
+            string xxx;
+            using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    xxx = reader.ReadLine();
+                }
+            }
+
             string res;
             if (succReg)
             {
-                res = sender.SendActivities(report, out statusCode);
+                res = sender.SendActivities(xxx, out statusCode);
             }
             
 

@@ -23,6 +23,7 @@ using MetricsProcessing;
 using Microsoft.Win32;
 using Registry = CommonModels.Registry;
 using System.ServiceProcess;
+using CommonModels;
 using Transmission;
 
 namespace TestWindowsFormsApplication
@@ -30,35 +31,30 @@ namespace TestWindowsFormsApplication
     public partial class Form1 : Form
     {
         private bool started;
+        private readonly int _stateScanIntervalSec;
 
         private Collector collector;
         private Writer writer;
         private MetricsProcessor processor;
         private Sender sender;
 
+        private event Action<SynchronizationContext, LoginForm> LoginFormEvaluated;
+
         public Form1()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
             int dataSavingIntervalSec = Convert.ToInt32(config.AppSettings.Settings["DataSavingIntervalSec"].Value);
-            int stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
+            _stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
             int processRegistriesIntervalSec = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesIntervalSec"].Value);
             int processRegistriesAtOneTime = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesAtOneTime"].Value);
             string authorizationUri = config.AppSettings.Settings["AuthorizationUri"].Value;
             string sendDataUri = config.AppSettings.Settings["SendDataUri"].Value;
 
             InitializeComponent();
-
+            LoginFormEvaluated += OnLoginFormEvaluated;
             started = false;
-
             writer = new Writer(connectionString, dataSavingIntervalSec);
-            collector = new Collector(
-                writer: writer,
-                stateScanIntervalSec: stateScanIntervalSec,
-                enableForegroundWindowChangeTracking: chbEnableForegroundWindowChangeTracking.Checked,
-                enableLeftClickTracking: chbEnableLeftClickTracking.Checked,
-                enableStateScanning: chbEnableStateScanning.Checked
-            );
             processor = new MetricsProcessor(
                 connectionString: connectionString,
                 processRegistriesIntervalSec: processRegistriesIntervalSec,
@@ -95,8 +91,35 @@ namespace TestWindowsFormsApplication
             sync.Post(c, null);
         }
 
-        #endregion
+        private void LoginWithForm(SynchronizationContext sync)
+        {
+            LoginForm loginForm = new LoginForm();
+            SendOrPostCallback c = (state) =>
+            {
+                EventHandler handler = (o, args) =>
+                {
+                    LoginFormEvaluated?.Invoke(sync, loginForm);
+                };
+                loginForm.SetLoginClickAction(handler);
+                loginForm.Show();
+            };
+            sync.Post(c, null);
+        }
         
+        private void OnLoginFormEvaluated(SynchronizationContext sync, LoginForm loginForm)
+        {
+            string login = loginForm.GetLogin();
+            string password = loginForm.GetPassword();
+            SendOrPostCallback c = (state) =>
+            {
+                loginForm.Close();
+            };
+            sync.Post(c, null);
+            btnTransmit_Click(this, new LoginPasswordEventArgs() {Login = login, Password = password});
+        }
+
+        #endregion
+
         #region button handlers
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -110,6 +133,14 @@ namespace TestWindowsFormsApplication
                 }
 
                 DisableFilterOnStart();
+
+                collector = new Collector(
+                    writer: writer,
+                    stateScanIntervalSec: _stateScanIntervalSec,
+                    enableForegroundWindowChangeTracking: chbEnableForegroundWindowChangeTracking.Checked,
+                    enableLeftClickTracking: chbEnableLeftClickTracking.Checked,
+                    enableStateScanning: chbEnableStateScanning.Checked
+                );
 
                 collector.Start();
                 writer.Start();
@@ -147,6 +178,7 @@ namespace TestWindowsFormsApplication
             if (txbAddFilter.Text != string.Empty && !listBoxFilter.Items.Contains(txbAddFilter.Text))
             {
                 listBoxFilter.Items.Add(txbAddFilter.Text);
+                txbAddFilter.Clear();
             }
         }
 
@@ -154,6 +186,15 @@ namespace TestWindowsFormsApplication
         {
             var sync = SynchronizationContext.Current;
             btnTransmit.Enabled = false;
+
+            if (!this.sender.Authorized && e.GetType() != typeof(LoginPasswordEventArgs))
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    LoginWithForm(sync);
+                });
+                return;
+            }
 
             Task.Factory.StartNew(() =>
             {
@@ -166,22 +207,25 @@ namespace TestWindowsFormsApplication
 
                 if (!this.sender.Authorized)
                 {
+                    string login = (e as LoginPasswordEventArgs).Login;
+                    string password = (e as LoginPasswordEventArgs).Password;
+
                     HttpStatusCode authorizationStatusCode;
-                    bool success = this.sender.Authorize("a.shunevich", "masterkey", out authorizationStatusCode); // TODO login
+                    bool success = this.sender.Authorize(login, password, out authorizationStatusCode);
                     if (!success)
                     {
-                        int authCode = (int) authorizationStatusCode;
+                        int authCode = (int)authorizationStatusCode;
                         MessageBox.Show($"Authorization failed with code {authCode}: {authorizationStatusCode}");
                         EnableTransmissionButton(sync);
                         return;
                     }
                 }
 
-                var jsonItem = processor.GetJsonItem();
+                ActivitiesRegistry jsonItem = processor.GetJsonItem();
 
                 HttpStatusCode sendStatusCode;
-                var result = this.sender.SendActivities(jsonItem.Json, out sendStatusCode);
-                int code = (int) sendStatusCode;
+                var result = this.sender.SendActivities(jsonItem.Json, out sendStatusCode); // TODO problem
+                int code = (int)sendStatusCode;
                 MessageBox.Show($"{code}: {sendStatusCode}");
                 EnableTransmissionButton(sync);
             });
@@ -212,6 +256,12 @@ namespace TestWindowsFormsApplication
         private void listBoxFilter_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             listBoxFilter.Items.Remove(listBoxFilter.SelectedItem);
+        }
+
+        private class LoginPasswordEventArgs : EventArgs
+        {
+            public string Login { get; set; }
+            public string Password { get; set; }
         }
     }
 }

@@ -30,15 +30,21 @@ namespace WindowsMetrics
             _dataSavingIntervalSec = dataSavingIntervalSec;
             _report = new List<Registry>();
             DataSaving += OnDataSaving;
+
+            using (var context = new MetricsDataContext(_connectionString))
+            {
+                if (!context.DatabaseExists())
+                {
+                    context.CreateDatabase();
+                    context.SubmitChanges();
+                }
+            }
         }
 
         private void OnDataSaving()
         {
             using (var context = new MetricsDataContext(_connectionString))
             {
-                if (!context.DatabaseExists())
-                    context.CreateDatabase();
-
                 for (int i = 0; i < _report.Count; i++)
                 {
                     var existingUser = context.Usernames.FirstOrDefault(u => u.Value == _report[i].Username1.Value);

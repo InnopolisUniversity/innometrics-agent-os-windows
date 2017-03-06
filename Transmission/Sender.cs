@@ -32,7 +32,10 @@ namespace Transmission
             var loginData = new {username = username, password = password};
             string json = JsonMaker.Serialize(loginData);
             string tokenJson = Send(AuthorizationUri, json, "application/json", out statusCode);
-            Token = JsonMaker.DeserializeToken(tokenJson);
+            if (statusCode == HttpStatusCode.OK)
+            {
+                Token = JsonMaker.DeserializeToken(tokenJson);
+            }
             return Token != null;
         }
 
@@ -54,7 +57,7 @@ namespace Transmission
             // create a request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.KeepAlive = false;
-            request.ProtocolVersion = HttpVersion.Version10;
+            request.ProtocolVersion = HttpVersion.Version11;
             request.Method = "POST";
             if (Token != null)
                 request.Headers["Authorization"] = $"Token {Token}";

@@ -38,7 +38,6 @@ namespace WindowsMetrics
             }
             else
             {
-                //TODO solution
                 //throw new ZeroHandleToWindowException();
                 return null;
             }
