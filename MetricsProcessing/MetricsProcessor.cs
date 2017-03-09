@@ -98,12 +98,12 @@ namespace MetricsProcessing
 
         public ActivitiesRegistry GetJsonItem()
         {
-            return _activitiesProcessor.GetFirstNonTransmittedJson();
+            return _activitiesProcessor.GetFirstNonTransmittedJsonFromDb();
         }
 
         public bool AnyNonTransmittedJson()
         {
-            return _activitiesProcessor.AnyNonTransmittedJson();
+            return _activitiesProcessor.AnyNonTransmittedJsonInDb();
         }
 
         public void Dispose()

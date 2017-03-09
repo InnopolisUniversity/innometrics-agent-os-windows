@@ -155,5 +155,18 @@ namespace MetricsProcessing
                 return context.ActivitiesRegistries.Any(r => !r.Transmitted.Value);
             }
         }
+
+        public static void MarkAllAsNonProcessed(string connectionString)
+        {
+            using (var context = new MetricsDataContext(connectionString))
+            {
+                var registries = context.Registries.ToArray();
+                for (int i = 0; i < registries.Count(); i++)
+                {
+                    registries[i].Processed = false;
+                }
+                context.SubmitChanges();
+            }
+        }
     }
 }

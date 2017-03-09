@@ -23,12 +23,12 @@ namespace MetricsProcessing
             DbHelper.StoreJsonInActivitiesRegistry(_connectionString, json);
         }
 
-        public ActivitiesRegistry GetFirstNonTransmittedJson()
+        public ActivitiesRegistry GetFirstNonTransmittedJsonFromDb()
         {
             return DbHelper.GetFirstNonTransmittedActivitiesRegistry(_connectionString);
         }
 
-        public bool AnyNonTransmittedJson()
+        public bool AnyNonTransmittedJsonInDb()
         {
             return DbHelper.AnyNonTransmittedActivitiesRegistries(_connectionString);
         }

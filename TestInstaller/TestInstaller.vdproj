@@ -177,6 +177,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B8BC0FAF032CF7F91C63A0C3F807C870"
+        "OwnerKey" = "8:_D0B5A57E722C46269BCD78919A3BA662"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C93B6F03BF63283653A25BDBC0A05FB5"
         "OwnerKey" = "8:_9ED21F614FB24758A7BA212195984F29"
         "MsmSig" = "8:_UNDEFINED"
@@ -191,6 +197,12 @@
         {
         "MsmKey" = "8:_D066D316E820D5853290F255EE9D94FD"
         "OwnerKey" = "8:_08FA426BE3C2C48A276E7081673CDA5E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D0B5A57E722C46269BCD78919A3BA662"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -251,6 +263,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9ED21F614FB24758A7BA212195984F29"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D0B5A57E722C46269BCD78919A3BA662"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1635,6 +1653,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{FD2F1D79-19AB-4035-B58C-A6F655A48220}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D0B5A57E722C46269BCD78919A3BA662"
+            {
+            "SourcePath" = "8:..\\MetricsSenderApplication\\obj\\Debug\\MetricsSenderApplication.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D940A3343C6B43E287A16524C1FCC612"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{2482E255-6FD1-49B4-A717-606D4D4C0F3A}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

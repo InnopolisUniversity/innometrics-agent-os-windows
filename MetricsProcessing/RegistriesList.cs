@@ -25,6 +25,11 @@ namespace MetricsProcessing
         public bool IsEmpty => this.Count == 0;
         public DateTime StartTime => this[0].Time;
 
+        public IEnumerable<long> GetAllIds()
+        {
+            return this.Select(r => r.Id);
+        }
+
         public void Filter(IEnumerable<string> nameFilter, bool includeNullTitles)
         {
             var filterSubstrings = nameFilter as string[];
@@ -33,7 +38,7 @@ namespace MetricsProcessing
                 foreach (var filterSubstring in filterSubstrings)
                 {
                     var filterExtract = includeNullTitles ?
-                        this.Where(r => r.WindowTitle != null && r.WindowTitle.Contains(filterSubstring)):
+                        this.Where(r => r.WindowTitle != null && r.WindowTitle.Contains(filterSubstring)) :
                         this.Where(r => r.WindowTitle == null || r.WindowTitle.Contains(filterSubstring));
                     FilteredRegistries.AddRange(filterExtract);
                 }
@@ -45,6 +50,39 @@ namespace MetricsProcessing
             }
 
             this.RemoveAll(r => FilteredRegistries.Contains(r));
+        }
+
+        public void Filter(IEnumerable<string> nameFilter, bool includeNullTitles, DateTime from, DateTime until)
+        {
+            var timeExtract = this.Where(r => r.Time < from || r.Time > until).ToList();
+            FilteredRegistries.AddRange(timeExtract);
+            this.RemoveAll(r => timeExtract.Contains(r));
+
+            if (!this.IsEmpty)
+            {
+                var filterSubstrings = nameFilter as string[];
+                if (filterSubstrings != null && filterSubstrings.Any())
+                {
+                    foreach (var filterSubstring in filterSubstrings)
+                    {
+                        var filterExtract = includeNullTitles
+                            ? this.Where(r => r.WindowTitle != null && r.WindowTitle.Contains(filterSubstring))
+                                .ToList()
+                            : this.Where(r => r.WindowTitle == null || r.WindowTitle.Contains(filterSubstring))
+                                .ToList();
+                        FilteredRegistries.AddRange(filterExtract);
+                    }
+                }
+                else
+                {
+                    if (!includeNullTitles)
+                    {
+                        var filterExtract = this.Where(r => r.WindowTitle == null).ToList();
+                        FilteredRegistries.AddRange(filterExtract);
+                    }
+                }
+                this.RemoveAll(r => FilteredRegistries.Contains(r));
+            }
         }
     }
 }
