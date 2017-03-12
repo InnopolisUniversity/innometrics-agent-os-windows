@@ -22,9 +22,9 @@ namespace MetricsSenderApplication
             btnLogin.Click += handler;
         }
 
-        public void SetCloseAction(EventHandler handler)
+        public void SetCloseAction(CancelEventHandler handler)
         {
-            this.Closed += handler;
+            this.Closing += handler;
         }
 
         public string GetLogin()

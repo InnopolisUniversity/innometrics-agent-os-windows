@@ -32,6 +32,7 @@ namespace MetricsSenderApplication
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -196,7 +197,7 @@ namespace MetricsSenderApplication
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
             this.dateTimePickerFrom.Size = new System.Drawing.Size(208, 20);
             this.dateTimePickerFrom.TabIndex = 0;
-            this.dateTimePickerFrom.Value = new System.DateTime(2017, 3, 8, 10, 10, 19, 32);
+            this.dateTimePickerFrom.Value = DateTime.Now - new TimeSpan(24, 0, 0);
             // 
             // buttonRefresh
             // 
@@ -228,8 +229,9 @@ namespace MetricsSenderApplication
             this.Controls.Add(this.groupBoxFilteringDate);
             this.Controls.Add(this.groupBoxFilteringTitle);
             this.Controls.Add(this.dataGridView);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Metrics Manager";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBoxFilteringTitle.ResumeLayout(false);
             this.groupBoxFilteringTitle.PerformLayout();

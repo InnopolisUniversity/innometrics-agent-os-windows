@@ -29,7 +29,6 @@ namespace MetricsSenderApplication
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
-            int processRegistriesAtOneTime = Convert.ToInt32(config.AppSettings.Settings["ProcessRegistriesAtOneTime"].Value);
             string authorizationUri = config.AppSettings.Settings["AuthorizationUri"].Value;
             string sendDataUri = config.AppSettings.Settings["SendDataUri"].Value;
 
@@ -72,6 +71,12 @@ namespace MetricsSenderApplication
             groupBoxFilteringTitle.Enabled = true;
         }
 
+        private void EnableFilterBoxFromAnotherTask(SynchronizationContext sync)
+        {
+            SendOrPostCallback c = (state) => { EnableFilterBox(); };
+            sync.Post(c, null);
+        }
+
         private void DisableButtons()
         {
             buttonRefresh.Enabled = false;
@@ -97,7 +102,8 @@ namespace MetricsSenderApplication
             {
                 EventHandler handler = (o, args) => { LoginFormSubmitted?.Invoke(sync, loginForm); };
                 loginForm.SetLoginClickAction(handler);
-                loginForm.SetCloseAction(handler);
+                CancelEventHandler handler2 = (o, args) => { EnableButtonsFromAnotherTask(sync); EnableFilterBoxFromAnotherTask(sync); };
+                loginForm.SetCloseAction(handler2);
                 loginForm.Show();
             };
             sync.Post(c, null);

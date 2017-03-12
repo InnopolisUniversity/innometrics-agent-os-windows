@@ -8,9 +8,13 @@ using CommonModels;
 using MetricsProcessing;
 using Transmission;
 using System.Configuration;
+using System.Data;
+using System.Data.Sql;
+using System.Data.SqlClient;
 using System.IO;
 using CommonModels.Helpers;
 using Microsoft.Win32.SafeHandles;
+using Microsoft.Win32;
 
 namespace TestConsoleApplication
 {
@@ -27,7 +31,7 @@ namespace TestConsoleApplication
             });
             a.Measurements.Add(new Measurement()
             {
-                Name = "Quality",
+                Name = "dgdfg fdgfdg fdgfdg",
                 Type = typeof(string).Name,
                 Value = "bad"
             });
@@ -37,34 +41,34 @@ namespace TestConsoleApplication
             {
                 Name = "Time",
                 Type = typeof(int).Name,
-                Value = 147
+                Value = 14779
             });
             b.Measurements.Add(new Measurement()
             {
                 Name = "Quality",
-                Type = typeof(string).Name,
+                Type = "4444444444444445",
                 Value = "good"
             });
             Report report = new Report() {Activities = new List<Activity>() {a, b}};
 
             HttpStatusCode statusCode;
             Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/activities/");
-            bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
+            //bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
 
-            string xxx;
-            using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
-            {
-                using (StreamReader reader = new StreamReader(fs))
-                {
-                    xxx = reader.ReadLine();
-                }
-            }
+            //string xxx;
+            //using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
+            //{
+            //    using (StreamReader reader = new StreamReader(fs))
+            //    {
+            //        xxx = reader.ReadLine();
+            //    }
+            //}
 
-            string res;
-            if (succReg)
-            {
-                res = sender.SendActivities(xxx, out statusCode);
-            }
+            //string res;
+            //if (succReg)
+            //{
+            //    res = sender.SendActivities(report, out statusCode);
+            //}
             
 
 
@@ -77,6 +81,16 @@ namespace TestConsoleApplication
             //Console.WriteLine();
             //Console.WriteLine(statusCode);
 
+
+            var xxxt = In();
+            //foreach (var row in asd.Rows)
+            //{
+            //    var rw = row as DataRow;
+            //    var ppp = rw["ServerName"];
+            //    var ddd = rw["InstanceName"];
+            //}
+
+            
 
             List<int> ri = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
 
@@ -97,7 +111,7 @@ namespace TestConsoleApplication
             //var xx = JsonMaker.Serialize(act);
             //FileWriteHelper.Write(xx, @"D:\aaa.txt");
 
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
 
@@ -113,6 +127,45 @@ namespace TestConsoleApplication
             return x-- * 2;
         }
 
+
+        public static string[] In()
+        {
+            //DataRowCollection rows = SqlDataSourceEnumerator.Instance.GetDataSources().Rows;
+            //string[] instances = new string[rows.Count];
+
+            //for (int i = 0; i < rows.Count; i++)
+            //{
+            //    instances[i] = Convert.ToString(rows[i]["InstanceName"]);
+            //}
+
+            //return instances;
+
+            //System.Data.Sql.SqlDataSourceEnumerator instance =
+            //    System.Data.Sql.SqlDataSourceEnumerator.Instance;
+
+            //System.Data.DataTable dataTable = instance.GetDataSources();
+
+            //return dataTable;
+
+            List<string> erter = new List<string>();
+
+            RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
+            using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
+            {
+                RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
+                if (instanceKey != null)
+                {
+                    foreach (var instanceName in instanceKey.GetValueNames())
+                    {
+                      erter.Add(Environment.MachineName + @"\" + instanceName);
+
+                        Console.WriteLine(Environment.MachineName + @"\" + instanceName);
+                    }
+                }
+            }
+
+            return erter.ToArray();
+        }
 
 
 

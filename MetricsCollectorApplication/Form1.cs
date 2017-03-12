@@ -31,6 +31,7 @@ namespace MetricsCollectorApplication
 
             started = false;
             writer = new Writer(connectionString, dataSavingIntervalSec);
+            writer.CreateDatabase(); // TODO exception
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
