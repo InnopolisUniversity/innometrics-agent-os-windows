@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsCollectorApplication
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MetricsCollectionSystem", "MetricsCollectionSystem\MetricsCollectionSystem.vdproj", "{01B5907F-FC5B-4183-9E99-16AB554FDD69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{3548C947-CA84-494F-BAFA-7F38DC5D9D0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{57BA9128-E93F-41A4-B68A-3C63ECF6B092}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01B5907F-FC5B-4183-9E99-16AB554FDD69}.Debug|Any CPU.ActiveCfg = Debug
 		{01B5907F-FC5B-4183-9E99-16AB554FDD69}.Release|Any CPU.ActiveCfg = Release
+		{3548C947-CA84-494F-BAFA-7F38DC5D9D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3548C947-CA84-494F-BAFA-7F38DC5D9D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3548C947-CA84-494F-BAFA-7F38DC5D9D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3548C947-CA84-494F-BAFA-7F38DC5D9D0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

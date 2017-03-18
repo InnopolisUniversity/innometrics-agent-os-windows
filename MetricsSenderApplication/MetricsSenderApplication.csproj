@@ -50,11 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="DetailsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="DetailsForm.Designer.cs">
+      <DependentUpon>DetailsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetricsSenderApplicationMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetricsSenderApplicationMainForm.Designer.cs">
+      <DependentUpon>MetricsSenderApplicationMainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Installer.cs">
       <SubType>Component</SubType>
@@ -70,8 +76,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="DetailsForm.resx">
+      <DependentUpon>DetailsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetricsSenderApplicationMainForm.resx">
+      <DependentUpon>MetricsSenderApplicationMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -110,6 +119,10 @@
     <ProjectReference Include="..\Transmission\Transmission.csproj">
       <Project>{7460eeab-4961-4074-ac0b-4a68e40b5481}</Project>
       <Name>Transmission</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Update\Update.csproj">
+      <Project>{3548c947-ca84-494f-bafa-7f38dc5d9d0f}</Project>
+      <Name>Update</Name>
     </ProjectReference>
     <ProjectReference Include="..\WindowsMetrics\WindowsMetrics.csproj">
       <Project>{385a023a-208d-4835-9f11-d999dd446bcc}</Project>

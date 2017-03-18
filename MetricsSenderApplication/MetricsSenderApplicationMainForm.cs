@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,28 +15,53 @@ using CommonModels;
 using CommonModels.Helpers;
 using MetricsProcessing;
 using Transmission;
+using Update;
 
 namespace MetricsSenderApplication
 {
-    public partial class Form1 : Form
+    public partial class MetricsSenderApplicationMainForm : Form, IUpdateable
     {
         private StraightMetricsProcessor processor;
         private Sender sender;
         private ActivitiesList activitiesTempStorage;
+        private Uri updateXmlUri;
+        private Updater updater;
+        private string[] assemblies;
+
+        public string ApplicationName => "MetricsSenderApplication";
+        public string ApplicationID => "MetricsSenderApplication";
+        public Assembly ApplicationAssembly => Assembly.GetExecutingAssembly();
+        public Icon ApllicationIcon => this.Icon;
+        public Uri UpdateXmlUri => updateXmlUri;
+        public Form Context => this;
+        public Updater Updater => updater;
+        public string[] Assemblies => assemblies;
 
         private event Action<SynchronizationContext, LoginForm> LoginFormSubmitted;
 
-        public Form1()
+        public MetricsSenderApplicationMainForm()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
             string authorizationUri = config.AppSettings.Settings["AuthorizationUri"].Value;
             string sendDataUri = config.AppSettings.Settings["SendDataUri"].Value;
+            string assemblies = config.AppSettings.Settings["Assemblies"].Value;
+            try
+            {
+                updateXmlUri = new Uri(config.AppSettings.Settings["UpdateXmlUri"].Value);
+            }
+            catch (Exception)
+            {
+                updateXmlUri = null;
+            }
 
             InitializeComponent();
+            this.assemblies = assemblies.Split(';');
+            dateTimePickerFrom.Value = DateTime.Now - new TimeSpan(24, 0, 0);
             LoginFormSubmitted += OnLoginFormSubmitted;
             processor = new StraightMetricsProcessor(connectionString);
             sender = new Sender(authorizationUri, sendDataUri);
+            updater = new Updater(this);
         }
 
         #region helper methods
@@ -183,13 +209,17 @@ namespace MetricsSenderApplication
                 return;
             }
 
-            string login = (e as LoginPasswordEventArgs).Login;
-            string password = (e as LoginPasswordEventArgs).Password;
-            if (login == string.Empty || password == string.Empty)
+            string login = string.Empty, password = string.Empty;
+            if (!this.sender.Authorized)
             {
-                EnableButtons();
-                EnableFilterBox();
-                return;
+                login = (e as LoginPasswordEventArgs).Login;
+                password = (e as LoginPasswordEventArgs).Password;
+                if (login == string.Empty || password == string.Empty)
+                {
+                    EnableButtons();
+                    EnableFilterBox();
+                    return;
+                }
             }
 
             Task.Factory.StartNew(() =>
@@ -221,6 +251,12 @@ namespace MetricsSenderApplication
             });
         }
 
+        private void buttonDetails_Click(object sender, EventArgs e)
+        {
+            DetailsForm detailsForm = new DetailsForm(this);
+            detailsForm.Show();
+        }
+
         #endregion
 
         // Helper inner class
@@ -228,6 +264,6 @@ namespace MetricsSenderApplication
         {
             public string Login { get; set; }
             public string Password { get; set; }
-        }        
+        }
     }
 }

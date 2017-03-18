@@ -1,6 +1,6 @@
 ﻿namespace MetricsCollectorApplication
 {
-    partial class Form1
+    partial class MetricsCollectorApplicationMainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetricsCollectorApplicationMainForm));
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonStop = new System.Windows.Forms.Button();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
-            this.checkBoxForegroundWindowChangeTracking = new System.Windows.Forms.CheckBox();
-            this.checkBoxMouseLeftClickTracking = new System.Windows.Forms.CheckBox();
             this.checkBoxStateScanning = new System.Windows.Forms.CheckBox();
+            this.checkBoxMouseLeftClickTracking = new System.Windows.Forms.CheckBox();
+            this.checkBoxForegroundWindowChangeTracking = new System.Windows.Forms.CheckBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBoxSettings.SuspendLayout();
             this.SuspendLayout();
@@ -52,6 +52,7 @@
             // 
             // buttonStop
             // 
+            this.buttonStop.Enabled = false;
             this.buttonStop.Location = new System.Drawing.Point(154, 12);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(118, 23);
@@ -72,17 +73,17 @@
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
             // 
-            // checkBoxForegroundWindowChangeTracking
+            // checkBoxStateScanning
             // 
-            this.checkBoxForegroundWindowChangeTracking.AutoSize = true;
-            this.checkBoxForegroundWindowChangeTracking.Checked = true;
-            this.checkBoxForegroundWindowChangeTracking.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxForegroundWindowChangeTracking.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxForegroundWindowChangeTracking.Name = "checkBoxForegroundWindowChangeTracking";
-            this.checkBoxForegroundWindowChangeTracking.Size = new System.Drawing.Size(207, 17);
-            this.checkBoxForegroundWindowChangeTracking.TabIndex = 0;
-            this.checkBoxForegroundWindowChangeTracking.Text = "Foreground Window Change Tracking";
-            this.checkBoxForegroundWindowChangeTracking.UseVisualStyleBackColor = true;
+            this.checkBoxStateScanning.AutoSize = true;
+            this.checkBoxStateScanning.Checked = true;
+            this.checkBoxStateScanning.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxStateScanning.Location = new System.Drawing.Point(6, 65);
+            this.checkBoxStateScanning.Name = "checkBoxStateScanning";
+            this.checkBoxStateScanning.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxStateScanning.TabIndex = 2;
+            this.checkBoxStateScanning.Text = "State Scanning";
+            this.checkBoxStateScanning.UseVisualStyleBackColor = true;
             // 
             // checkBoxMouseLeftClickTracking
             // 
@@ -96,17 +97,17 @@
             this.checkBoxMouseLeftClickTracking.Text = "Mouse Left Click Tracking";
             this.checkBoxMouseLeftClickTracking.UseVisualStyleBackColor = true;
             // 
-            // checkBoxStateScanning
+            // checkBoxForegroundWindowChangeTracking
             // 
-            this.checkBoxStateScanning.AutoSize = true;
-            this.checkBoxStateScanning.Checked = true;
-            this.checkBoxStateScanning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxStateScanning.Location = new System.Drawing.Point(6, 65);
-            this.checkBoxStateScanning.Name = "checkBoxStateScanning";
-            this.checkBoxStateScanning.Size = new System.Drawing.Size(99, 17);
-            this.checkBoxStateScanning.TabIndex = 2;
-            this.checkBoxStateScanning.Text = "State Scanning";
-            this.checkBoxStateScanning.UseVisualStyleBackColor = true;
+            this.checkBoxForegroundWindowChangeTracking.AutoSize = true;
+            this.checkBoxForegroundWindowChangeTracking.Checked = true;
+            this.checkBoxForegroundWindowChangeTracking.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxForegroundWindowChangeTracking.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxForegroundWindowChangeTracking.Name = "checkBoxForegroundWindowChangeTracking";
+            this.checkBoxForegroundWindowChangeTracking.Size = new System.Drawing.Size(207, 17);
+            this.checkBoxForegroundWindowChangeTracking.TabIndex = 0;
+            this.checkBoxForegroundWindowChangeTracking.Text = "Foreground Window Change Tracking";
+            this.checkBoxForegroundWindowChangeTracking.UseVisualStyleBackColor = true;
             // 
             // trayIcon
             // 
@@ -114,7 +115,7 @@
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
             // 
-            // Form1
+            // MetricsCollectorApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -122,9 +123,12 @@
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.buttonStart);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Metrics";
+            this.MaximizeBox = false;
+            this.Name = "MetricsCollectorApplicationMainForm";
+            this.Text = "Metrics Collector";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();

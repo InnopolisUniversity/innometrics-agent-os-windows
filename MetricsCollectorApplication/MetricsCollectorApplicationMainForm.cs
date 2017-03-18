@@ -12,7 +12,7 @@ using WindowsMetrics;
 
 namespace MetricsCollectorApplication
 {
-    public partial class Form1 : Form
+    public partial class MetricsCollectorApplicationMainForm : Form
     {
         private bool started;
         private readonly int _stateScanIntervalSec;
@@ -20,7 +20,7 @@ namespace MetricsCollectorApplication
         private Collector collector;
         private Writer writer;
 
-        public Form1()
+        public MetricsCollectorApplicationMainForm()
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -103,6 +103,11 @@ namespace MetricsCollectorApplication
             return checkBoxForegroundWindowChangeTracking.Checked ||
                    checkBoxMouseLeftClickTracking.Checked ||
                    checkBoxStateScanning.Checked;
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            
         }
     }
 }

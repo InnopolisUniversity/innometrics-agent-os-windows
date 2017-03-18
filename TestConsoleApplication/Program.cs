@@ -53,23 +53,23 @@ namespace TestConsoleApplication
 
             HttpStatusCode statusCode;
             Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/activities/");
-            //bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
+            bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
 
-            //string xxx;
-            //using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
-            //{
-            //    using (StreamReader reader = new StreamReader(fs))
-            //    {
-            //        xxx = reader.ReadLine();
-            //    }
-            //}
+            string xxx;
+            using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    xxx = reader.ReadLine();
+                }
+            }
 
-            //string res;
-            //if (succReg)
-            //{
-            //    res = sender.SendActivities(report, out statusCode);
-            //}
-            
+            string res;
+            if (succReg)
+            {
+                res = sender.SendActivities(xxx, out statusCode);
+            }
+
 
 
             //string json = JsonMaker.Serialize(report);

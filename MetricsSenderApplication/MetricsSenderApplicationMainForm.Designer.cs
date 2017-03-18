@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace MetricsSenderApplication
 {
-    partial class Form1
+    partial class MetricsSenderApplicationMainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace MetricsSenderApplication
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetricsSenderApplicationMainForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +52,7 @@ namespace MetricsSenderApplication
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonTransmit = new System.Windows.Forms.Button();
+            this.buttonDetails = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBoxFilteringTitle.SuspendLayout();
             this.groupBoxFilteringDate.SuspendLayout();
@@ -75,7 +76,7 @@ namespace MetricsSenderApplication
             this.dataGridView.Location = new System.Drawing.Point(259, 12);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
-            this.dataGridView.Size = new System.Drawing.Size(746, 361);
+            this.dataGridView.Size = new System.Drawing.Size(746, 392);
             this.dataGridView.TabIndex = 2;
             // 
             // Title
@@ -197,7 +198,6 @@ namespace MetricsSenderApplication
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
             this.dateTimePickerFrom.Size = new System.Drawing.Size(208, 20);
             this.dateTimePickerFrom.TabIndex = 0;
-            this.dateTimePickerFrom.Value = DateTime.Now - new TimeSpan(24, 0, 0);
             // 
             // buttonRefresh
             // 
@@ -219,18 +219,31 @@ namespace MetricsSenderApplication
             this.buttonTransmit.UseVisualStyleBackColor = true;
             this.buttonTransmit.Click += new System.EventHandler(this.buttonTransmit_Click);
             // 
-            // Form1
+            // buttonDetails
+            // 
+            this.buttonDetails.Location = new System.Drawing.Point(12, 381);
+            this.buttonDetails.Name = "buttonDetails";
+            this.buttonDetails.Size = new System.Drawing.Size(220, 23);
+            this.buttonDetails.TabIndex = 6;
+            this.buttonDetails.Text = "Details";
+            this.buttonDetails.UseVisualStyleBackColor = true;
+            this.buttonDetails.Click += new System.EventHandler(this.buttonDetails_Click);
+            // 
+            // MetricsSenderApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1017, 386);
+            this.ClientSize = new System.Drawing.Size(1017, 416);
+            this.Controls.Add(this.buttonDetails);
             this.Controls.Add(this.buttonTransmit);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.groupBoxFilteringDate);
             this.Controls.Add(this.groupBoxFilteringTitle);
             this.Controls.Add(this.dataGridView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.MaximizeBox = false;
+            this.Name = "MetricsSenderApplicationMainForm";
             this.Text = "Metrics Manager";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBoxFilteringTitle.ResumeLayout(false);
@@ -261,6 +274,7 @@ namespace MetricsSenderApplication
         private DataGridViewTextBoxColumn Mac;
         private DataGridViewTextBoxColumn User;
         private DataGridViewTextBoxColumn Url;
+        private Button buttonDetails;
     }
 }
 
