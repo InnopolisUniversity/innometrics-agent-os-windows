@@ -94,7 +94,7 @@ namespace WindowsMetrics
             throw new NotImplementedException();
         }
 
-        public void CreateDatabase()
+        public void CreateDatabaseIfNotExists()
         {
             using (var context = new MetricsDataContext(_connectionString))
             {

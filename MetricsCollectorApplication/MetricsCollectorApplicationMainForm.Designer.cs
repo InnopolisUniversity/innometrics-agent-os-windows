@@ -128,8 +128,8 @@
             this.MaximizeBox = false;
             this.Name = "MetricsCollectorApplicationMainForm";
             this.Text = "Metrics Collector";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
+            this.Load += new System.EventHandler(this.MetricsCollectorApplicationMainForm_Load);
+            this.Resize += new System.EventHandler(this.MetricsCollectorApplicationMainForm_Resize);
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();
             this.ResumeLayout(false);

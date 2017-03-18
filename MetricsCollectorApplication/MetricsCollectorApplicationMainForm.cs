@@ -14,6 +14,7 @@ namespace MetricsCollectorApplication
 {
     public partial class MetricsCollectorApplicationMainForm : Form
     {
+        private bool exceptionOnDatabaseCheckOccured;
         private bool started;
         private readonly int _stateScanIntervalSec;
 
@@ -29,9 +30,18 @@ namespace MetricsCollectorApplication
 
             InitializeComponent();
 
+            exceptionOnDatabaseCheckOccured = false;
             started = false;
             writer = new Writer(connectionString, dataSavingIntervalSec);
-            writer.CreateDatabase(); // TODO exception
+            try
+            {
+                writer.CreateDatabaseIfNotExists();
+            }
+            catch (Exception e)
+            {
+                exceptionOnDatabaseCheckOccured = true;
+                MessageBox.Show($"An error occured while creating database.\n***\n{e.Message}");
+            }
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -78,7 +88,7 @@ namespace MetricsCollectorApplication
             }
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+        private void MetricsCollectorApplicationMainForm_Resize(object sender, EventArgs e)
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
@@ -105,9 +115,10 @@ namespace MetricsCollectorApplication
                    checkBoxStateScanning.Checked;
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        private void MetricsCollectorApplicationMainForm_Load(object sender, EventArgs e)
         {
-            
+            if (exceptionOnDatabaseCheckOccured)
+                Application.Exit();
         }
     }
 }

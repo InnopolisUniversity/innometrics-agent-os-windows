@@ -128,7 +128,11 @@ namespace MetricsSenderApplication
             {
                 EventHandler handler = (o, args) => { LoginFormSubmitted?.Invoke(sync, loginForm); };
                 loginForm.SetLoginClickAction(handler);
-                CancelEventHandler handler2 = (o, args) => { EnableButtonsFromAnotherTask(sync); EnableFilterBoxFromAnotherTask(sync); };
+                CancelEventHandler handler2 = (o, args) =>
+                {
+                    EnableButtonsFromAnotherTask(sync);
+                    EnableFilterBoxFromAnotherTask(sync);
+                };
                 loginForm.SetCloseAction(handler2);
                 loginForm.Show();
             };
@@ -144,7 +148,7 @@ namespace MetricsSenderApplication
                 loginForm.Close();
             };
             sync.Post(c, null);
-            buttonTransmit_Click(this, new LoginPasswordEventArgs() { Login = login, Password = password });
+            buttonTransmit_Click(this, new LoginPasswordEventArgs() {Login = login, Password = password});
         }
 
         #endregion
@@ -153,7 +157,8 @@ namespace MetricsSenderApplication
 
         private void buttonAddFilterTitle_Click(object sender, EventArgs e)
         {
-            if (textBoxFilteringTitle.Text != string.Empty && !listBoxFilteringTitle.Items.Contains(textBoxFilteringTitle.Text))
+            if (textBoxFilteringTitle.Text != string.Empty &&
+                !listBoxFilteringTitle.Items.Contains(textBoxFilteringTitle.Text))
             {
                 listBoxFilteringTitle.Items.Add(textBoxFilteringTitle.Text);
                 textBoxFilteringTitle.Clear();
@@ -170,7 +175,15 @@ namespace MetricsSenderApplication
             var from = dateTimePickerFrom.Value;
             var until = dateTimePickerUntil.Value;
             var task = Task<ActivitiesList>.Factory.StartNew(() => processor.Process(nameFilter, false, from, until));
-            activitiesTempStorage = task.Result;
+            try
+            {
+                activitiesTempStorage = task.Result;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("An error occured while processing collected data.");
+            }
+            
             if (activitiesTempStorage != null)
             {
                 foreach (var activity in activitiesTempStorage)
@@ -237,16 +250,23 @@ namespace MetricsSenderApplication
                     }
                 }
 
-                var json = JsonMaker.Serialize(activitiesTempStorage);
+                Report report = new Report() {Activities = activitiesTempStorage};
+                var json = JsonMaker.Serialize(report);
 
                 HttpStatusCode sendStatusCode;
-                var result = this.sender.SendActivities(json, out sendStatusCode); // TODO problem
+                var result = this.sender.SendActivities(json, out sendStatusCode);
                 int code = (int)sendStatusCode;
-                MessageBox.Show($"{code}: {sendStatusCode}");
 
-                if (sendStatusCode == HttpStatusCode.OK || sendStatusCode == HttpStatusCode.Created)
+                if (sendStatusCode == HttpStatusCode.Created)
+                {
                     processor.DeleteRegistriesFromDb(activitiesTempStorage.RegistriesIds);
-
+                    MessageBox.Show("Transmission successfully completed.");
+                }
+                else
+                {
+                    MessageBox.Show($"{code}: {sendStatusCode}");
+                }
+                
                 EnableButtonsFromAnotherTask(sync);
             });
         }

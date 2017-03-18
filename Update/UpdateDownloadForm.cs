@@ -53,7 +53,7 @@ namespace Update
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             this.progressBar.Value = e.ProgressPercentage;
-            this.labelProgress.Text = $"Downloaded {e.BytesReceived} of {e.TotalBytesToReceive}"; //TODO foramt bytes
+            this.labelProgress.Text = $"Downloaded {e.BytesReceived} of {e.TotalBytesToReceive}";
         }
 
         private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
