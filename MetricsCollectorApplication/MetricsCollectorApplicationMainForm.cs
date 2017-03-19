@@ -23,13 +23,14 @@ namespace MetricsCollectorApplication
 
         public MetricsCollectorApplicationMainForm()
         {
+            InitializeComponent();
+            this.Cursor = System.Windows.Forms.Cursors.AppStarting;
+
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
             int dataSavingIntervalSec = Convert.ToInt32(config.AppSettings.Settings["DataSavingIntervalSec"].Value);
             _stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
-
-            InitializeComponent();
-
+            
             exceptionOnDatabaseCheckOccured = false;
             started = false;
             writer = new Writer(connectionString, dataSavingIntervalSec);
@@ -117,6 +118,7 @@ namespace MetricsCollectorApplication
 
         private void MetricsCollectorApplicationMainForm_Load(object sender, EventArgs e)
         {
+            Cursor = System.Windows.Forms.Cursors.Default;
             if (exceptionOnDatabaseCheckOccured)
                 Application.Exit();
         }

@@ -92,6 +92,8 @@
             this.Controls.Add(this.buttonNo);
             this.Controls.Add(this.buttonYes);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "UpdateAcceptForm";
             this.Text = "UpdateAcceptForm";
             this.ResumeLayout(false);

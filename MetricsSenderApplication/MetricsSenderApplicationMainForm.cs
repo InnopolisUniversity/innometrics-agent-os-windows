@@ -21,6 +21,8 @@ namespace MetricsSenderApplication
 {
     public partial class MetricsSenderApplicationMainForm : Form, IUpdateable
     {
+        private const string ApplicationId = "MetricsCollectionSystem";
+
         private StraightMetricsProcessor processor;
         private Sender sender;
         private ActivitiesList activitiesTempStorage;
@@ -28,8 +30,8 @@ namespace MetricsSenderApplication
         private Updater updater;
         private string[] assemblies;
 
-        public string ApplicationName => "MetricsSenderApplication";
-        public string ApplicationID => "MetricsSenderApplication";
+        public string ApplicationName => ApplicationId;
+        public string ApplicationID => ApplicationId;
         public Assembly ApplicationAssembly => Assembly.GetExecutingAssembly();
         public Icon ApllicationIcon => this.Icon;
         public Uri UpdateXmlUri => updateXmlUri;
@@ -284,6 +286,15 @@ namespace MetricsSenderApplication
         {
             public string Login { get; set; }
             public string Password { get; set; }
+        }
+
+        private void ValidateTimeOrderOnValueChanged(object sender, EventArgs e)
+        {
+            if (dateTimePickerFrom.Value > dateTimePickerUntil.Value)
+            {
+                MessageBox.Show("'From' time cannot be after 'Until' time.");
+                dateTimePickerFrom.Value = dateTimePickerUntil.Value;
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ namespace MetricsSenderApplication
 
             StringBuilder text = new StringBuilder();
             text.Append(
-                $"Metrics Collection System version: {form.ApplicationAssembly.GetName().Version}\n\n{mainDivisor}\n\n");
+                $"Metrics Collection System version (version of MetricsSenderApplication): {form.ApplicationAssembly.GetName().Version}\n\n{mainDivisor}\n\n");
 
             foreach (var assembly in assemblies)
                 text.Append($"Assembly: {assembly.GetName()}\n{divisor}\n");

@@ -54,6 +54,8 @@
             this.ClientSize = new System.Drawing.Size(254, 87);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.progressBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "UpdateDownloadForm";
             this.Text = "UpdateDownloadForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UpdateDownloadForm_FormClosed);

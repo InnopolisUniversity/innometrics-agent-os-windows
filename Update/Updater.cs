@@ -55,8 +55,10 @@ namespace Update
             if (!e.Cancelled)
             {
                 UpdateXml[] updateXmls = e.Result as UpdateXml[];
-
-                if (updateXmls != null && updateXmls[0].IsNewerThan(applicationInfo.ApplicationAssembly.GetName().Version))
+                UpdateXml senderApplicationXml =
+                    updateXmls?.SingleOrDefault(xml => xml.FileName == "MetricsSenderApplication.exe"); // Version of sender is the version of the system
+                if (updateXmls != null && senderApplicationXml != null &&
+                    senderApplicationXml.IsNewerThan(applicationInfo.ApplicationAssembly.GetName().Version))
                 {
                     if (new UpdateAcceptForm(applicationInfo, updateXmls[0]).ShowDialog(applicationInfo.Context) == DialogResult.Yes)
                         this.DownloadUpdate(updateXmls);

@@ -22,7 +22,7 @@ namespace Update
 
             this.applicationInfo = applicationInfo;
             this.updateInfo = updateInfo;
-            this.Text = this.applicationInfo.ApplicationName + " - Update available";
+            this.Text = this.applicationInfo.ApplicationName;
             if (this.applicationInfo.ApllicationIcon != null)
                 this.Icon = applicationInfo.ApllicationIcon;
             this.labelNewVersion.Text = $"New version {this.updateInfo.Version.ToString()}";

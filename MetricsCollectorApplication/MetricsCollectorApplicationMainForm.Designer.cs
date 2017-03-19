@@ -42,12 +42,13 @@
             // 
             // buttonStart
             // 
+            this.buttonStart.BackColor = System.Drawing.SystemColors.Control;
             this.buttonStart.Location = new System.Drawing.Point(12, 12);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(118, 23);
             this.buttonStart.TabIndex = 0;
             this.buttonStart.Text = "Start Tracking";
-            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.UseVisualStyleBackColor = false;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // buttonStop

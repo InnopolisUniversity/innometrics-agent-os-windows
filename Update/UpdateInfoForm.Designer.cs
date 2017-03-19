@@ -36,6 +36,7 @@
             // 
             this.richTextBoxDescription.Location = new System.Drawing.Point(12, 66);
             this.richTextBoxDescription.Name = "richTextBoxDescription";
+            this.richTextBoxDescription.ReadOnly = true;
             this.richTextBoxDescription.Size = new System.Drawing.Size(374, 155);
             this.richTextBoxDescription.TabIndex = 0;
             this.richTextBoxDescription.Text = "";
@@ -55,6 +56,8 @@
             this.ClientSize = new System.Drawing.Size(398, 233);
             this.Controls.Add(this.labelVersions);
             this.Controls.Add(this.richTextBoxDescription);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "UpdateInfoForm";
             this.Text = "UpdateInfoForm";
             this.ResumeLayout(false);

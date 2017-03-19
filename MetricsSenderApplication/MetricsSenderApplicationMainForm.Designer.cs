@@ -155,12 +155,13 @@ namespace MetricsSenderApplication
             // 
             // buttonAddFilterTitle
             // 
+            this.buttonAddFilterTitle.BackColor = System.Drawing.SystemColors.Control;
             this.buttonAddFilterTitle.Location = new System.Drawing.Point(163, 17);
             this.buttonAddFilterTitle.Name = "buttonAddFilterTitle";
             this.buttonAddFilterTitle.Size = new System.Drawing.Size(51, 30);
             this.buttonAddFilterTitle.TabIndex = 3;
             this.buttonAddFilterTitle.Text = "Add";
-            this.buttonAddFilterTitle.UseVisualStyleBackColor = true;
+            this.buttonAddFilterTitle.UseVisualStyleBackColor = false;
             this.buttonAddFilterTitle.Click += new System.EventHandler(this.buttonAddFilterTitle_Click);
             // 
             // textBoxFilteringTitle
@@ -189,6 +190,7 @@ namespace MetricsSenderApplication
             this.dateTimePickerUntil.Name = "dateTimePickerUntil";
             this.dateTimePickerUntil.Size = new System.Drawing.Size(208, 20);
             this.dateTimePickerUntil.TabIndex = 1;
+            this.dateTimePickerUntil.ValueChanged += new System.EventHandler(this.ValidateTimeOrderOnValueChanged);
             // 
             // dateTimePickerFrom
             // 
@@ -198,6 +200,7 @@ namespace MetricsSenderApplication
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
             this.dateTimePickerFrom.Size = new System.Drawing.Size(208, 20);
             this.dateTimePickerFrom.TabIndex = 0;
+            this.dateTimePickerFrom.ValueChanged += new System.EventHandler(this.ValidateTimeOrderOnValueChanged);
             // 
             // buttonRefresh
             // 
