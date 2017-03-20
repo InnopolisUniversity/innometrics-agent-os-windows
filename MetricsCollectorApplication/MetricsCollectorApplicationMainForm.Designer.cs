@@ -37,6 +37,7 @@
             this.checkBoxMouseLeftClickTracking = new System.Windows.Forms.CheckBox();
             this.checkBoxForegroundWindowChangeTracking = new System.Windows.Forms.CheckBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.groupBoxSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,11 +117,22 @@
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
             // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Location = new System.Drawing.Point(12, 139);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(118, 23);
+            this.buttonSettings.TabIndex = 3;
+            this.buttonSettings.Text = "Settings";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            // 
             // MetricsCollectorApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 141);
+            this.ClientSize = new System.Drawing.Size(284, 171);
+            this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.buttonStart);
@@ -146,6 +158,7 @@
         private System.Windows.Forms.CheckBox checkBoxMouseLeftClickTracking;
         private System.Windows.Forms.CheckBox checkBoxForegroundWindowChangeTracking;
         private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.Button buttonSettings;
     }
 }
 

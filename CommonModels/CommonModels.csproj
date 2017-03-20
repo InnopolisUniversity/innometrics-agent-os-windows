@@ -35,6 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CollectionEvent.cs" />
     <Compile Include="Guard.cs" />
+    <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\FileWriteHelper.cs" />
     <Compile Include="Helpers\JsonMaker.cs" />
     <Compile Include="Metrics.designer.cs">

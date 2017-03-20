@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -8,32 +9,35 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonModels.Helpers;
 using Update;
 
 namespace MetricsSenderApplication
 {
-    public partial class DetailsForm : Form
+    public partial class SettingsForm : Form
     {
         private readonly MetricsSenderApplicationMainForm mainForm;
 
-        public DetailsForm(MetricsSenderApplicationMainForm form)
+        public SettingsForm(MetricsSenderApplicationMainForm form)
         {
             InitializeComponent();
-
             mainForm = form;
-            Assembly[] assemblies = TryGetAssemblies(form.Assemblies);
-
             string divisor = "----------";
             string mainDivisor = "**********";
 
+            Assembly[] assemblies = TryGetAssemblies(form.Assemblies);
             StringBuilder text = new StringBuilder();
             text.Append(
                 $"Metrics Collection System version (version of MetricsSenderApplication): {form.ApplicationAssembly.GetName().Version}\n\n{mainDivisor}\n\n");
-
             foreach (var assembly in assemblies)
                 text.Append($"Assembly: {assembly.GetName()}\n{divisor}\n");
-
             richTextBox.Text = text.ToString();
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            textBoxAuthorizationUri.Text = config.AppSettings.Settings["AuthorizationUri"].Value;
+            textBoxSendDataUri.Text = config.AppSettings.Settings["SendDataUri"].Value;
+            textBoxUpdateXmlUri.Text = config.AppSettings.Settings["UpdateXmlUri"].Value;
+            textBoxAssemblies.Text = config.AppSettings.Settings["Assemblies"].Value;
         }
 
         private void buttonCheckUpdate_Click(object sender, EventArgs e)
@@ -47,6 +51,15 @@ namespace MetricsSenderApplication
                 mainForm.Updater.DoUpdate();
                 Close();
             }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "AuthorizationUri", textBoxAuthorizationUri.Text);
+            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "SendDataUri", textBoxSendDataUri.Text);
+            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "UpdateXmlUri", textBoxUpdateXmlUri.Text);
+            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "Assemblies", textBoxAssemblies.Text);
+            Application.Exit();
         }
 
         private Assembly[] TryGetAssemblies(string[] paths)

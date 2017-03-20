@@ -48,6 +48,8 @@ namespace MetricsSenderApplication
             this.buttonAddFilterTitle = new System.Windows.Forms.Button();
             this.textBoxFilteringTitle = new System.Windows.Forms.TextBox();
             this.groupBoxFilteringDate = new System.Windows.Forms.GroupBox();
+            this.labelFrom = new System.Windows.Forms.Label();
+            this.labelUntil = new System.Windows.Forms.Label();
             this.dateTimePickerUntil = new System.Windows.Forms.DateTimePicker();
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.buttonRefresh = new System.Windows.Forms.Button();
@@ -140,6 +142,7 @@ namespace MetricsSenderApplication
             this.listBoxFilteringTitle.Name = "listBoxFilteringTitle";
             this.listBoxFilteringTitle.Size = new System.Drawing.Size(208, 186);
             this.listBoxFilteringTitle.TabIndex = 1;
+            this.listBoxFilteringTitle.DoubleClick += new System.EventHandler(this.listBoxFilteringTitle_DoubleClick);
             // 
             // groupBoxFilteringTitle
             // 
@@ -148,10 +151,10 @@ namespace MetricsSenderApplication
             this.groupBoxFilteringTitle.Controls.Add(this.listBoxFilteringTitle);
             this.groupBoxFilteringTitle.Location = new System.Drawing.Point(12, 12);
             this.groupBoxFilteringTitle.Name = "groupBoxFilteringTitle";
-            this.groupBoxFilteringTitle.Size = new System.Drawing.Size(220, 253);
+            this.groupBoxFilteringTitle.Size = new System.Drawing.Size(220, 251);
             this.groupBoxFilteringTitle.TabIndex = 0;
             this.groupBoxFilteringTitle.TabStop = false;
-            this.groupBoxFilteringTitle.Text = "Title";
+            this.groupBoxFilteringTitle.Text = "Filter";
             // 
             // buttonAddFilterTitle
             // 
@@ -173,22 +176,42 @@ namespace MetricsSenderApplication
             // 
             // groupBoxFilteringDate
             // 
+            this.groupBoxFilteringDate.Controls.Add(this.labelFrom);
+            this.groupBoxFilteringDate.Controls.Add(this.labelUntil);
             this.groupBoxFilteringDate.Controls.Add(this.dateTimePickerUntil);
             this.groupBoxFilteringDate.Controls.Add(this.dateTimePickerFrom);
-            this.groupBoxFilteringDate.Location = new System.Drawing.Point(12, 271);
+            this.groupBoxFilteringDate.Location = new System.Drawing.Point(12, 269);
             this.groupBoxFilteringDate.Name = "groupBoxFilteringDate";
-            this.groupBoxFilteringDate.Size = new System.Drawing.Size(220, 73);
+            this.groupBoxFilteringDate.Size = new System.Drawing.Size(220, 75);
             this.groupBoxFilteringDate.TabIndex = 3;
             this.groupBoxFilteringDate.TabStop = false;
             this.groupBoxFilteringDate.Text = "Date";
+            // 
+            // labelFrom
+            // 
+            this.labelFrom.AutoSize = true;
+            this.labelFrom.Location = new System.Drawing.Point(6, 25);
+            this.labelFrom.Name = "labelFrom";
+            this.labelFrom.Size = new System.Drawing.Size(30, 13);
+            this.labelFrom.TabIndex = 3;
+            this.labelFrom.Text = "From";
+            // 
+            // labelUntil
+            // 
+            this.labelUntil.AutoSize = true;
+            this.labelUntil.Location = new System.Drawing.Point(6, 51);
+            this.labelUntil.Name = "labelUntil";
+            this.labelUntil.Size = new System.Drawing.Size(28, 13);
+            this.labelUntil.TabIndex = 2;
+            this.labelUntil.Text = "Until";
             // 
             // dateTimePickerUntil
             // 
             this.dateTimePickerUntil.CustomFormat = "dd/MM/yyyy HH:mm:ss";
             this.dateTimePickerUntil.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerUntil.Location = new System.Drawing.Point(6, 45);
+            this.dateTimePickerUntil.Location = new System.Drawing.Point(51, 45);
             this.dateTimePickerUntil.Name = "dateTimePickerUntil";
-            this.dateTimePickerUntil.Size = new System.Drawing.Size(208, 20);
+            this.dateTimePickerUntil.Size = new System.Drawing.Size(163, 20);
             this.dateTimePickerUntil.TabIndex = 1;
             this.dateTimePickerUntil.ValueChanged += new System.EventHandler(this.ValidateTimeOrderOnValueChanged);
             // 
@@ -196,9 +219,9 @@ namespace MetricsSenderApplication
             // 
             this.dateTimePickerFrom.CustomFormat = "dd/MM/yyyy HH:mm:ss";
             this.dateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerFrom.Location = new System.Drawing.Point(6, 19);
+            this.dateTimePickerFrom.Location = new System.Drawing.Point(51, 19);
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
-            this.dateTimePickerFrom.Size = new System.Drawing.Size(208, 20);
+            this.dateTimePickerFrom.Size = new System.Drawing.Size(163, 20);
             this.dateTimePickerFrom.TabIndex = 0;
             this.dateTimePickerFrom.ValueChanged += new System.EventHandler(this.ValidateTimeOrderOnValueChanged);
             // 
@@ -228,7 +251,7 @@ namespace MetricsSenderApplication
             this.buttonDetails.Name = "buttonDetails";
             this.buttonDetails.Size = new System.Drawing.Size(220, 23);
             this.buttonDetails.TabIndex = 6;
-            this.buttonDetails.Text = "Details";
+            this.buttonDetails.Text = "Settings";
             this.buttonDetails.UseVisualStyleBackColor = true;
             this.buttonDetails.Click += new System.EventHandler(this.buttonDetails_Click);
             // 
@@ -252,6 +275,7 @@ namespace MetricsSenderApplication
             this.groupBoxFilteringTitle.ResumeLayout(false);
             this.groupBoxFilteringTitle.PerformLayout();
             this.groupBoxFilteringDate.ResumeLayout(false);
+            this.groupBoxFilteringDate.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -278,6 +302,8 @@ namespace MetricsSenderApplication
         private DataGridViewTextBoxColumn User;
         private DataGridViewTextBoxColumn Url;
         private Button buttonDetails;
+        private Label labelFrom;
+        private Label labelUntil;
     }
 }
 

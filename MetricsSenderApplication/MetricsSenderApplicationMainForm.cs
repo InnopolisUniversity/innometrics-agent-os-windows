@@ -145,6 +145,16 @@ namespace MetricsSenderApplication
         {
             string login = loginForm.GetLogin();
             string password = loginForm.GetPassword();
+            if (login == string.Empty)
+            {
+                MessageBox.Show("Login missing");
+                return;
+            }
+            if (password == string.Empty)
+            {
+                MessageBox.Show("Password missing");
+                return;
+            }
             SendOrPostCallback c = (state) =>
             {
                 loginForm.Close();
@@ -242,7 +252,17 @@ namespace MetricsSenderApplication
                 if (!this.sender.Authorized) // after first 'if' data was obtained as EventArgs
                 {
                     HttpStatusCode authorizationStatusCode;
-                    bool success = this.sender.Authorize(login, password, out authorizationStatusCode);
+                    bool success;
+                    try
+                    {
+                        success = this.sender.Authorize(login, password, out authorizationStatusCode);
+                    }
+                    catch (WebException ex)
+                    {
+                        MessageBox.Show($"An error occured while authorization\n{ex.Message}");
+                        return;
+                    }
+
                     if (!success)
                     {
                         int authCode = (int)authorizationStatusCode;
@@ -256,7 +276,16 @@ namespace MetricsSenderApplication
                 var json = JsonMaker.Serialize(report);
 
                 HttpStatusCode sendStatusCode;
-                var result = this.sender.SendActivities(json, out sendStatusCode);
+                string result;
+                try
+                {
+                    result = this.sender.SendActivities(json, out sendStatusCode);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show($"An error occured while sending activities\n{ex.Message}");
+                    return;
+                }
                 int code = (int)sendStatusCode;
 
                 if (sendStatusCode == HttpStatusCode.Created)
@@ -275,8 +304,8 @@ namespace MetricsSenderApplication
 
         private void buttonDetails_Click(object sender, EventArgs e)
         {
-            DetailsForm detailsForm = new DetailsForm(this);
-            detailsForm.Show();
+            SettingsForm settingsForm = new SettingsForm(this);
+            settingsForm.Show();
         }
 
         #endregion
@@ -295,6 +324,11 @@ namespace MetricsSenderApplication
                 MessageBox.Show("'From' time cannot be after 'Until' time.");
                 dateTimePickerFrom.Value = dateTimePickerUntil.Value;
             }
+        }
+
+        private void listBoxFilteringTitle_DoubleClick(object sender, EventArgs e)
+        {
+            listBoxFilteringTitle.Items.Remove(listBoxFilteringTitle.SelectedItem);
         }
     }
 }

@@ -70,6 +70,7 @@ namespace MetricsCollectorApplication
             groupBoxSettings.Enabled = false;
             buttonStart.Enabled = false;
             buttonStop.Enabled = true;
+            buttonSettings.Enabled = false;
             started = true;
         }
 
@@ -85,8 +86,15 @@ namespace MetricsCollectorApplication
                 groupBoxSettings.Enabled = true;
                 buttonStart.Enabled = true;
                 buttonStop.Enabled = false;
+                buttonSettings.Enabled = true;
                 started = false;
             }
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            SettingsForm form = new SettingsForm();
+            form.Show();
         }
 
         private void MetricsCollectorApplicationMainForm_Resize(object sender, EventArgs e)
