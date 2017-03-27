@@ -12,7 +12,7 @@ using CommonModels.Helpers;
 
 namespace WindowsMetrics
 {
-    public class Collector : IDisposable
+    public class Collector
     {
         private Writer _writer;
 
@@ -37,7 +37,7 @@ namespace WindowsMetrics
 
         #region Handlers for the events being tracked
 
-        private Registry MakeRegistry(CollectionEvent @event)
+        private static Registry MakeRegistry(CollectionEvent @event)
         {
             IntPtr winId = WinAPI.GetForegroundWindowId();
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
@@ -195,11 +195,6 @@ namespace WindowsMetrics
             }
 
             return foregroundWindowChangeTrackingDeactivated && mouseClickTrackingDeactivated;
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -74,7 +74,7 @@ namespace MetricsProcessing
 
         private static RegistriesList MakeRegistriesList(List<Registry> registries)
         {
-            return new RegistriesList(registries, registries[registries.Count - 1].Time);
+            return new RegistriesList(registries);
         }
     }
 }

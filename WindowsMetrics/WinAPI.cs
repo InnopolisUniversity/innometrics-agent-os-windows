@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,6 +19,7 @@ using HookProc = WindowsMetrics.Declarations.Delegates.HookProc;
 
 namespace WindowsMetrics
 {
+    [ExcludeFromCodeCoverage]
     public static class WinAPI
     {
         #region Private part

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,7 +10,8 @@ using CommonModels.Helpers;
 
 namespace MetricsProcessing
 {
-    public class MetricsProcessor : IDisposable
+    [ExcludeFromCodeCoverage]
+    public class MetricsProcessor
     {
         private Guard _guardRegistriesProcessor;
         private Task _taskForGuardRegistriesProcessor; // where guard works in
@@ -104,11 +106,6 @@ namespace MetricsProcessing
         public bool AnyNonTransmittedJson()
         {
             return _activitiesProcessor.AnyNonTransmittedJsonInDb();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

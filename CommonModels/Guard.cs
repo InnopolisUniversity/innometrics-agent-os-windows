@@ -7,7 +7,7 @@ using System.Timers;
 
 namespace CommonModels
 {
-    public class Guard : IDisposable
+    public class Guard
     {
         private readonly Timer _timer;
 
@@ -23,7 +23,7 @@ namespace CommonModels
             _timer.Stop();
         }
 
-        // resets when started
+        /// <summary>Resets when started</summary>
         public void Start()
         {
             _timer.Start();
@@ -34,18 +34,11 @@ namespace CommonModels
             _timer.Stop();
         }
 
-        /// <summary>
-        /// Start the timer from 0
-        /// </summary>
+        /// <summary> Start the timer from 0</summary>
         public void Reset()
         {
             _timer.Stop();
             _timer.Start();
-        }
-
-        public void Dispose()
-        {
-            _timer.Dispose();
         }
     }
 }

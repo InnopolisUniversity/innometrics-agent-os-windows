@@ -52,21 +52,23 @@ namespace Update
 
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (!e.Cancelled)
+            if (e.Cancelled)
             {
-                UpdateXml[] updateXmls = e.Result as UpdateXml[];
-                UpdateXml senderApplicationXml =
-                    updateXmls?.SingleOrDefault(xml => xml.FileName == "MetricsSenderApplication.exe"); // Version of sender is the version of the system
-                if (updateXmls != null && senderApplicationXml != null &&
-                    senderApplicationXml.IsNewerThan(applicationInfo.ApplicationAssembly.GetName().Version))
-                {
-                    if (new UpdateAcceptForm(applicationInfo, updateXmls[0]).ShowDialog(applicationInfo.Context) == DialogResult.Yes)
-                        this.DownloadUpdate(updateXmls);
-                }
-                else
-                {
-                    MessageBox.Show("No updates available.");
-                }
+                MessageBox.Show("No updates available.");
+            }
+
+            UpdateXml[] updateXmls = e.Result as UpdateXml[];
+            UpdateXml senderApplicationXml =
+                updateXmls?.SingleOrDefault(xml => xml.FileName == "MetricsSenderApplication.exe"); // Version of sender is the version of the system
+            if (updateXmls != null && senderApplicationXml != null &&
+                senderApplicationXml.IsNewerThan(applicationInfo.ApplicationAssembly.GetName().Version))
+            {
+                if (new UpdateAcceptForm(applicationInfo, updateXmls[0]).ShowDialog(applicationInfo.Context) == DialogResult.Yes)
+                    this.DownloadUpdate(updateXmls);
+            }
+            else
+            {
+                MessageBox.Show("No updates available.");
             }
         }
 

@@ -53,6 +53,7 @@
     <Compile Include="Enums\Event.cs" />
     <Compile Include="Enums\GetWindowType.cs" />
     <Compile Include="Enums\HookType.cs" />
+    <Compile Include="Enums\IDC_STANDARD_CURSORS.cs" />
     <Compile Include="Enums\ProcessAccessFlags.cs" />
     <Compile Include="Enums\WindowsMessageCode.cs" />
     <Compile Include="Exceptions\CloseProcessException.cs" />

@@ -11,7 +11,7 @@ using CommonModels.Helpers;
 
 namespace WindowsMetrics
 {
-    public class Writer : IDisposable
+    public class Writer
     {
         private readonly string _connectionString;
         private readonly int _dataSavingIntervalSec;
@@ -23,6 +23,8 @@ namespace WindowsMetrics
         private Guard _guardDataSaver;
         private Task _taskForGuardDataSaver; // where guard works in
         private CancellationTokenSource _tokenSource;
+
+        private static readonly Mutex DatabaseMutex = new Mutex(false, "DatabaseMutex");
 
         public Writer(string connectionString, int dataSavingIntervalSec)
         {
@@ -89,18 +91,20 @@ namespace WindowsMetrics
             _report.Add(registry);
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public void CreateDatabaseIfNotExists()
         {
+            DatabaseMutex.WaitOne();
+
             using (var context = new MetricsDataContext(_connectionString))
             {
-                if(!context.DatabaseExists())
+                if (!context.DatabaseExists())
+                {
                     context.CreateDatabase();
+                    context.SubmitChanges();
+                }
             }
+
+            DatabaseMutex.ReleaseMutex();
         }
     }
 }

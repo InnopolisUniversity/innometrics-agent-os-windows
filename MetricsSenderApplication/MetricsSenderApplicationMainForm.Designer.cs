@@ -54,7 +54,7 @@ namespace MetricsSenderApplication
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonTransmit = new System.Windows.Forms.Button();
-            this.buttonDetails = new System.Windows.Forms.Button();
+            this.buttonSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBoxFilteringTitle.SuspendLayout();
             this.groupBoxFilteringDate.SuspendLayout();
@@ -245,22 +245,22 @@ namespace MetricsSenderApplication
             this.buttonTransmit.UseVisualStyleBackColor = true;
             this.buttonTransmit.Click += new System.EventHandler(this.buttonTransmit_Click);
             // 
-            // buttonDetails
+            // buttonSettings
             // 
-            this.buttonDetails.Location = new System.Drawing.Point(12, 381);
-            this.buttonDetails.Name = "buttonDetails";
-            this.buttonDetails.Size = new System.Drawing.Size(220, 23);
-            this.buttonDetails.TabIndex = 6;
-            this.buttonDetails.Text = "Settings";
-            this.buttonDetails.UseVisualStyleBackColor = true;
-            this.buttonDetails.Click += new System.EventHandler(this.buttonDetails_Click);
+            this.buttonSettings.Location = new System.Drawing.Point(12, 381);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(220, 23);
+            this.buttonSettings.TabIndex = 6;
+            this.buttonSettings.Text = "Settings";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
             // MetricsSenderApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1017, 416);
-            this.Controls.Add(this.buttonDetails);
+            this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonTransmit);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.groupBoxFilteringDate);
@@ -301,7 +301,7 @@ namespace MetricsSenderApplication
         private DataGridViewTextBoxColumn Mac;
         private DataGridViewTextBoxColumn User;
         private DataGridViewTextBoxColumn Url;
-        private Button buttonDetails;
+        private Button buttonSettings;
         private Label labelFrom;
         private Label labelUntil;
     }

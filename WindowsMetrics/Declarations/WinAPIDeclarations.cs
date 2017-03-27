@@ -478,5 +478,8 @@ namespace WindowsMetrics.Declarations
 
         [DllImport("iphlpapi.dll", CharSet = CharSet.Ansi)]
         public static extern int GetAdaptersInfo(IntPtr pAdapterInfo, ref Int64 pBufOutLen);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
     }
 }

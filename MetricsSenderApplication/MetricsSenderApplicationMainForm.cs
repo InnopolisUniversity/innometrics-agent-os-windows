@@ -43,14 +43,11 @@ namespace MetricsSenderApplication
 
         public MetricsSenderApplicationMainForm()
         {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
-            string authorizationUri = config.AppSettings.Settings["AuthorizationUri"].Value;
-            string sendDataUri = config.AppSettings.Settings["SendDataUri"].Value;
-            string assemblies = config.AppSettings.Settings["Assemblies"].Value;
+            string connectionString = ConfigHelper.GetConnectionString("MetricsSenderApplication.exe.config", "DefaultConnection");
+            var appSettings = ConfigHelper.GetAppSettings("MetricsSenderApplication.exe.config");
             try
             {
-                updateXmlUri = new Uri(config.AppSettings.Settings["UpdateXmlUri"].Value);
+                updateXmlUri = new Uri(appSettings["UpdateXmlUri"]);
             }
             catch (Exception)
             {
@@ -58,11 +55,11 @@ namespace MetricsSenderApplication
             }
 
             InitializeComponent();
-            this.assemblies = assemblies.Split(';');
+            this.assemblies = appSettings["Assemblies"].Split(';');
             dateTimePickerFrom.Value = DateTime.Now - new TimeSpan(24, 0, 0);
             LoginFormSubmitted += OnLoginFormSubmitted;
             processor = new StraightMetricsProcessor(connectionString);
-            sender = new Sender(authorizationUri, sendDataUri);
+            sender = new Sender(appSettings["AuthorizationUri"], appSettings["SendDataUri"]);
             updater = new Updater(this);
         }
 
@@ -109,12 +106,14 @@ namespace MetricsSenderApplication
         {
             buttonRefresh.Enabled = false;
             buttonTransmit.Enabled = false;
+            buttonSettings.Enabled = false;
         }
 
         private void EnableButtons()
         {
             buttonRefresh.Enabled = true;
             buttonTransmit.Enabled = true;
+            buttonSettings.Enabled = true;
         }
 
         private void EnableButtonsFromAnotherTask(SynchronizationContext sync)
@@ -273,13 +272,12 @@ namespace MetricsSenderApplication
                 }
 
                 Report report = new Report() {Activities = activitiesTempStorage};
-                var json = JsonMaker.Serialize(report);
 
                 HttpStatusCode sendStatusCode;
                 string result;
                 try
                 {
-                    result = this.sender.SendActivities(json, out sendStatusCode);
+                    result = this.sender.SendActivities(report, out sendStatusCode);
                 }
                 catch (WebException ex)
                 {
@@ -302,20 +300,13 @@ namespace MetricsSenderApplication
             });
         }
 
-        private void buttonDetails_Click(object sender, EventArgs e)
+        private void buttonSettings_Click(object sender, EventArgs e)
         {
             SettingsForm settingsForm = new SettingsForm(this);
             settingsForm.Show();
         }
 
         #endregion
-
-        // Helper inner class
-        private class LoginPasswordEventArgs : EventArgs
-        {
-            public string Login { get; set; }
-            public string Password { get; set; }
-        }
 
         private void ValidateTimeOrderOnValueChanged(object sender, EventArgs e)
         {
@@ -329,6 +320,16 @@ namespace MetricsSenderApplication
         private void listBoxFilteringTitle_DoubleClick(object sender, EventArgs e)
         {
             listBoxFilteringTitle.Items.Remove(listBoxFilteringTitle.SelectedItem);
+        }
+
+
+
+
+        // Helper inner class
+        private class LoginPasswordEventArgs : EventArgs
+        {
+            public string Login { get; set; }
+            public string Password { get; set; }
         }
     }
 }

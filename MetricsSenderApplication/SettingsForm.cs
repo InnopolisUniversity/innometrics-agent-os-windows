@@ -33,11 +33,11 @@ namespace MetricsSenderApplication
                 text.Append($"Assembly: {assembly.GetName()}\n{divisor}\n");
             richTextBox.Text = text.ToString();
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            textBoxAuthorizationUri.Text = config.AppSettings.Settings["AuthorizationUri"].Value;
-            textBoxSendDataUri.Text = config.AppSettings.Settings["SendDataUri"].Value;
-            textBoxUpdateXmlUri.Text = config.AppSettings.Settings["UpdateXmlUri"].Value;
-            textBoxAssemblies.Text = config.AppSettings.Settings["Assemblies"].Value;
+            var appSettings = ConfigHelper.GetAppSettings("MetricsSenderApplication.exe.config");
+            textBoxAuthorizationUri.Text = appSettings["AuthorizationUri"];
+            textBoxSendDataUri.Text = appSettings["SendDataUri"];
+            textBoxUpdateXmlUri.Text = appSettings["UpdateXmlUri"];
+            textBoxAssemblies.Text = appSettings["Assemblies"];
         }
 
         private void buttonCheckUpdate_Click(object sender, EventArgs e)

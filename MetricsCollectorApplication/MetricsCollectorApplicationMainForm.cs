@@ -9,14 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsMetrics;
+using CommonModels.Helpers;
 
 namespace MetricsCollectorApplication
 {
     public partial class MetricsCollectorApplicationMainForm : Form
     {
+        private readonly string ConfigFileName = "MetricsCollectorApplication.exe.config";
+
         private bool exceptionOnDatabaseCheckOccured;
         private bool started;
-        private readonly int _stateScanIntervalSec;
+        private int _stateScanIntervalSec;
 
         private Collector collector;
         private Writer writer;
@@ -24,25 +27,6 @@ namespace MetricsCollectorApplication
         public MetricsCollectorApplicationMainForm()
         {
             InitializeComponent();
-            this.Cursor = System.Windows.Forms.Cursors.AppStarting;
-
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            string connectionString = config.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
-            int dataSavingIntervalSec = Convert.ToInt32(config.AppSettings.Settings["DataSavingIntervalSec"].Value);
-            _stateScanIntervalSec = Convert.ToInt32(config.AppSettings.Settings["StateScanIntervalSec"].Value);
-            
-            exceptionOnDatabaseCheckOccured = false;
-            started = false;
-            writer = new Writer(connectionString, dataSavingIntervalSec);
-            try
-            {
-                writer.CreateDatabaseIfNotExists();
-            }
-            catch (Exception e)
-            {
-                exceptionOnDatabaseCheckOccured = true;
-                MessageBox.Show($"An error occured while creating database.\n***\n{e.Message}");
-            }
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -93,7 +77,7 @@ namespace MetricsCollectorApplication
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            SettingsForm form = new SettingsForm();
+            SettingsForm form = new SettingsForm(this);
             form.Show();
         }
 
@@ -126,9 +110,21 @@ namespace MetricsCollectorApplication
 
         private void MetricsCollectorApplicationMainForm_Load(object sender, EventArgs e)
         {
-            Cursor = System.Windows.Forms.Cursors.Default;
-            if (exceptionOnDatabaseCheckOccured)
+            var appSettings = ConfigHelper.GetAppSettings(ConfigFileName);
+            string connectionString = ConfigHelper.GetConnectionString(ConfigFileName, "DefaultConnection");
+            _stateScanIntervalSec = Convert.ToInt32(appSettings["StateScanIntervalSec"]);
+
+            started = false;
+            writer = new Writer(connectionString, Convert.ToInt32(appSettings["DataSavingIntervalSec"]));
+            try
+            {
+                writer.CreateDatabaseIfNotExists();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occured while creating database.\n***\n{ex.Message}");
                 Application.Exit();
+            }
         }
     }
 }

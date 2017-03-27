@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace MetricsProcessing.Exceptions
     /// There's a possibility that the first registries after that range can also be in the same activity.
     /// If this exception happen, more registries should be obtained in order to determine an activity and process it.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     class AllTakenRegistiesBeginActivityException : Exception
     {
         public RegistriesList TakenRegistries { get; }

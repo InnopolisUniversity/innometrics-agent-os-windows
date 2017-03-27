@@ -25,13 +25,7 @@ namespace TestConsoleApplication
             Activity a = new Activity { Name = "Activity 1" };
             a.Measurements.Add(new Measurement()
             {
-                Name = "Время",
-                Type = typeof(DateTime).Name,
-                Value = DateTime.Now
-            });
-            a.Measurements.Add(new Measurement()
-            {
-                Name = "dgdfg fdgfdg fdgfdg",
+                Name = "Quality",
                 Type = typeof(string).Name,
                 Value = "bad"
             });
@@ -46,10 +40,42 @@ namespace TestConsoleApplication
             b.Measurements.Add(new Measurement()
             {
                 Name = "Quality",
-                Type = "4444444444444445",
+                Type = typeof(string).Name,
                 Value = "good"
             });
-            Report report = new Report() {Activities = new List<Activity>() {a, b}};
+            Report report = new Report() { Activities = new List<Activity>() { a, b } };
+            string json = JsonMaker.Serialize(report);
+
+
+
+            //Activity a = new Activity { Name = "Activity 1" };
+            //a.Measurements.Add(new Measurement()
+            //{
+            //    Name = "Время",
+            //    Type = typeof(DateTime).Name,
+            //    Value = DateTime.Now
+            //});
+            //a.Measurements.Add(new Measurement()
+            //{
+            //    Name = "dgdfg fdgfdg fdgfdg",
+            //    Type = typeof(string).Name,
+            //    Value = "bad"
+            //});
+
+            //Activity b = new Activity { Name = "Activity 2" };
+            //b.Measurements.Add(new Measurement()
+            //{
+            //    Name = "Time",
+            //    Type = typeof(int).Name,
+            //    Value = 14779
+            //});
+            //b.Measurements.Add(new Measurement()
+            //{
+            //    Name = "Quality",
+            //    Type = "4444444444444445",
+            //    Value = "good"
+            //});
+            //Report report = new Report() {Activities = new List<Activity>() {a, b}};
 
             HttpStatusCode statusCode;
             Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/activities/");

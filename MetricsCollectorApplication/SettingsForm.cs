@@ -14,13 +14,16 @@ namespace MetricsCollectorApplication
 {
     public partial class SettingsForm : Form
     {
-        public SettingsForm()
+        private MetricsCollectorApplicationMainForm form;
+
+        public SettingsForm(MetricsCollectorApplicationMainForm form)
         {
             InitializeComponent();
+            this.form = form;
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            textBoxDataSavingIntervalSec.Text = config.AppSettings.Settings["DataSavingIntervalSec"].Value;
-            textBoxStateScanIntervalSec.Text = config.AppSettings.Settings["StateScanIntervalSec"].Value;
+            var appSettings = ConfigHelper.GetAppSettings("MetricsCollectorApplication.exe.config");
+            textBoxDataSavingIntervalSec.Text = appSettings["DataSavingIntervalSec"];
+            textBoxStateScanIntervalSec.Text = appSettings["StateScanIntervalSec"];
         }
 
         private void buttonSave_Click(object sender, EventArgs e)

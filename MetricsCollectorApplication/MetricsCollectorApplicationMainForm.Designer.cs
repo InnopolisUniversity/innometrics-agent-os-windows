@@ -114,14 +114,14 @@
             // trayIcon
             // 
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.Text = "trayIcon";
+            this.trayIcon.Text = "Double click to open";
             this.trayIcon.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
             // 
             // buttonSettings
             // 
             this.buttonSettings.Location = new System.Drawing.Point(12, 139);
             this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(118, 23);
+            this.buttonSettings.Size = new System.Drawing.Size(260, 23);
             this.buttonSettings.TabIndex = 3;
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.UseVisualStyleBackColor = true;
