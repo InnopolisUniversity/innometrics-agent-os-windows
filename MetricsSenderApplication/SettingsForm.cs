@@ -34,6 +34,7 @@ namespace MetricsSenderApplication
             richTextBox.Text = text.ToString();
 
             var appSettings = ConfigHelper.GetAppSettings("MetricsSenderApplication.exe.config");
+            textBoxActivitiesToSendAtOneTime.Text = appSettings["ActivitiesToSendAtOneTime"];
             textBoxAuthorizationUri.Text = appSettings["AuthorizationUri"];
             textBoxSendDataUri.Text = appSettings["SendDataUri"];
             textBoxUpdateXmlUri.Text = appSettings["UpdateXmlUri"];
@@ -55,11 +56,27 @@ namespace MetricsSenderApplication
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "AuthorizationUri", textBoxAuthorizationUri.Text);
-            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "SendDataUri", textBoxSendDataUri.Text);
-            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "UpdateXmlUri", textBoxUpdateXmlUri.Text);
-            ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "Assemblies", textBoxAssemblies.Text);
-            Application.Exit();
+            try
+            {
+                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "ActivitiesToSendAtOneTime",
+                    textBoxActivitiesToSendAtOneTime.Text);
+                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "AuthorizationUri",
+                    textBoxAuthorizationUri.Text);
+                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "SendDataUri", textBoxSendDataUri.Text);
+                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "UpdateXmlUri",
+                    textBoxUpdateXmlUri.Text);
+                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "Assemblies", textBoxAssemblies.Text);
+
+                Application.Exit();
+            }
+            catch (ConfigurationException ex)
+            {
+                MessageBox.Show("Failed to access .config files. Run the application in administrator mode or change security permissions of MetricsSenderApplication.exe.config\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private Assembly[] TryGetAssemblies(string[] paths)

@@ -27,7 +27,6 @@ namespace Transmission
 
         /// <summary>Get and store token</summary>
         /// <returns>Success of authorization</returns>
-        /// <exception cref="WebException"></exception>
         public bool Authorize(string username, string password, out HttpStatusCode statusCode)
         {
             var loginData = new {username = username, password = password};
@@ -40,19 +39,16 @@ namespace Transmission
             return Token != null;
         }
 
-        /// <exception cref="WebException"></exception>
         public string SendActivities(Report activities, out HttpStatusCode statusCode)
         {
             return Send(SendDataUri, JsonMaker.Serialize(activities), "application/json", out statusCode);
         }
 
-        /// <exception cref="WebException"></exception>
         public string SendActivities(string json, out HttpStatusCode statusCode)
         {
             return Send(SendDataUri, json, "application/json", out statusCode);
         }
 
-        /// <exception cref="WebException"></exception>
         private string Send(string uri, string json, string contentType, out HttpStatusCode statusCode)
         {
             // source of the solution
@@ -83,20 +79,15 @@ namespace Transmission
             HttpWebResponse response;
             try
             {
-                response = (HttpWebResponse) request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
             }
             catch (WebException e)
             {
-                response = (HttpWebResponse) e.Response;
+                response = (HttpWebResponse)e.Response;
                 statusCode = response.StatusCode;
                 return response?.StatusDescription;
             }
-            catch (Exception e)
-            {
-                statusCode = 0;
-                return e.Message;
-            }
-            
+
             using (var streamReader = new StreamReader(response.GetResponseStream()))
             {
                 responseString = streamReader.ReadToEnd();

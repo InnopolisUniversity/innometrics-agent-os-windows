@@ -16,11 +16,21 @@ namespace CommonModels
     public class Activity
     {
         public string Name { get; set; }
-        public IList<Measurement> Measurements { get; set; } = new List<Measurement>();
+        public IList<Measurement> Measurements { get; set; }
+
+        public Activity()
+        {
+            Measurements = new List<Measurement>();
+        }
     }
 
     public class Report
     {
-        public IList<Activity> Activities { get; set; } = new List<Activity>();
+        public IList<Activity> Activities { get; set; }
+
+        public Report()
+        {
+            Activities = new List<Activity>();
+        }
     }
 }

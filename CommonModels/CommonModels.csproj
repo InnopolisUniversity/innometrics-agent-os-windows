@@ -51,6 +51,7 @@
     <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\FileWriteHelper.cs" />
     <Compile Include="Helpers\JsonMaker.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Metrics.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

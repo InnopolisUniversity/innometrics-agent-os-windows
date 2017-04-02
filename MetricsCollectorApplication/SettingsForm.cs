@@ -28,9 +28,22 @@ namespace MetricsCollectorApplication
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            ConfigHelper.UpdateConfig("MetricsCollectorApplication.exe.config", "DataSavingIntervalSec", textBoxDataSavingIntervalSec.Text);
-            ConfigHelper.UpdateConfig("MetricsCollectorApplication.exe.config", "StateScanIntervalSec", textBoxStateScanIntervalSec.Text);
-            Application.Exit();
+            try
+            {
+                ConfigHelper.UpdateConfig("MetricsCollectorApplication.exe.config", "DataSavingIntervalSec",
+                    textBoxDataSavingIntervalSec.Text);
+                ConfigHelper.UpdateConfig("MetricsCollectorApplication.exe.config", "StateScanIntervalSec",
+                    textBoxStateScanIntervalSec.Text);
+                Application.Exit();
+            }
+            catch (ConfigurationException ex)
+            {
+                MessageBox.Show("Failed to access .config files. Run the application in administrator mode or change security permissions of MetricsSenderApplication.exe.config\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

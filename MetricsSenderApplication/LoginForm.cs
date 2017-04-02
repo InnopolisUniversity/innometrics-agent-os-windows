@@ -12,9 +12,12 @@ namespace MetricsSenderApplication
 {
     public partial class LoginForm : Form
     {
+        public bool LoginClicked { get; set; }
+
         public LoginForm()
         {
             InitializeComponent();
+            LoginClicked = false;
         }
 
         public void SetLoginClickAction(EventHandler handler)

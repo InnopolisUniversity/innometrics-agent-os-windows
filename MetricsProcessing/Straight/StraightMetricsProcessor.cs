@@ -25,5 +25,10 @@ namespace MetricsProcessing
         {
             _registriesProcessor.DeleteRegistriesFromDb(ids);
         }
+
+        public void MarkRegistriesAsProcessed(IEnumerable<long> ids)
+        {
+            _registriesProcessor.MarkRegistriesAsProcessed(ids);
+        }
     }
 }

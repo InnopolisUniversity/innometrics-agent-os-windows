@@ -23,6 +23,23 @@ namespace MetricsProcessing
             }
         }
 
+        public static void MarkRegistriesAsProcessed(string connectionString, IEnumerable<long> ids)
+        {
+            var enumerable = ids as long[] ?? ids.ToArray();
+            if (!enumerable.Any())
+                return;
+
+            using (var context = new MetricsDataContext(connectionString))
+            {
+                var registriesToMark = context.Registries.Where(r => enumerable.Contains(r.Id)).ToArray();
+                for (int i = 0; i < registriesToMark.Length; i++)
+                {
+                    registriesToMark[i].Processed = true;
+                }
+                context.SubmitChanges();
+            }
+        }
+
         public static RegistriesList GetRegistries(string connectionString)
         {
             using (var context = new MetricsDataContext(connectionString))

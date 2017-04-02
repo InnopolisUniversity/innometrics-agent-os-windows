@@ -102,30 +102,5 @@ namespace WindowsMetricsTest
 
             // TODO cover registry write
         }
-
-        //private readonly string cString = ConfigHelper.GetConnectionString("WindowsMetricsTest.dll.config", "DefaultConnection");
-        //[TestMethod]
-        //public void TestCreateDatabaseIfNotExists()
-        //{
-        //    using (var context = new MetricsDataContext(cString))
-        //    {
-        //        if (context.DatabaseExists())
-        //        {
-        //            context.DeleteDatabase();
-        //            context.SubmitChanges();
-        //        }
-        //    }
-
-        //    int interval = 100;
-        //    Writer writer = new Writer(cString, interval);
-        //    writer.CreateDatabaseIfNotExists();
-
-        //    using (var context = new MetricsDataContext(cString))
-        //    {
-        //        Assert.IsTrue(context.DatabaseExists());
-        //        context.DeleteDatabase();
-        //        context.SubmitChanges();
-        //    }
-        //}
     }
 }

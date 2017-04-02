@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommonModels;
+using CommonModels.Helpers;
 using MetricsProcessing.Exceptions;
 
 namespace MetricsProcessing
@@ -20,6 +21,11 @@ namespace MetricsProcessing
         public void DeleteRegistriesFromDb(IEnumerable<long> ids)
         {
             StraightDbHelper.DeleteRegistries(_connectionString, ids);
+        }
+
+        public void MarkRegistriesAsProcessed(IEnumerable<long> ids)
+        {
+            StraightDbHelper.MarkRegistriesAsProcessed(_connectionString, ids);
         }
 
         public ActivitiesList Process(IEnumerable<string> nameFilter, bool includeNullTitles, DateTime from, DateTime until)
@@ -76,7 +82,7 @@ namespace MetricsProcessing
         {
             Activity activity = new Activity()
             {
-                Name = activityRegistries.First.WindowTitle,
+                Name = activityRegistries.First.WindowTitle.NormalizeToMaxLength255() ?? "NULL"
             };
 
             activity.Measurements.Add(new Measurement()
@@ -101,19 +107,19 @@ namespace MetricsProcessing
             {
                 Name = "Executable Path",
                 Type = "String",
-                Value = activityRegistries.First.ExeModulePath
+                Value = activityRegistries.First.ExeModulePath.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "IP address",
                 Type = "String",
-                Value = activityRegistries.First.IpAddress.Value
+                Value = activityRegistries.First.IpAddress.Value.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "MAC address",
                 Type = "String",
-                Value = activityRegistries.First.MacAddress.Value
+                Value = activityRegistries.First.MacAddress.Value.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
@@ -127,7 +133,7 @@ namespace MetricsProcessing
                 {
                     Name = "URL",
                     Type = "String",
-                    Value = activityRegistries.First(r => r.Url != null).Url
+                    Value = activityRegistries.FirstOrDefault(r => r.Url != null)?.Url.NormalizeToMaxLength255() ?? "NULL"
                 });
             }
 

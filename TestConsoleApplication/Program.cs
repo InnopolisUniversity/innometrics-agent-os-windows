@@ -78,11 +78,11 @@ namespace TestConsoleApplication
             //Report report = new Report() {Activities = new List<Activity>() {a, b}};
 
             HttpStatusCode statusCode;
-            Sender sender = new Sender("https://aqueous-escarpment-80312.herokuapp.com/api-token-auth/", "https://aqueous-escarpment-80312.herokuapp.com/activities/");
-            bool succReg = sender.Authorize("a.shunevich", "masterkey", out statusCode);
+            Sender sender = new Sender("http://innometrics.guru:8000/api-token-auth/", "http://innometrics.guru:8000/activities/");
+            bool succReg = sender.Authorize("as", "123456", out statusCode);
 
             string xxx;
-            using (FileStream fs = new FileStream("D:\\eer.txt", FileMode.Open))
+            using (FileStream fs = new FileStream("D:\\awe.txt", FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(fs))
                 {
@@ -93,7 +93,9 @@ namespace TestConsoleApplication
             string res;
             if (succReg)
             {
-                res = sender.SendActivities(xxx, out statusCode);
+
+                    res = sender.SendActivities(xxx, out statusCode);
+      
             }
 
 

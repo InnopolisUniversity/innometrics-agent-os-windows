@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace MetricsSenderApplication
         private Uri updateXmlUri;
         private Updater updater;
         private string[] assemblies;
+        private int activitiesToSendAtOneTime;
 
         public string ApplicationName => ApplicationId;
         public string ApplicationID => ApplicationId;
@@ -43,6 +45,8 @@ namespace MetricsSenderApplication
 
         public MetricsSenderApplicationMainForm()
         {
+            InitializeComponent();
+
             string connectionString = ConfigHelper.GetConnectionString("MetricsSenderApplication.exe.config", "DefaultConnection");
             var appSettings = ConfigHelper.GetAppSettings("MetricsSenderApplication.exe.config");
             try
@@ -53,19 +57,18 @@ namespace MetricsSenderApplication
             {
                 updateXmlUri = null;
             }
-
-            InitializeComponent();
-            this.assemblies = appSettings["Assemblies"].Split(';');
+            assemblies = appSettings["Assemblies"].Split(';');
             dateTimePickerFrom.Value = DateTime.Now - new TimeSpan(24, 0, 0);
             LoginFormSubmitted += OnLoginFormSubmitted;
             processor = new StraightMetricsProcessor(connectionString);
             sender = new Sender(appSettings["AuthorizationUri"], appSettings["SendDataUri"]);
             updater = new Updater(this);
+            activitiesToSendAtOneTime = int.Parse(appSettings["ActivitiesToSendAtOneTime"]);
         }
 
         #region helper methods
 
-        private DataGridViewRow ToDataGridViewRow(Activity activity)
+        private static DataGridViewRow ToDataGridViewRow(Activity activity)
         {
             DataGridViewRow row = new DataGridViewRow();
             row.Cells.Add(new DataGridViewTextBoxCell() {Value = activity.Name});
@@ -76,6 +79,10 @@ namespace MetricsSenderApplication
             return row;
         }
 
+        #endregion
+
+        #region filter
+        
         private List<string> GetFilter()
         {
             List<string> filter = new List<string>();
@@ -102,6 +109,10 @@ namespace MetricsSenderApplication
             sync.Post(c, null);
         }
 
+        #endregion
+
+        #region buttons
+        
         private void DisableButtons()
         {
             buttonRefresh.Enabled = false;
@@ -122,6 +133,19 @@ namespace MetricsSenderApplication
             sync.Post(c, null);
         }
 
+        #endregion
+
+        private void ClearDataFromAnotherTask(SynchronizationContext sync)
+        {
+            SendOrPostCallback c = (state) =>
+            {
+                dataGridView.Rows.Clear();
+            };
+            sync.Post(c, null);
+        }
+
+        #region login
+        
         private void LoginWithForm(SynchronizationContext sync)
         {
             LoginForm loginForm = new LoginForm();
@@ -131,8 +155,12 @@ namespace MetricsSenderApplication
                 loginForm.SetLoginClickAction(handler);
                 CancelEventHandler handler2 = (o, args) =>
                 {
-                    EnableButtonsFromAnotherTask(sync);
-                    EnableFilterBoxFromAnotherTask(sync);
+                    if (!loginForm.LoginClicked)
+                    {
+                        EnableButtonsFromAnotherTask(sync);
+                        EnableFilterBoxFromAnotherTask(sync);
+                    }
+                    loginForm.LoginClicked = false;
                 };
                 loginForm.SetCloseAction(handler2);
                 loginForm.Show();
@@ -154,12 +182,63 @@ namespace MetricsSenderApplication
                 MessageBox.Show("Password missing");
                 return;
             }
+            loginForm.LoginClicked = true;
             SendOrPostCallback c = (state) =>
             {
                 loginForm.Close();
             };
             sync.Post(c, null);
             buttonTransmit_Click(this, new LoginPasswordEventArgs() {Login = login, Password = password});
+        }
+
+        #endregion
+
+        #region progress form
+
+        private SendingProgressForm ShowProgressForm(SynchronizationContext sync, int itemsCount, CancellationTokenSource tokenSource)
+        {
+            SendingProgressForm form = new SendingProgressForm(itemsCount);
+            SendOrPostCallback c = (state) =>
+            {
+                EventHandler cancelHandler = (o, args) =>
+                {
+                    tokenSource.Cancel();
+                };
+                form.SetCancelClickAction(cancelHandler);
+                form.Show();
+            };
+            sync.Post(c, null);
+            return form;
+        }
+
+        private void IncrementProgress(SynchronizationContext sync, SendingProgressForm form)
+        {
+            SendOrPostCallback c = (state) =>
+            {
+                form.Increment();
+            };
+            sync.Post(c, null);
+        }
+
+        private void CompleteProgress(SynchronizationContext sync, SendingProgressForm form)
+        {
+            SendOrPostCallback c = (state) =>
+            {
+                form.To100();
+                MessageBox.Show("Completed");
+                form.Close();
+            };
+            sync.Post(c, null);
+        }
+
+        private void StopProgressOnCancel(SynchronizationContext sync, SendingProgressForm form)
+        {
+            SendOrPostCallback c = (state) =>
+            {
+                MessageBox.Show("Cancelled");
+                form.Close();
+            };
+            sync.Post(c, null);
         }
 
         #endregion
@@ -197,9 +276,10 @@ namespace MetricsSenderApplication
             
             if (activitiesTempStorage != null)
             {
-                foreach (var activity in activitiesTempStorage)
+                for (int i = 0; i < activitiesTempStorage.Count; i++)
                 {
-                    DataGridViewRow row = ToDataGridViewRow(activity);
+                    DataGridViewRow row = ToDataGridViewRow(activitiesTempStorage[i]);
+                    row.HeaderCell.Value = (i + 1).ToString();
                     dataGridView.Rows.Add(row);
                 }
             }
@@ -214,6 +294,8 @@ namespace MetricsSenderApplication
 
         private void buttonTransmit_Click(object sender, EventArgs e)
         {
+            System.Runtime.GCSettings.LatencyMode = GCLatencyMode.LowLatency;
+
             if (activitiesTempStorage == null)
             {
                 MessageBox.Show("There's nothing to transmit");
@@ -245,8 +327,10 @@ namespace MetricsSenderApplication
                     return;
                 }
             }
+        
 
-            Task.Factory.StartNew(() =>
+
+            Task authorizationTask = new Task(() =>
             {
                 if (!this.sender.Authorized) // after first 'if' data was obtained as EventArgs
                 {
@@ -270,34 +354,82 @@ namespace MetricsSenderApplication
                         return;
                     }
                 }
+            });
+            authorizationTask.Start();
+            authorizationTask.Wait();
 
-                Report report = new Report() {Activities = activitiesTempStorage};
 
-                HttpStatusCode sendStatusCode;
-                string result;
-                try
+
+            Task<List<Report>> splittingActivitiesListTask = new Task<List<Report>>(() =>
+            {
+                List<Report> r = new List<Report>();
+                while (activitiesTempStorage.Count > 0)
                 {
-                    result = this.sender.SendActivities(report, out sendStatusCode);
+                    var a = activitiesTempStorage.Take(activitiesToSendAtOneTime).ToList();
+                    r.Add(new Report() { Activities = a });
+                    activitiesTempStorage.RemoveRange(0, a.Count);
                 }
-                catch (WebException ex)
-                {
-                    MessageBox.Show($"An error occured while sending activities\n{ex.Message}");
-                    return;
-                }
-                int code = (int)sendStatusCode;
+                return r;
+            });
+            splittingActivitiesListTask.Start();
+            List<Report> reports = splittingActivitiesListTask.Result;
 
-                if (sendStatusCode == HttpStatusCode.Created)
+
+
+            var tokenSource = new CancellationTokenSource();
+            var cancellation = tokenSource.Token;
+            SendingProgressForm sendingProgressForm = ShowProgressForm(sync, reports.Count, tokenSource);
+            Task sendingTask = new Task((token) =>
+            {
+                CancellationToken cancellationToken = (CancellationToken) token;
+
+                while (reports.Any())
                 {
-                    processor.DeleteRegistriesFromDb(activitiesTempStorage.RegistriesIds);
-                    MessageBox.Show("Transmission successfully completed.");
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var report = reports.First();
+
+                    HttpStatusCode sendStatusCode;
+                    string result;
+                    try
+                    {
+                        result = this.sender.SendActivities(report, out sendStatusCode);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occured while sending activities\n{ex.Message}");
+                        return;
+                    }
+                    int code = (int) sendStatusCode;
+
+                    if (sendStatusCode == HttpStatusCode.Created)
+                    {
+                        reports.Remove(report);
+                        IncrementProgress(sync, sendingProgressForm);
+                    }
+                }
+
+                processor.MarkRegistriesAsProcessed(activitiesTempStorage.RegistriesIds);
+            }, 
+            cancellation, TaskCreationOptions.LongRunning);
+            Task continuation = sendingTask.ContinueWith((obj) =>
+            {
+                if (cancellation.IsCancellationRequested)
+                {
+                    StopProgressOnCancel(sync, sendingProgressForm);
                 }
                 else
                 {
-                    MessageBox.Show($"{code}: {sendStatusCode}");
+                    CompleteProgress(sync, sendingProgressForm);
                 }
-                
+
+                activitiesTempStorage = null;
+
+                EnableFilterBoxFromAnotherTask(sync);
                 EnableButtonsFromAnotherTask(sync);
+                ClearDataFromAnotherTask(sync);
             });
+            sendingTask.Start();
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
