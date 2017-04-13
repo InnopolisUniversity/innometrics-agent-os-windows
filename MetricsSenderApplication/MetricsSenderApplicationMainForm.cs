@@ -351,14 +351,15 @@ namespace MetricsSenderApplication
                         int authCode = (int)authorizationStatusCode;
                         MessageBox.Show($"Authorization failed with code {authCode}: {authorizationStatusCode}");
                         EnableButtonsFromAnotherTask(sync);
-                        return;
+                        EnableFilterBoxFromAnotherTask(sync);
                     }
                 }
             });
             authorizationTask.Start();
             authorizationTask.Wait();
 
-
+            if (!this.sender.Authorized)
+                return;
 
             Task<List<Report>> splittingActivitiesListTask = new Task<List<Report>>(() =>
             {

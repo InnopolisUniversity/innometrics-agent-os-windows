@@ -1,42 +1,42 @@
 <?xml version="1.0"?>
 <sharpUpdate>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/CommonModels.dll</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/CommonModels.dll</url>
 		<fileName>CommonModels.dll</fileName>
-		<md5>81B6B62F3D306B5FC6F91CE09E84A5D6</md5>
+		<md5>9718A6EB9001291734EB395C5178E17F</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/MetricsProcessing.dll</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/MetricsProcessing.dll</url>
 		<fileName>MetricsProcessing.dll</fileName>
-		<md5>6CCF0B741A43BD0B2E3C130EB15A8E68</md5>
+		<md5>6731DD3B4D0AE5378E13EBD620AC8047</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/Transmission.dll</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/Transmission.dll</url>
 		<fileName>Transmission.dll</fileName>
-		<md5>AA4745140729B9677463E0A075AAE43F</md5>
+		<md5>3F903BEBF248BA0AE7173250C48463B9</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/Update.dll</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/Update.dll</url>
 		<fileName>Update.dll</fileName>
-		<md5>DD6CBF4520BECEBA34E526C37F232AFE</md5>
+		<md5>BC53C280306ADF9CB1EB373A768780B6</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/WindowsMetrics.dll</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/WindowsMetrics.dll</url>
 		<fileName>WindowsMetrics.dll</fileName>
-		<md5>C2B0C734D395F910EA18D41E601FF3A6</md5>
+		<md5>DC0FAC40FB968DCA9A04C2AB09B941A3</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>	
@@ -44,27 +44,20 @@
   
   
   
+
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/MetricsSenderApplication.exe.config</url>
-		<fileName>MetricsSenderApplication.exe.config</fileName>
-		<md5>98E3D5C54434E10AF7586AA3AE500BC9</md5>
-		<description></description>
-		<launchArgs></launchArgs>
-	</update>
-	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/MetricsCollectorApplication.exe</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/MetricsCollectorApplication.exe</url>
 		<fileName>MetricsCollectorApplication.exe</fileName>
-		<md5>369748CB8790A9D777AA7B84D40C8382</md5>
+		<md5>80124541EAB5815CF8653BC47522DC4B</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
 	<update appId="MetricsCollectionSystem">
-		<version>1.0.0.4</version>
-		<url>http://innometrics.guru:8000/downloadables/MetricsSenderApplication.exe</url>
+		<version>1.0.0.6</version>
+		<url>http://innometrics.guru:8000/downloadables/win/MetricsSenderApplication.exe</url>
 		<fileName>MetricsSenderApplication.exe</fileName>
-		<md5>2BC571D8116A5E815A85694A834A0BFE</md5>
+		<md5>C413904E0AACF68B72B2D1023B228202</md5>
 		<description></description>
 		<launchArgs></launchArgs>
 	</update>
