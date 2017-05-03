@@ -7,6 +7,7 @@ using System.Timers;
 
 namespace CommonModels
 {
+    // написать про то, что он должен создаваться и работать только в фоне
     public class Guard
     {
         private readonly Timer _timer;

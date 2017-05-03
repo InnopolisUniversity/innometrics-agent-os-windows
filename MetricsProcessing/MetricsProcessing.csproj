@@ -42,15 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivitiesList.cs" />
-    <Compile Include="Background\ActivitiesProcessor.cs" />
-    <Compile Include="Background\DbHelper.cs" />
+    <Compile Include="Background %28Unused%29\ActivitiesProcessor.cs" />
+    <Compile Include="Background %28Unused%29\DbHelper.cs" />
     <Compile Include="Exceptions\AllTakenRegistiesBeginActivityException.cs" />
     <Compile Include="Exceptions\NoNonProcessedRegistriesException.cs" />
     <Compile Include="Exceptions\OnlyOneNonProcessedRegistryTakenException.cs" />
-    <Compile Include="Background\MetricsProcessor.cs" />
+    <Compile Include="Background %28Unused%29\MetricsProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistriesList.cs" />
-    <Compile Include="Background\RegistriesProcessor.cs" />
+    <Compile Include="Background %28Unused%29\RegistriesProcessor.cs" />
     <Compile Include="Straight\StraightDbHelper.cs" />
     <Compile Include="Straight\StraightMetricsProcessor.cs" />
     <Compile Include="Straight\StraightRegistriesProcessor.cs" />

@@ -18,9 +18,9 @@ namespace MetricsProcessing
             _connectionString = connectionString;
         }
 
-        public void DeleteRegistriesFromDb(IEnumerable<long> ids)
+        public void DeleteProcessedRegistriesFromDb()
         {
-            StraightDbHelper.DeleteRegistries(_connectionString, ids);
+            StraightDbHelper.DeleteProcessedRegistries(_connectionString);
         }
 
         public void MarkRegistriesAsProcessed(IEnumerable<long> ids)

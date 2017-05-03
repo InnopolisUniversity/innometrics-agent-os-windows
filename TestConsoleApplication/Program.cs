@@ -20,127 +20,127 @@ namespace TestConsoleApplication
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            Activity a = new Activity { Name = "Activity 1" };
-            a.Measurements.Add(new Measurement()
-            {
-                Name = "Quality",
-                Type = typeof(string).Name,
-                Value = "bad"
-            });
+        //static void Main(string[] args)
+        //{
+        //    Activity a = new Activity { Name = "Activity 1" };
+        //    a.Measurements.Add(new Measurement()
+        //    {
+        //        Name = "Quality",
+        //        Type = typeof(string).Name,
+        //        Value = "bad"
+        //    });
 
-            Activity b = new Activity { Name = "Activity 2" };
-            b.Measurements.Add(new Measurement()
-            {
-                Name = "Time",
-                Type = typeof(int).Name,
-                Value = 14779
-            });
-            b.Measurements.Add(new Measurement()
-            {
-                Name = "Quality",
-                Type = typeof(string).Name,
-                Value = "good"
-            });
-            Report report = new Report() { Activities = new List<Activity>() { a, b } };
-            string json = JsonMaker.Serialize(report);
+        //    Activity b = new Activity { Name = "Activity 2" };
+        //    b.Measurements.Add(new Measurement()
+        //    {
+        //        Name = "Time",
+        //        Type = typeof(int).Name,
+        //        Value = 14779
+        //    });
+        //    b.Measurements.Add(new Measurement()
+        //    {
+        //        Name = "Quality",
+        //        Type = typeof(string).Name,
+        //        Value = "good"
+        //    });
+        //    Report report = new Report() { Activities = new List<Activity>() { a, b } };
+        //    string json = JsonMaker.Serialize(report);
 
 
 
-            //Activity a = new Activity { Name = "Activity 1" };
-            //a.Measurements.Add(new Measurement()
-            //{
-            //    Name = "Время",
-            //    Type = typeof(DateTime).Name,
-            //    Value = DateTime.Now
-            //});
-            //a.Measurements.Add(new Measurement()
-            //{
-            //    Name = "dgdfg fdgfdg fdgfdg",
-            //    Type = typeof(string).Name,
-            //    Value = "bad"
-            //});
+        //    //Activity a = new Activity { Name = "Activity 1" };
+        //    //a.Measurements.Add(new Measurement()
+        //    //{
+        //    //    Name = "Время",
+        //    //    Type = typeof(DateTime).Name,
+        //    //    Value = DateTime.Now
+        //    //});
+        //    //a.Measurements.Add(new Measurement()
+        //    //{
+        //    //    Name = "dgdfg fdgfdg fdgfdg",
+        //    //    Type = typeof(string).Name,
+        //    //    Value = "bad"
+        //    //});
 
-            //Activity b = new Activity { Name = "Activity 2" };
-            //b.Measurements.Add(new Measurement()
-            //{
-            //    Name = "Time",
-            //    Type = typeof(int).Name,
-            //    Value = 14779
-            //});
-            //b.Measurements.Add(new Measurement()
-            //{
-            //    Name = "Quality",
-            //    Type = "4444444444444445",
-            //    Value = "good"
-            //});
-            //Report report = new Report() {Activities = new List<Activity>() {a, b}};
+        //    //Activity b = new Activity { Name = "Activity 2" };
+        //    //b.Measurements.Add(new Measurement()
+        //    //{
+        //    //    Name = "Time",
+        //    //    Type = typeof(int).Name,
+        //    //    Value = 14779
+        //    //});
+        //    //b.Measurements.Add(new Measurement()
+        //    //{
+        //    //    Name = "Quality",
+        //    //    Type = "4444444444444445",
+        //    //    Value = "good"
+        //    //});
+        //    //Report report = new Report() {Activities = new List<Activity>() {a, b}};
 
-            HttpStatusCode statusCode;
-            Sender sender = new Sender("http://innometrics.guru:8000/api-token-auth/", "http://innometrics.guru:8000/activities/");
-            bool succReg = sender.Authorize("as", "123456", out statusCode);
+        //    HttpStatusCode statusCode;
+        //    Sender sender = new Sender("http://innometrics.guru:8000/api-token-auth/", "http://innometrics.guru:8000/activities/");
+        //    bool succReg = sender.Authorize("as", "123456", out statusCode);
 
-            string xxx;
-            using (FileStream fs = new FileStream("D:\\awe.txt", FileMode.Open))
-            {
-                using (StreamReader reader = new StreamReader(fs))
-                {
-                    xxx = reader.ReadLine();
-                }
-            }
+        //    string xxx;
+        //    using (FileStream fs = new FileStream("D:\\awe.txt", FileMode.Open))
+        //    {
+        //        using (StreamReader reader = new StreamReader(fs))
+        //        {
+        //            xxx = reader.ReadLine();
+        //        }
+        //    }
 
-            string res;
-            if (succReg)
-            {
+        //    string res;
+        //    if (succReg)
+        //    {
 
-                    res = sender.SendActivities(xxx, out statusCode);
+        //            res = sender.SendActivities(xxx, out statusCode);
       
-            }
+        //    }
 
 
 
-            //string json = JsonMaker.Serialize(report);
-            //string statusCode;
-            ////var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
-            //var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
+        //    //string json = JsonMaker.Serialize(report);
+        //    //string statusCode;
+        //    ////var s = Sender.Send("http://httpbin.org/post", json, "application/json", out statusCode);
+        //    //var s = Sender.Send("https://aqueous-escarpment-80312.herokuapp.com/activities/", json, "application/json", out statusCode);
 
-            //Console.WriteLine(s);
-            //Console.WriteLine();
-            //Console.WriteLine(statusCode);
+        //    //Console.WriteLine(s);
+        //    //Console.WriteLine();
+        //    //Console.WriteLine(statusCode);
 
 
-            var xxxt = In();
-            //foreach (var row in asd.Rows)
-            //{
-            //    var rw = row as DataRow;
-            //    var ppp = rw["ServerName"];
-            //    var ddd = rw["InstanceName"];
-            //}
+        //    var xxxt = In();
+        //    //foreach (var row in asd.Rows)
+        //    //{
+        //    //    var rw = row as DataRow;
+        //    //    var ppp = rw["ServerName"];
+        //    //    var ddd = rw["InstanceName"];
+        //    //}
 
             
 
-            List<int> ri = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
+        //    List<int> ri = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7};
 
-            var ui = Foo(ri);
+        //    var ui = Foo(ri);
 
-            int p = 100;
-            Foo2(p);
+        //    int p = 100;
+        //    Foo2(p);
 
-            List<string> filter = new List<string>()
-            {
-                "Tele"
-            };
+        //    List<string> filter = new List<string>()
+        //    {
+        //        "Tele"
+        //    };
 
-            //MetricsDataContext context = new MetricsDataContext(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
-            //RegistriesProcessor rp = new RegistriesProcessor(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
-            //var act = rp.Process(100, filter, includeNullTitles: true);
-            //var act2 = rp.Process(50, filter, includeNullTitles: true);
-            //var xx = JsonMaker.Serialize(act);
-            //FileWriteHelper.Write(xx, @"D:\aaa.txt");
+        //    //MetricsDataContext context = new MetricsDataContext(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
+        //    //RegistriesProcessor rp = new RegistriesProcessor(@"Data Source=DESKTOP-7CAUMID\SQLEXPRESS;Initial Catalog=WindowsMetrics;Integrated Security=True");
+        //    //var act = rp.Process(100, filter, includeNullTitles: true);
+        //    //var act2 = rp.Process(50, filter, includeNullTitles: true);
+        //    //var xx = JsonMaker.Serialize(act);
+        //    //FileWriteHelper.Write(xx, @"D:\aaa.txt");
 
-            Console.ReadKey();
-        }
+        //    Console.ReadKey();
+        //}
 
 
         private static List<int> Foo(List<int> l)
@@ -218,6 +218,71 @@ namespace TestConsoleApplication
                 Console.WriteLine("Count end");
             });
             await t;
+        }
+
+        static void Main(string[] args)
+        {
+            Animal animalCat;
+            Animal animalDog;
+            Cat cat = new Cat();
+            Dog dog = new Dog();
+
+            ((Animal)cat).VoiceV();
+            ((Animal)dog).VoiceV();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    public class Animal
+    {
+        public void Voice()
+        {
+            Console.WriteLine("---");
+        }
+
+        public virtual void VoiceV()
+        {
+            Console.WriteLine("---");
+        }
+    }
+
+    public class Cat : Animal
+    {
+        public void Voice()
+        {
+            Console.WriteLine("Meow");
+        }
+
+        public new void VoiceV()
+        {
+            Console.WriteLine("Meow");
+        }
+    }
+
+    public class Dog : Animal
+    {
+        public void Voice()
+        {
+            Console.WriteLine("Bark");
+        }
+
+        public new void VoiceV()
+        {
+            Console.WriteLine("Bark");
         }
     }
 }

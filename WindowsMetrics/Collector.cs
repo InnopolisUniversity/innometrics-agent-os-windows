@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -74,6 +75,7 @@ namespace WindowsMetrics
         }
 
         private readonly Action<object> _onForegroundWindowChangeAddon = null;
+        [ExcludeFromCodeCoverage]
         private void OnForegroundWindowChange()
         {
             Registry registry = MakeRegistry(CollectionEvent.WIN_CHANGE);
@@ -86,6 +88,7 @@ namespace WindowsMetrics
         }
 
         private readonly Action<object> _onLeftMouseClickAddon = null;
+        [ExcludeFromCodeCoverage]
         private void OnLeftMouseClick()
         {
             Registry registry = MakeRegistry(CollectionEvent.LEFT_CLICK);
@@ -99,6 +102,7 @@ namespace WindowsMetrics
 
         private readonly SynchronizationContext _sync;
         private readonly Action<object> _onGuardStateScanAddon = null;
+        [ExcludeFromCodeCoverage]
         private void OnGuardStateScan()
         {
             Registry registry = MakeRegistry(CollectionEvent.STATE_SCAN);
@@ -152,6 +156,7 @@ namespace WindowsMetrics
             CommonConstructor(writer, stateScanIntervalSec, enableForegroundWindowChangeTracking, enableLeftClickTracking, enableStateScanning);
         }
 
+        [ExcludeFromCodeCoverage]
         public void Start()
         {
             if(_enableForegroundWindowChangeTracking)
@@ -177,6 +182,7 @@ namespace WindowsMetrics
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public bool Stop()
         {
             bool foregroundWindowChangeTrackingDeactivated = _foregroundWindowHook == IntPtr.Zero;

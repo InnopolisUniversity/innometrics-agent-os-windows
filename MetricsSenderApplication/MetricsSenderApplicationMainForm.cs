@@ -118,6 +118,7 @@ namespace MetricsSenderApplication
             buttonRefresh.Enabled = false;
             buttonTransmit.Enabled = false;
             buttonSettings.Enabled = false;
+            buttonDeleteProcessed.Enabled = false;
         }
 
         private void EnableButtons()
@@ -125,6 +126,7 @@ namespace MetricsSenderApplication
             buttonRefresh.Enabled = true;
             buttonTransmit.Enabled = true;
             buttonSettings.Enabled = true;
+            buttonDeleteProcessed.Enabled = true;
         }
 
         private void EnableButtonsFromAnotherTask(SynchronizationContext sync)
@@ -132,8 +134,6 @@ namespace MetricsSenderApplication
             SendOrPostCallback c = (state) => { EnableButtons(); };
             sync.Post(c, null);
         }
-
-        #endregion
 
         private void ClearDataFromAnotherTask(SynchronizationContext sync)
         {
@@ -144,8 +144,10 @@ namespace MetricsSenderApplication
             sync.Post(c, null);
         }
 
+        #endregion
+
         #region login
-        
+
         private void LoginWithForm(SynchronizationContext sync)
         {
             LoginForm loginForm = new LoginForm();
@@ -349,7 +351,7 @@ namespace MetricsSenderApplication
                     if (!success)
                     {
                         int authCode = (int)authorizationStatusCode;
-                        MessageBox.Show($"Authorization failed with code {authCode}: {authorizationStatusCode}");
+                        MessageBox.Show($"Authorization failed. Code {authCode}: {authorizationStatusCode}");
                         EnableButtonsFromAnotherTask(sync);
                         EnableFilterBoxFromAnotherTask(sync);
                     }
@@ -439,6 +441,20 @@ namespace MetricsSenderApplication
             settingsForm.Show();
         }
 
+        private void buttonDeleteProcessed_Click(object sender, EventArgs e)
+        {
+            Task deletionTask = new Task(() =>
+            {
+                processor.DeleteProcessedRegistriesFromDb();
+            });
+            Task continuation = deletionTask.ContinueWith((obj) =>
+            {
+                MessageBox.Show("All the transmitted activities successfully removed from the storage");
+            });
+
+            deletionTask.Start();
+        }
+
         #endregion
 
         private void ValidateTimeOrderOnValueChanged(object sender, EventArgs e)
@@ -464,5 +480,6 @@ namespace MetricsSenderApplication
             public string Login { get; set; }
             public string Password { get; set; }
         }
+
     }
 }

@@ -73,7 +73,7 @@
             this.groupBoxSettings.Size = new System.Drawing.Size(260, 92);
             this.groupBoxSettings.TabIndex = 2;
             this.groupBoxSettings.TabStop = false;
-            this.groupBoxSettings.Text = "Choose events for to track activities on";
+            this.groupBoxSettings.Text = "Choose events to track on";
             // 
             // checkBoxStateScanning
             // 

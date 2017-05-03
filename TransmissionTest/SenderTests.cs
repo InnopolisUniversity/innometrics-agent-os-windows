@@ -15,8 +15,8 @@ namespace TransmissionTest
     public class SenderTests
     {
         private static readonly string ConfigFileName = "TransmissionTest.dll.config";
-        private static string Login => ConfigHelper.GetAppSetting(ConfigFileName, "Login");
-        private static string Password => ConfigHelper.GetAppSetting(ConfigFileName, "Password");
+        private static string Login => "as";
+        private static string Password => "123456";
         private static string AuthorizationUri => ConfigHelper.GetAppSetting(ConfigFileName, "AuthorizationUri");
         private static string SendDataUri => ConfigHelper.GetAppSetting(ConfigFileName, "SendDataUri");
 
@@ -39,6 +39,8 @@ namespace TransmissionTest
             Sender sender = new Sender(AuthorizationUri, SendDataUri);
             HttpStatusCode code;
             sender.Authorize(Login, Password, out code);
+
+            Assert.IsTrue(sender.Authorized, "sender.Authorized");
 
             Activity activity = new Activity()
             {

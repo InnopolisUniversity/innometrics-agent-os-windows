@@ -41,9 +41,9 @@
   </Table>
   <Table Name="" Member="ActivitiesRegistries">
     <Type Name="ActivitiesRegistry">
-      <Column Member="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="Json" Type="System.String" CanBeNull="true" />
-      <Column Member="Transmitted" Type="System.Boolean" CanBeNull="true" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Json" Type="System.String" CanBeNull="true" />
+      <Column Name="Transmitted" Type="System.Boolean" CanBeNull="true" />
     </Type>
   </Table>
 </Database>

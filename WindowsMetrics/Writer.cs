@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -34,6 +35,7 @@ namespace WindowsMetrics
             DataSaving += OnDataSaving;
         }
 
+        [ExcludeFromCodeCoverage]
         private void OnDataSaving()
         {
             using (var context = new MetricsDataContext(_connectionString))
@@ -91,6 +93,7 @@ namespace WindowsMetrics
             _report.Add(registry);
         }
 
+        [ExcludeFromCodeCoverage]
         public void CreateDatabaseIfNotExists()
         {
             DatabaseMutex.WaitOne();

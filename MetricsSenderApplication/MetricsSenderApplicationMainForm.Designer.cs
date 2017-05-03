@@ -55,6 +55,7 @@ namespace MetricsSenderApplication
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonTransmit = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
+            this.buttonDeleteProcessed = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBoxFilteringTitle.SuspendLayout();
             this.groupBoxFilteringDate.SuspendLayout();
@@ -154,7 +155,7 @@ namespace MetricsSenderApplication
             this.groupBoxFilteringTitle.Size = new System.Drawing.Size(220, 251);
             this.groupBoxFilteringTitle.TabIndex = 0;
             this.groupBoxFilteringTitle.TabStop = false;
-            this.groupBoxFilteringTitle.Text = "Filter";
+            this.groupBoxFilteringTitle.Text = "Window Title Filter";
             // 
             // buttonAddFilterTitle
             // 
@@ -185,7 +186,7 @@ namespace MetricsSenderApplication
             this.groupBoxFilteringDate.Size = new System.Drawing.Size(220, 75);
             this.groupBoxFilteringDate.TabIndex = 3;
             this.groupBoxFilteringDate.TabStop = false;
-            this.groupBoxFilteringDate.Text = "Date";
+            this.groupBoxFilteringDate.Text = "Date Filter";
             // 
             // labelFrom
             // 
@@ -229,37 +230,48 @@ namespace MetricsSenderApplication
             // 
             this.buttonRefresh.Location = new System.Drawing.Point(12, 350);
             this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(94, 23);
+            this.buttonRefresh.Size = new System.Drawing.Size(102, 23);
             this.buttonRefresh.TabIndex = 4;
-            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.Text = "Show Activities";
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
             // buttonTransmit
             // 
-            this.buttonTransmit.Location = new System.Drawing.Point(138, 350);
+            this.buttonTransmit.Location = new System.Drawing.Point(130, 350);
             this.buttonTransmit.Name = "buttonTransmit";
-            this.buttonTransmit.Size = new System.Drawing.Size(94, 23);
+            this.buttonTransmit.Size = new System.Drawing.Size(102, 23);
             this.buttonTransmit.TabIndex = 5;
-            this.buttonTransmit.Text = "Transmit";
+            this.buttonTransmit.Text = "Transmit Activities";
             this.buttonTransmit.UseVisualStyleBackColor = true;
             this.buttonTransmit.Click += new System.EventHandler(this.buttonTransmit_Click);
             // 
             // buttonSettings
             // 
-            this.buttonSettings.Location = new System.Drawing.Point(12, 381);
+            this.buttonSettings.Location = new System.Drawing.Point(130, 381);
             this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(220, 23);
+            this.buttonSettings.Size = new System.Drawing.Size(102, 23);
             this.buttonSettings.TabIndex = 6;
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.UseVisualStyleBackColor = true;
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            // 
+            // buttonDeleteProcessed
+            // 
+            this.buttonDeleteProcessed.Location = new System.Drawing.Point(12, 381);
+            this.buttonDeleteProcessed.Name = "buttonDeleteProcessed";
+            this.buttonDeleteProcessed.Size = new System.Drawing.Size(102, 23);
+            this.buttonDeleteProcessed.TabIndex = 7;
+            this.buttonDeleteProcessed.Text = "Clear Transmitted";
+            this.buttonDeleteProcessed.UseVisualStyleBackColor = true;
+            this.buttonDeleteProcessed.Click += new System.EventHandler(this.buttonDeleteProcessed_Click);
             // 
             // MetricsSenderApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1017, 416);
+            this.Controls.Add(this.buttonDeleteProcessed);
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonTransmit);
             this.Controls.Add(this.buttonRefresh);
@@ -304,6 +316,7 @@ namespace MetricsSenderApplication
         private Button buttonSettings;
         private Label labelFrom;
         private Label labelUntil;
+        private Button buttonDeleteProcessed;
     }
 }
 

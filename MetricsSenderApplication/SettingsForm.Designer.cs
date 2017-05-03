@@ -33,11 +33,9 @@
             this.textBoxUpdateXmlUri = new System.Windows.Forms.TextBox();
             this.textBoxSendDataUri = new System.Windows.Forms.TextBox();
             this.textBoxAuthorizationUri = new System.Windows.Forms.TextBox();
-            this.textBoxAssemblies = new System.Windows.Forms.TextBox();
             this.labelAuthorizationUri = new System.Windows.Forms.Label();
             this.labelSendDataUri = new System.Windows.Forms.Label();
             this.labelUpdateXmlUri = new System.Windows.Forms.Label();
-            this.labelAssemblies = new System.Windows.Forms.Label();
             this.buttonSave = new System.Windows.Forms.Button();
             this.labelActivitiesToSendAtOneTime = new System.Windows.Forms.Label();
             this.textBoxActivitiesToSendAtOneTime = new System.Windows.Forms.TextBox();
@@ -45,7 +43,7 @@
             // 
             // buttonCheckUpdate
             // 
-            this.buttonCheckUpdate.Location = new System.Drawing.Point(202, 304);
+            this.buttonCheckUpdate.Location = new System.Drawing.Point(202, 277);
             this.buttonCheckUpdate.Name = "buttonCheckUpdate";
             this.buttonCheckUpdate.Size = new System.Drawing.Size(106, 25);
             this.buttonCheckUpdate.TabIndex = 1;
@@ -83,13 +81,6 @@
             this.textBoxAuthorizationUri.Size = new System.Drawing.Size(197, 20);
             this.textBoxAuthorizationUri.TabIndex = 5;
             // 
-            // textBoxAssemblies
-            // 
-            this.textBoxAssemblies.Location = new System.Drawing.Point(111, 272);
-            this.textBoxAssemblies.Name = "textBoxAssemblies";
-            this.textBoxAssemblies.Size = new System.Drawing.Size(197, 20);
-            this.textBoxAssemblies.TabIndex = 6;
-            // 
             // labelAuthorizationUri
             // 
             this.labelAuthorizationUri.AutoSize = true;
@@ -117,18 +108,9 @@
             this.labelUpdateXmlUri.TabIndex = 9;
             this.labelUpdateXmlUri.Text = "UpdateXmlUri";
             // 
-            // labelAssemblies
-            // 
-            this.labelAssemblies.AutoSize = true;
-            this.labelAssemblies.Location = new System.Drawing.Point(12, 275);
-            this.labelAssemblies.Name = "labelAssemblies";
-            this.labelAssemblies.Size = new System.Drawing.Size(59, 13);
-            this.labelAssemblies.TabIndex = 10;
-            this.labelAssemblies.Text = "Assemblies";
-            // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(15, 304);
+            this.buttonSave.Location = new System.Drawing.Point(15, 277);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(151, 25);
             this.buttonSave.TabIndex = 11;
@@ -156,15 +138,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(320, 339);
+            this.ClientSize = new System.Drawing.Size(320, 313);
             this.Controls.Add(this.textBoxActivitiesToSendAtOneTime);
             this.Controls.Add(this.labelActivitiesToSendAtOneTime);
             this.Controls.Add(this.buttonSave);
-            this.Controls.Add(this.labelAssemblies);
             this.Controls.Add(this.labelUpdateXmlUri);
             this.Controls.Add(this.labelSendDataUri);
             this.Controls.Add(this.labelAuthorizationUri);
-            this.Controls.Add(this.textBoxAssemblies);
             this.Controls.Add(this.textBoxAuthorizationUri);
             this.Controls.Add(this.textBoxSendDataUri);
             this.Controls.Add(this.textBoxUpdateXmlUri);
@@ -173,7 +153,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "SettingsForm";
-            this.Text = "SettingsForm";
+            this.Text = "Settings";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,11 +165,9 @@
         private System.Windows.Forms.TextBox textBoxUpdateXmlUri;
         private System.Windows.Forms.TextBox textBoxSendDataUri;
         private System.Windows.Forms.TextBox textBoxAuthorizationUri;
-        private System.Windows.Forms.TextBox textBoxAssemblies;
         private System.Windows.Forms.Label labelAuthorizationUri;
         private System.Windows.Forms.Label labelSendDataUri;
         private System.Windows.Forms.Label labelUpdateXmlUri;
-        private System.Windows.Forms.Label labelAssemblies;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Label labelActivitiesToSendAtOneTime;
         private System.Windows.Forms.TextBox textBoxActivitiesToSendAtOneTime;

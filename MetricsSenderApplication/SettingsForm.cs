@@ -38,7 +38,6 @@ namespace MetricsSenderApplication
             textBoxAuthorizationUri.Text = appSettings["AuthorizationUri"];
             textBoxSendDataUri.Text = appSettings["SendDataUri"];
             textBoxUpdateXmlUri.Text = appSettings["UpdateXmlUri"];
-            textBoxAssemblies.Text = appSettings["Assemblies"];
         }
 
         private void buttonCheckUpdate_Click(object sender, EventArgs e)
@@ -65,7 +64,6 @@ namespace MetricsSenderApplication
                 ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "SendDataUri", textBoxSendDataUri.Text);
                 ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "UpdateXmlUri",
                     textBoxUpdateXmlUri.Text);
-                ConfigHelper.UpdateConfig("MetricsSenderApplication.exe.config", "Assemblies", textBoxAssemblies.Text);
 
                 Application.Exit();
             }

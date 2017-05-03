@@ -40,7 +40,6 @@ namespace WindowsMetrics
             }
             else
             {
-                //throw new ZeroHandleToWindowException();
                 return null;
             }
         }

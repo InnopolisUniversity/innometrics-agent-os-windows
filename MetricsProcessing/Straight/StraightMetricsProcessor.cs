@@ -21,14 +21,14 @@ namespace MetricsProcessing
             return _registriesProcessor.Process(nameFilter, includeNullTitles, from, until);
         }
 
-        public void DeleteRegistriesFromDb(IEnumerable<long> ids)
-        {
-            _registriesProcessor.DeleteRegistriesFromDb(ids);
-        }
-
         public void MarkRegistriesAsProcessed(IEnumerable<long> ids)
         {
             _registriesProcessor.MarkRegistriesAsProcessed(ids);
+        }
+
+        public void DeleteProcessedRegistriesFromDb()
+        {
+            _registriesProcessor.DeleteProcessedRegistriesFromDb();
         }
     }
 }

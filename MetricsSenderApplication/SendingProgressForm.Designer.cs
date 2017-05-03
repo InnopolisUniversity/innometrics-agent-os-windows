@@ -60,7 +60,7 @@
             this.MinimizeBox = false;
             this.Name = "SendingProgressForm";
             this.ShowInTaskbar = false;
-            this.Text = "SendingProgressForm";
+            this.Text = "Sending Progress";
             this.ResumeLayout(false);
 
         }

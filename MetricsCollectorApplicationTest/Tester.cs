@@ -110,7 +110,7 @@ namespace MetricsCollectorApplicationTest
 
 
 
-        //// TODO should run separately with no database on server
+        //
         //[TestMethod]
         //public void TestCreationDatabase()
         //{
@@ -119,59 +119,59 @@ namespace MetricsCollectorApplicationTest
         //    Assert.IsTrue(DatabaseExists());
         //}
 
-        [TestMethod]
-        public void TestStartWithNoChosenEvents()
-        {
-            MetricsCollectorApplicationMainForm collector = CreateCollector();
-            Load(collector);
+        //[TestMethod]
+        //public void TestStartWithNoChosenEvents()
+        //{
+        //    MetricsCollectorApplicationMainForm collector = CreateCollector();
+        //    Load(collector);
 
-            var chbxs =
-                typeof(MetricsCollectorApplicationMainForm).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Where(f => f.FieldType == typeof(CheckBox)).ToArray();
-            foreach (var chbx in chbxs)
-            {
-                var c = chbx.GetValue(collector) as CheckBox;
-                c.CheckState = CheckState.Unchecked;
-            }
+        //    var chbxs =
+        //        typeof(MetricsCollectorApplicationMainForm).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+        //            .Where(f => f.FieldType == typeof(CheckBox)).ToArray();
+        //    foreach (var chbx in chbxs)
+        //    {
+        //        var c = chbx.GetValue(collector) as CheckBox;
+        //        c.CheckState = CheckState.Unchecked;
+        //    }
 
-            Start(collector);
+        //    Start(collector);
 
-            var fCollector = typeof(MetricsCollectorApplicationMainForm).GetField("collector",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            var fColVal = fCollector.GetValue(collector);
-            Assert.IsNull(fColVal, "fColVal != null");
+        //    var fCollector = typeof(MetricsCollectorApplicationMainForm).GetField("collector",
+        //        BindingFlags.Instance | BindingFlags.NonPublic);
+        //    var fColVal = fCollector.GetValue(collector);
+        //    Assert.IsNull(fColVal, "fColVal != null");
 
-            var fStarted = typeof(MetricsCollectorApplicationMainForm).GetField("started",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            var fStartedVal = (bool)fStarted.GetValue(collector);
-            Assert.IsFalse(fStartedVal);
-        }
+        //    var fStarted = typeof(MetricsCollectorApplicationMainForm).GetField("started",
+        //        BindingFlags.Instance | BindingFlags.NonPublic);
+        //    var fStartedVal = (bool)fStarted.GetValue(collector);
+        //    Assert.IsFalse(fStartedVal);
+        //}
 
-        [TestMethod]
-        public void TestStartRecording()
-        {
-            var time = GetLastRecordTime();
+        //[TestMethod]
+        //public void TestStartRecording_3()
+        //{
+        //    var time = GetLastRecordTime();
 
-            var tokenSource = new CancellationTokenSource();
-            var cancellation = tokenSource.Token;
-            Task task = new Task((token) =>
-            {
-                CancellationToken t = (CancellationToken)token;
-                MetricsCollectorApplicationMainForm collector = CreateCollector();
-                Load(collector);
-                Start(collector);
-            }, cancellation);
-            task.Start();
+        //    var tokenSource = new CancellationTokenSource();
+        //    var cancellation = tokenSource.Token;
+        //    Task task = new Task((token) =>
+        //    {
+        //        CancellationToken t = (CancellationToken)token;
+        //        MetricsCollectorApplicationMainForm collector = CreateCollector();
+        //        Load(collector);
+        //        Start(collector);
+        //    }, cancellation);
+        //    task.Start();
 
-            // TODO test buttons
+        //    // TODO test buttons
 
-            Thread.Sleep(DataSavingIntervalSec + WaitingInterval);
+        //    Thread.Sleep(DataSavingIntervalSec + WaitingInterval);
 
-            tokenSource.Cancel();
-            task.Wait();
+        //    tokenSource.Cancel();
+        //    task.Wait();
 
-            Assert.IsTrue(AnyRecordsAfter(time));
-        }
+        //    Assert.IsTrue(AnyRecordsAfter(time));
+        //}
 
         //[TestMethod]
         //public void TestStopRecording()

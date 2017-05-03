@@ -9,15 +9,11 @@ namespace MetricsProcessing
 {
     public static class StraightDbHelper
     {
-        public static void DeleteRegistries(string connectionString, IEnumerable<long> ids)
+        public static void DeleteProcessedRegistries(string connectionString)
         {
-            var enumerable = ids as long[] ?? ids.ToArray();
-            if (!enumerable.Any())
-                return;
-
             using (var context = new MetricsDataContext(connectionString))
             {
-                var registriesToDelete = context.Registries.Where(r => enumerable.Contains(r.Id));
+                var registriesToDelete = context.Registries.Where(r => r.Processed.HasValue && r.Processed.Value);
                 context.Registries.DeleteAllOnSubmit(registriesToDelete);
                 context.SubmitChanges();
             }
