@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
 using CommonModels;
 using CommonModels.Helpers;
 
@@ -13,8 +9,8 @@ namespace Transmission
 {
     public class Sender
     {
-        public string AuthorizationUri { get; }
-        public string SendDataUri { get; }
+        private string AuthorizationUri { get; }
+        private string SendDataUri { get; }
         private string Token { get; set; }
 
         public Sender(string authorizationUri, string sendDataUri)
@@ -29,9 +25,9 @@ namespace Transmission
         /// <returns>Success of authorization</returns>
         public bool Authorize(string username, string password, out HttpStatusCode statusCode)
         {
-            var loginData = new {username = username, password = password};
-            string json = JsonMaker.Serialize(loginData);
-            string tokenJson = Send(AuthorizationUri, json, "application/json", out statusCode);
+            var loginData = new {username, password};
+            var json = JsonMaker.Serialize(loginData);
+            var tokenJson = Send(AuthorizationUri, json, "application/json", out statusCode);
             if (statusCode == HttpStatusCode.OK)
             {
                 Token = JsonMaker.DeserializeToken(tokenJson);
@@ -75,7 +71,7 @@ namespace Transmission
             }
 
             // grab te response and print it out to the console along with the status code
-            string responseString = null;
+            string responseString;
             HttpWebResponse response;
             try
             {
@@ -85,10 +81,10 @@ namespace Transmission
             {
                 response = (HttpWebResponse)e.Response;
                 statusCode = response.StatusCode;
-                return response?.StatusDescription;
+                return response.StatusDescription;
             }
 
-            using (var streamReader = new StreamReader(response.GetResponseStream()))
+            using (var streamReader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
             {
                 responseString = streamReader.ReadToEnd();
             }

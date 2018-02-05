@@ -79,7 +79,6 @@ namespace MetricsProcessing.Straight
             Activity activity = new Activity()
             {
                 Name = "WindowsTool-ProcessActivity"
-                //activityRegistries.First.WindowTitle.NormalizeToMaxLength255() ?? "NULL"
             };
 
             activity.Measurements.Add(new Measurement()
