@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommonModels;
 using CommonModels.Helpers;
 using MetricsProcessing;
+using MetricsProcessing.Straight;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MetricsProcessingTest

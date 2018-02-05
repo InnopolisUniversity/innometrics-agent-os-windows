@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using CommonModels;
 using CommonModels.Helpers;
 using MetricsProcessing;
+using MetricsProcessing.Straight;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MetricsProcessingTest
@@ -50,8 +48,11 @@ namespace MetricsProcessingTest
             StraightRegistriesProcessor processor = new StraightRegistriesProcessor(ConfigHelper.GetConnectionString(ConfigFileName, ConnectionName));
             var ca = typeof(StraightRegistriesProcessor).GetMethod("CreateActivity",
                 BindingFlags.Static | BindingFlags.NonPublic);
-            var activity = ca.Invoke(processor, new object[] {reg}) as Activity;
-            Assert.IsNotNull(activity, "activity != null");
+            if (ca != null)
+            {
+                var activity = ca.Invoke(processor, new object[] {reg}) as Activity;
+                Assert.IsNotNull(activity, "activity != null");
+            }
         }
 
         [TestMethod]
@@ -61,8 +62,12 @@ namespace MetricsProcessingTest
             StraightRegistriesProcessor processor = new StraightRegistriesProcessor(ConfigHelper.GetConnectionString(ConfigFileName, ConnectionName));
             var ca = typeof(StraightRegistriesProcessor).GetMethod("ExtractActivity",
                 BindingFlags.Static | BindingFlags.NonPublic);
-            var activity = ca.Invoke(processor, new object[] { reg, 5 }) as RegistriesList;
-            Assert.IsNotNull(activity,"activity != null");
+            if (ca != null)
+            {
+                var activity = ca.Invoke(processor, new object[] { reg, 5 }) as RegistriesList;
+                Assert.IsNotNull(activity,"activity != null");
+            }
+
             Assert.IsTrue(reg.Count == 5);
         }
 
@@ -73,8 +78,11 @@ namespace MetricsProcessingTest
             StraightRegistriesProcessor processor = new StraightRegistriesProcessor(ConfigHelper.GetConnectionString(ConfigFileName, ConnectionName));
             var ca = typeof(StraightRegistriesProcessor).GetMethod("DetectActivity",
                 BindingFlags.Static | BindingFlags.NonPublic);
-            var num = (int)ca.Invoke(processor, new object[] { reg });
-            Assert.IsTrue(num == 10);
+            if (ca != null)
+            {
+                var num = (int)ca.Invoke(processor, new object[] { reg });
+                Assert.IsTrue(num == 10);
+            }
         }
     }
 }
