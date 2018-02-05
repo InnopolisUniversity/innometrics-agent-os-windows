@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommonModels;
 
-namespace MetricsProcessing
+namespace MetricsProcessing.Straight
 {
     public static class StraightDbHelper
     {
@@ -53,28 +50,29 @@ namespace MetricsProcessing
 
                     foreach (var registry in registries)
                     {
-                        if (ips.ContainsKey(registry.Ip.Value))
+                        if (registry.Ip != null && ips.ContainsKey(registry.Ip.Value))
                             registry.IpAddress = new IpAddress() {Value = ips[registry.Ip.Value]};
                         else
                         {
                             registry.IpAddress = context.IpAddresses.Single(ip => ip.Id == registry.Ip);
-                            ips.Add(registry.Ip.Value, registry.IpAddress.Value);
+                            if (registry.Ip != null) ips.Add(registry.Ip.Value, registry.IpAddress.Value);
                         }
 
-                        if (macs.ContainsKey(registry.Mac.Value))
+                        if (registry.Mac != null && macs.ContainsKey(registry.Mac.Value))
                             registry.MacAddress = new MacAddress() {Value = macs[registry.Mac.Value]};
                         else
                         {
                             registry.MacAddress = context.MacAddresses.Single(mac => mac.Id == registry.Mac);
-                            macs.Add(registry.Mac.Value, registry.MacAddress.Value);
+                            if (registry.Mac != null) macs.Add(registry.Mac.Value, registry.MacAddress.Value);
                         }
 
-                        if (usernames.ContainsKey(registry.Username.Value))
+                        if (registry.Username != null && usernames.ContainsKey(registry.Username.Value))
                             registry.Username1 = new Username() {Value = usernames[registry.Username.Value]};
                         else
                         {
                             registry.Username1 = context.Usernames.Single(u => u.Id == registry.Username);
-                            usernames.Add(registry.Username.Value, registry.Username1.Value);
+                            if (registry.Username != null)
+                                usernames.Add(registry.Username.Value, registry.Username1.Value);
                         }
                     }
 

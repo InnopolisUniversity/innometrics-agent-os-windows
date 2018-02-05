@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommonModels;
 using CommonModels.Helpers;
-using MetricsProcessing.Exceptions;
 
-namespace MetricsProcessing
+namespace MetricsProcessing.Straight
 {
     public class StraightRegistriesProcessor
     {
@@ -43,10 +40,9 @@ namespace MetricsProcessing
 
             while (!registries.IsEmpty)
             {
-                Activity activity = null;
                 int numOfRegistriesInActivity = DetectActivity(registries);
                 RegistriesList activityRegistries = ExtractActivity(registries, numOfRegistriesInActivity);
-                activity = CreateActivity(activityRegistries);
+                var activity = CreateActivity(activityRegistries);
                 activities.Add(activity);
                 activities.RegistriesIds.AddRange(activityRegistries.GetAllIds());
             }
@@ -82,26 +78,33 @@ namespace MetricsProcessing
         {
             Activity activity = new Activity()
             {
-                Name = activityRegistries.First.WindowTitle.NormalizeToMaxLength255() ?? "NULL"
+                Name = "WindowsTool-ProcessActivity"
+                //activityRegistries.First.WindowTitle.NormalizeToMaxLength255() ?? "NULL"
             };
 
             activity.Measurements.Add(new Measurement()
             {
+                Name = "window title",
+                Type = "string",
+                Value = activityRegistries.First.WindowTitle.NormalizeToMaxLength255()
+            });
+            activity.Measurements.Add(new Measurement()
+            {
                 Name = "From",
-                Type = "DateTime",
-                Value = activityRegistries.First.Time
+                Type = "long",
+                Value = activityRegistries.First.Time.GetTimestamp()
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "Until",
-                Type = "DateTime",
-                Value = activityRegistries.EndTime
+                Type = "long",
+                Value = activityRegistries.EndTime.GetTimestamp()
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "Duration",
-                Type = "TimeSpan",
-                Value = activityRegistries.Duration
+                Type = "long",
+                Value = (long)activityRegistries.Duration.TotalSeconds
             });
             activity.Measurements.Add(new Measurement()
             {

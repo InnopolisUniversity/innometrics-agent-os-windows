@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CommonModels.Helpers
 {
@@ -12,7 +6,7 @@ namespace CommonModels.Helpers
     {
         public static string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj).ToLower();
+            return JsonConvert.SerializeObject(obj);
         }
         
         public static string DeserializeToken(string tokenJson)
@@ -26,7 +20,12 @@ namespace CommonModels.Helpers
         // Helper classes
         private class TokenDeserializationHelpClass
         {
-            public string Token { get; set; }
+            public TokenDeserializationHelpClass(string token)
+            {
+                Token = token;
+            }
+
+            public string Token { get; }
         }
     }
 }
