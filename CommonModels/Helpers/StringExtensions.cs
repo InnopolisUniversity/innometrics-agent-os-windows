@@ -21,7 +21,7 @@ namespace CommonModels.Helpers
     {
         public static long GetTimestamp(this DateTime d)
         {
-            return (long)(d.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
+            return (long)(d.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
     }
 }

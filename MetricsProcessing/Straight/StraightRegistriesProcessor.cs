@@ -78,8 +78,15 @@ namespace MetricsProcessing.Straight
         {
             Activity activity = new Activity()
             {
-                Name = "WindowsTool-ProcessActivity"
+                Name = "Windows Agent"
             };
+
+            activity.Measurements.Add(new Measurement()
+            {
+                Name = "application name",
+                Type = "string",
+                Value = activityRegistries.First.ProcessName.NormalizeToMaxLength255()
+            });
 
             activity.Measurements.Add(new Measurement()
             {
@@ -89,52 +96,52 @@ namespace MetricsProcessing.Straight
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "From",
-                Type = "long",
+                Name = "activity start",
+                Type = "epoch_time",
                 Value = activityRegistries.First.Time.GetTimestamp()
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "Until",
-                Type = "long",
+                Name = "activity end",
+                Type = "epoch_time",
                 Value = activityRegistries.EndTime.GetTimestamp()
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "Duration",
+                Name = "activity duration",
                 Type = "long",
                 Value = (long)activityRegistries.Duration.TotalSeconds
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "Executable Path",
-                Type = "String",
+                Name = "path",
+                Type = "string",
                 Value = activityRegistries.First.ExeModulePath.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "IP address",
-                Type = "String",
+                Name = "ip address",
+                Type = "string",
                 Value = activityRegistries.First.IpAddress.Value.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "MAC address",
-                Type = "String",
+                Name = "mac address",
+                Type = "string",
                 Value = activityRegistries.First.MacAddress.Value.NormalizeToMaxLength255() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
-                Name = "User",
-                Type = "String",
+                Name = "os username",
+                Type = "string",
                 Value = activityRegistries.First.Username1.Value
             });
             if (activityRegistries.Any(r => r.Url != null))
             {
                 activity.Measurements.Add(new Measurement()
                 {
-                    Name = "URL",
-                    Type = "String",
+                    Name = "url",
+                    Type = "string",
                     Value = activityRegistries.FirstOrDefault(r => r.Url != null)?.Url.NormalizeToMaxLength255() ?? "NULL"
                 });
             }
