@@ -34,15 +34,6 @@ namespace MetricsSenderApplication
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetricsSenderApplicationMainForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Until = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Mac = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.User = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Url = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listBoxFilteringTitle = new System.Windows.Forms.ListBox();
             this.groupBoxFilteringTitle = new System.Windows.Forms.GroupBox();
             this.buttonAddFilterTitle = new System.Windows.Forms.Button();
@@ -56,6 +47,17 @@ namespace MetricsSenderApplication
             this.buttonTransmit = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonDeleteProcessed = new System.Windows.Forms.Button();
+            this.AgentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Application = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.From = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Until = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Mac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.User = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Url = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBoxFilteringTitle.SuspendLayout();
             this.groupBoxFilteringDate.SuspendLayout();
@@ -67,6 +69,8 @@ namespace MetricsSenderApplication
             this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.AgentName,
+            this.Application,
             this.Title,
             this.From,
             this.Until,
@@ -81,60 +85,6 @@ namespace MetricsSenderApplication
             this.dataGridView.ReadOnly = true;
             this.dataGridView.Size = new System.Drawing.Size(746, 392);
             this.dataGridView.TabIndex = 2;
-            // 
-            // Title
-            // 
-            this.Title.HeaderText = "Title";
-            this.Title.Name = "Title";
-            this.Title.ReadOnly = true;
-            // 
-            // From
-            // 
-            this.From.HeaderText = "From";
-            this.From.Name = "From";
-            this.From.ReadOnly = true;
-            // 
-            // Until
-            // 
-            this.Until.HeaderText = "Until";
-            this.Until.Name = "Until";
-            this.Until.ReadOnly = true;
-            // 
-            // Duration
-            // 
-            this.Duration.HeaderText = "Duration";
-            this.Duration.Name = "Duration";
-            this.Duration.ReadOnly = true;
-            // 
-            // ExePath
-            // 
-            this.ExePath.HeaderText = "Executable Path";
-            this.ExePath.Name = "ExePath";
-            this.ExePath.ReadOnly = true;
-            // 
-            // Ip
-            // 
-            this.Ip.HeaderText = "IP";
-            this.Ip.Name = "Ip";
-            this.Ip.ReadOnly = true;
-            // 
-            // Mac
-            // 
-            this.Mac.HeaderText = "MAC";
-            this.Mac.Name = "Mac";
-            this.Mac.ReadOnly = true;
-            // 
-            // User
-            // 
-            this.User.HeaderText = "User";
-            this.User.Name = "User";
-            this.User.ReadOnly = true;
-            // 
-            // Url
-            // 
-            this.Url.HeaderText = "URL";
-            this.Url.Name = "Url";
-            this.Url.ReadOnly = true;
             // 
             // listBoxFilteringTitle
             // 
@@ -266,6 +216,72 @@ namespace MetricsSenderApplication
             this.buttonDeleteProcessed.UseVisualStyleBackColor = true;
             this.buttonDeleteProcessed.Click += new System.EventHandler(this.buttonDeleteProcessed_Click);
             // 
+            // AgentName
+            // 
+            this.AgentName.HeaderText = "Agent Name";
+            this.AgentName.Name = "AgentName";
+            this.AgentName.ReadOnly = true;
+            // 
+            // Application
+            // 
+            this.Application.HeaderText = "Application";
+            this.Application.Name = "Application";
+            this.Application.ReadOnly = true;
+            // 
+            // Title
+            // 
+            this.Title.HeaderText = "Title";
+            this.Title.Name = "Title";
+            this.Title.ReadOnly = true;
+            // 
+            // From
+            // 
+            this.From.HeaderText = "From";
+            this.From.Name = "From";
+            this.From.ReadOnly = true;
+            // 
+            // Until
+            // 
+            this.Until.HeaderText = "Until";
+            this.Until.Name = "Until";
+            this.Until.ReadOnly = true;
+            // 
+            // Duration
+            // 
+            this.Duration.HeaderText = "Duration";
+            this.Duration.Name = "Duration";
+            this.Duration.ReadOnly = true;
+            // 
+            // ExePath
+            // 
+            this.ExePath.HeaderText = "Executable Path";
+            this.ExePath.Name = "ExePath";
+            this.ExePath.ReadOnly = true;
+            // 
+            // Ip
+            // 
+            this.Ip.HeaderText = "IP";
+            this.Ip.Name = "Ip";
+            this.Ip.ReadOnly = true;
+            // 
+            // Mac
+            // 
+            this.Mac.HeaderText = "MAC";
+            this.Mac.Name = "Mac";
+            this.Mac.ReadOnly = true;
+            // 
+            // User
+            // 
+            this.User.HeaderText = "User";
+            this.User.Name = "User";
+            this.User.ReadOnly = true;
+            // 
+            // Url
+            // 
+            this.Url.HeaderText = "URL";
+            this.Url.Name = "Url";
+            this.Url.ReadOnly = true;
+            // 
             // MetricsSenderApplicationMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,6 +320,12 @@ namespace MetricsSenderApplication
         private System.Windows.Forms.DateTimePicker dateTimePickerFrom;
         private Button buttonRefresh;
         private Button buttonTransmit;
+        private Button buttonSettings;
+        private Label labelFrom;
+        private Label labelUntil;
+        private Button buttonDeleteProcessed;
+        private DataGridViewTextBoxColumn AgentName;
+        private DataGridViewTextBoxColumn Application;
         private DataGridViewTextBoxColumn Title;
         private DataGridViewTextBoxColumn From;
         private DataGridViewTextBoxColumn Until;
@@ -313,10 +335,6 @@ namespace MetricsSenderApplication
         private DataGridViewTextBoxColumn Mac;
         private DataGridViewTextBoxColumn User;
         private DataGridViewTextBoxColumn Url;
-        private Button buttonSettings;
-        private Label labelFrom;
-        private Label labelUntil;
-        private Button buttonDeleteProcessed;
     }
 }
 

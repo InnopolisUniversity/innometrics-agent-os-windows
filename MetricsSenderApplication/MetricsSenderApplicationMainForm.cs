@@ -273,6 +273,9 @@ namespace MetricsSenderApplication
             {
                 MessageBox.Show("An error occured while processing collected data.");
             }
+
+            var hm = dataGridView.Columns;
+            var lel = hm.Count;
             
             if (activitiesTempStorage != null)
             {
@@ -280,7 +283,14 @@ namespace MetricsSenderApplication
                 {
                     DataGridViewRow row = ToDataGridViewRow(activitiesTempStorage[i]);
                     row.HeaderCell.Value = (i + 1).ToString();
-                    dataGridView.Rows.Add(row);
+                    try
+                    {
+                        dataGridView.Rows.Add(row);
+                    }
+                    catch (Exception)
+                    {
+                        break;
+                    }
                 }
             }
             else
