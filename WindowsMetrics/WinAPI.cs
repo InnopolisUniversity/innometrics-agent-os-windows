@@ -190,11 +190,21 @@ namespace WindowsMetrics
             return GetTextOfWindow(topWindow);
         }
 
-        public static string GetForegroundWindowProcessName()
+        public static string GetForegroundWindowApplicationName()
         {
-            uint pid = GetForegroundWindowProcessID();
-            Process p = Process.GetProcessById((int) pid);
-            return p.ProcessName;
+            var pid = GetForegroundWindowProcessID();
+            var p = Process.GetProcessById((int) pid);
+            string productName;
+            try
+            {
+                productName = p.MainModule.FileVersionInfo.ProductName;
+            }
+            catch
+            {
+                productName = "";
+            }
+
+            return (string.IsNullOrWhiteSpace(productName)) ? p.ProcessName : productName;
         }
 
         public static void GetAdapters(out string IP, out string MAC)

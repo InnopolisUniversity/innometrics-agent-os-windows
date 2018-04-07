@@ -43,7 +43,7 @@ namespace WindowsMetrics
             IntPtr winId = WinAPI.GetForegroundWindowId();
             string foregroundWinTitle = WinAPI.GetTextOfForegroundWindow();
             string path = WinAPI.GetForegroundWindowExeModulePath();
-            string process = WinAPI.GetForegroundWindowProcessName();
+            string process = WinAPI.GetForegroundWindowApplicationName();
             string ip, mac;
             WinAPI.GetAdapters(out ip, out mac);
             string username = WinAPI.GetSystemUserName();
