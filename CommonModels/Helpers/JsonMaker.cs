@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CommonModels.Helpers
 {
@@ -6,7 +7,9 @@ namespace CommonModels.Helpers
     {
         public static string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new LowercaseContractResolver();
+            return JsonConvert.SerializeObject(obj, Formatting.Indented, settings);
         }
         
         public static string DeserializeToken(string tokenJson)
@@ -26,6 +29,14 @@ namespace CommonModels.Helpers
             }
 
             public string Token { get; }
+        }
+
+        private class LowercaseContractResolver : DefaultContractResolver
+        {
+            protected override string ResolvePropertyName(string propertyName)
+            {
+                return propertyName.ToLower();
+            }
         }
     }
 }
