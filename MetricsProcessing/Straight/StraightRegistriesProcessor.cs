@@ -85,14 +85,14 @@ namespace MetricsProcessing.Straight
             {
                 Name = "application name",
                 Type = "string",
-                Value = activityRegistries.First.ProcessName.NormalizeToMaxLength255()
+                Value = activityRegistries.First.ProcessName.NormalizeToMaxLength1024()
             });
 
             activity.Measurements.Add(new Measurement()
             {
                 Name = "window title",
                 Type = "string",
-                Value = activityRegistries.First.WindowTitle.NormalizeToMaxLength255()
+                Value = activityRegistries.First.WindowTitle.NormalizeToMaxLength1024()
             });
             activity.Measurements.Add(new Measurement()
             {
@@ -116,19 +116,19 @@ namespace MetricsProcessing.Straight
             {
                 Name = "path",
                 Type = "string",
-                Value = activityRegistries.First.ExeModulePath.NormalizeToMaxLength255() ?? "NULL"
+                Value = activityRegistries.First.ExeModulePath.NormalizeToMaxLength1024() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "ip address",
                 Type = "string",
-                Value = activityRegistries.First.IpAddress.Value.NormalizeToMaxLength255() ?? "NULL"
+                Value = activityRegistries.First.IpAddress.Value.NormalizeToMaxLength1024() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
                 Name = "mac address",
                 Type = "string",
-                Value = activityRegistries.First.MacAddress.Value.NormalizeToMaxLength255() ?? "NULL"
+                Value = activityRegistries.First.MacAddress.Value.NormalizeToMaxLength1024() ?? "NULL"
             });
             activity.Measurements.Add(new Measurement()
             {
@@ -142,7 +142,7 @@ namespace MetricsProcessing.Straight
                 {
                     Name = "url",
                     Type = "string",
-                    Value = activityRegistries.FirstOrDefault(r => r.Url != null)?.Url.NormalizeToMaxLength255() ?? "NULL"
+                    Value = activityRegistries.FirstOrDefault(r => r.Url != null)?.Url.NormalizeToMaxLength1024() ?? "NULL"
                 });
             }
 
